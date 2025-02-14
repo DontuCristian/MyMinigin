@@ -11,6 +11,7 @@ dae::TextObject::TextObject(const std::string& text, std::shared_ptr<Font> font)
 
 void dae::TextObject::Update()
 {
+
 	if (m_needsUpdate)
 	{
 		const SDL_Color color = { 255,255,255,255 }; // only white text is supported now
@@ -28,6 +29,9 @@ void dae::TextObject::Update()
 		m_textTexture = std::make_shared<Texture2D>(texture);
 		m_needsUpdate = false;
 	}
+}
+void dae::TextObject::FixedUpdate()
+{
 }
 
 void dae::TextObject::Render() const

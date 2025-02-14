@@ -1,6 +1,8 @@
 #pragma once
 #include <memory>
+#include <vector>
 #include "Transform.h"
+#include "BaseComponent.h"
 
 namespace dae
 {
@@ -11,6 +13,7 @@ namespace dae
 	{
 	public:
 		virtual void Update();
+		virtual void FixedUpdate();
 		virtual void Render() const;
 
 		void SetTexture(const std::string& filename);
@@ -26,6 +29,9 @@ namespace dae
 	private:
 		Transform m_transform{};
 		// todo: mmm, every gameobject has a texture? Is that correct?
+		//Answer: No, not every gameobject has a texture. Use a component system to add a texture to a gameobject.
 		std::shared_ptr<Texture2D> m_texture{};
+
+		std::vector<BComponent*> m_ComponentsArr{};
 	};
 }

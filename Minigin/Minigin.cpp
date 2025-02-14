@@ -1,14 +1,21 @@
+
+//Std includes
 #include <stdexcept>
+#include <thread>
+#include <iostream>
+//Windows and SDL
 #define WIN32_LEAN_AND_MEAN 
 #include <windows.h>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+//Minigin includes
 #include "Minigin.h"
 #include "InputManager.h"
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "Timer.h"
 
 SDL_Window* g_window{};
 
@@ -82,13 +89,31 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
+	auto& timer = Timer::GetInstance();
 
-	// todo: this update loop could use some work.
+	timer.Init();
+
+	float lag{};
+
 	bool doContinue = true;
 	while (doContinue)
 	{
+
 		doContinue = input.ProcessInput();
+
+		timer.Update();
 		sceneManager.Update();
+
+		lag += timer.GetDeltaTime();
+
+		while (lag >= timer.GetFixedDeltaTime())
+		{
+			sceneManager.FixedUpdate();
+			timer.FixedUpdate();
+			lag -= timer.GetFixedDeltaTime();
+		}
+
 		renderer.Render();
+
 	}
 }
