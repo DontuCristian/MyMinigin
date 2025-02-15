@@ -1,37 +1,52 @@
 #pragma once
 #include <memory>
-#include <vector>
-#include "Transform.h"
-#include "BaseComponent.h"
+#include <unordered_map>
+#include <typeindex>
+#include "ComponentsIncludes.h"
 
 namespace dae
 {
-	class Texture2D;
-
-	// todo: this should become final.
-	class GameObject 
+	class GameObject final
 	{
 	public:
-		virtual void Update();
-		virtual void FixedUpdate();
-		virtual void Render() const;
+		void Update();
+		void FixedUpdate();
+		void Render() const;
 
-		void SetTexture(const std::string& filename);
-		void SetPosition(float x, float y);
+		//The GameObject owns the components and manages it's lifetime that's why we 
+		//return a normal pointer
+		template <typename Component>
+		Component* GetComponent() const
+		{
+			auto it = m_ComponentsMap.find(std::type_index(typeid(Component)));
 
-		GameObject() = default;
+			if (it != m_ComponentsMap.end())
+			{
+				auto test = static_cast<Component*>(it->second.get());
+
+				test;
+				return static_cast<Component*>(it->second.get());
+			}
+			return nullptr;
+		}
+
+		template <typename Component>
+		void AddComponent()
+		{
+			auto component = std::make_unique<Component>(this);
+			m_ComponentsMap.insert({ std::type_index(typeid(Component)), std::move(component)});
+		}
+	
+		GameObject();
 		virtual ~GameObject();
+
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
 
 	private:
-		Transform m_transform{};
-		// todo: mmm, every gameobject has a texture? Is that correct?
-		//Answer: No, not every gameobject has a texture. Use a component system to add a texture to a gameobject.
-		std::shared_ptr<Texture2D> m_texture{};
 
-		std::vector<BComponent*> m_ComponentsArr{};
+		std::unordered_map<std::type_index, std::unique_ptr<BComponent>> m_ComponentsMap{};
 	};
 }

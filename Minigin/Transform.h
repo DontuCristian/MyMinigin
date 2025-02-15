@@ -1,14 +1,26 @@
 #pragma once
 #include <glm.hpp>
+#include "BaseComponent.h"
 
 namespace dae
 {
-	class Transform final
+	class GameObject;
+
+	class Transform final : public BComponent
 	{
 	public:
-		const glm::vec3& GetPosition() const { return m_position; }
+		Transform(GameObject* obj);
+		virtual ~Transform() = default;
+
+		Transform(const Transform& other) = delete;
+		Transform(Transform&& other) = delete;
+		Transform& operator=(const Transform& other) = delete;
+		Transform& operator=(Transform&& other) = delete;
+
+		const glm::vec3& GetPosition() const { return m_Position; }
 		void SetPosition(float x, float y, float z);
+
 	private:
-		glm::vec3 m_position;
+		glm::vec3 m_Position;
 	};
 }

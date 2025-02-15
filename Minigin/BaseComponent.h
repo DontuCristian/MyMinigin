@@ -1,42 +1,27 @@
 #pragma once
 
-//-----------------------------------------------------
-// Include Files
-//-----------------------------------------------------
-
-//-----------------------------------------------------
-// BComponent Class									
-//-----------------------------------------------------
-class BComponent final
+namespace dae
 {
-public:
-	BComponent() = default;				// Constructor
-	~BComponent() = default;				// Destructor
+	class GameObject;
 
-	// -------------------------
-	// Copy/move constructors and assignment operators
-	// -------------------------    
-	BComponent(const BComponent& other) = default;
-	BComponent(BComponent&& other) noexcept = default;
-	BComponent& operator=(const BComponent& other) = default;
-	BComponent& operator=(BComponent&& other)	noexcept = default;
-
-	//-------------------------------------------------
-	// Member functions						
-	//-------------------------------------------------
-	virtual void Update() { };
-	virtual void FixedUpdate() { };
-
-private:
-	//-------------------------------------------------
-	// Private member functions								
-	//-------------------------------------------------
+	class BComponent
+	{
+	public:
+		BComponent(GameObject* obj) { obj; };
+		virtual ~BComponent() = default;
 
 
-	//-------------------------------------------------
-	// Datamembers								
-	//-------------------------------------------------
+		BComponent(const BComponent& other) = default;
+		BComponent(BComponent&& other) noexcept = default;
+		BComponent& operator=(const BComponent& other) = default;
+		BComponent& operator=(BComponent&& other)	noexcept = default;
 
 
-};
+		virtual void Update() {};
+		virtual void FixedUpdate() {};
+
+		virtual void Render() const { };
+	protected:
+	};
+}
 

@@ -3,24 +3,32 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
+dae::GameObject::GameObject()
+{
+	AddComponent<Transform>();
+}
 dae::GameObject::~GameObject() = default;
 
-void dae::GameObject::Update() { }
+void dae::GameObject::Update() 
+{
+	for (auto& [type,component] : m_ComponentsMap)
+	{
+		component->Update();
+	}
+}
 
-void dae::GameObject::FixedUpdate() { }
+void dae::GameObject::FixedUpdate() 
+{
+	for (auto& [type, component] : m_ComponentsMap)
+	{
+		component->FixedUpdate();
+	}
+}
 
 void dae::GameObject::Render() const
 {
-	const auto& pos = m_transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
-}
-
-void dae::GameObject::SetTexture(const std::string& filename)
-{
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
-}
-
-void dae::GameObject::SetPosition(float x, float y)
-{
-	m_transform.SetPosition(x, y, 0.0f);
+	for (auto& [type, component] : m_ComponentsMap)
+	{
+		component->Render();
+	}
 }
