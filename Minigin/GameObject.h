@@ -1,17 +1,32 @@
 #pragma once
 #include <memory>
 #include <unordered_map>
+#include <vector>
+#include <algorithm>
 #include <typeindex>
-#include "ComponentsIncludes.h"
+#include <assert.h>
+#include <string>
 
 namespace dae
 {
+	class Transform;
+	class BComponent;
+
 	class GameObject final
 	{
 	public:
 		void Update();
 		void FixedUpdate();
 		void Render() const;
+
+		bool SetParent(GameObject* parent, bool keepWorldPos);
+
+
+		//========================
+		// Templates
+		// =======================
+		
+		//Components
 
 		//The GameObject owns the components and manages it's lifetime that's why we 
 		//return a normal pointer
@@ -33,9 +48,35 @@ namespace dae
 		template <typename Component>
 		void AddComponent()
 		{
-			auto component = std::make_unique<Component>(this);
-			m_ComponentsMap.insert({ std::type_index(typeid(Component)), std::move(component)});
+			auto component = std::make_unique<Component>(*this);
+			m_ComponentsMap.insert({ std::type_index(typeid(Component)), std::move(component) });
 		}
+
+		template <typename Component>
+		bool HasComponent()
+		{
+			auto it = m_ComponentsMap.find(std::type_index(typeid(Component)));
+
+			if (it != m_ComponentsMap.end())
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		template <typename Component>
+		void RemoveComponent()
+		{
+			m_ComponentsMap.erase(std::type_index(typeid(Component)));
+		}
+
+
+
+
+		Transform* GetTransform();
+		GameObject* GetParent();
+		bool HasParent();
 	
 		GameObject();
 		virtual ~GameObject();
@@ -47,6 +88,17 @@ namespace dae
 
 	private:
 
+		//Components
+		std::unique_ptr<Transform> m_Transform;
 		std::unordered_map<std::type_index, std::unique_ptr<BComponent>> m_ComponentsMap{};
+
+		//For the scene graph
+		GameObject* m_Parent{};
+		std::vector<GameObject*> m_Children{};
+
+		//Private members
+		bool IsChild(GameObject* obj);
+		void RemoveChild(GameObject* obj);
+		void AddChild(GameObject* obj);
 	};
 }

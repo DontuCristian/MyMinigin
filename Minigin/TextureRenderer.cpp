@@ -5,18 +5,14 @@
 #include "ResourceManager.h"
 #include "GameObject.h"
 
-dae::TextureRenderer::TextureRenderer(GameObject* obj):
+dae::TextureRenderer::TextureRenderer(GameObject& obj):
 	BComponent(obj),
 	m_Texture(nullptr)
 {
-	m_Transform = obj->GetComponent<Transform>();
+	m_Transform = BComponent::GetOwner()->GetTransform();
 }
 
 void dae::TextureRenderer::Update()
-{
-}
-
-void dae::TextureRenderer::FixedUpdate()
 {
 }
 

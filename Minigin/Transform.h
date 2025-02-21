@@ -9,18 +9,29 @@ namespace dae
 	class Transform final : public BComponent
 	{
 	public:
-		Transform(GameObject* obj);
 		virtual ~Transform() = default;
+		explicit Transform(GameObject& obj);
 
 		Transform(const Transform& other) = delete;
 		Transform(Transform&& other) = delete;
 		Transform& operator=(const Transform& other) = delete;
 		Transform& operator=(Transform&& other) = delete;
 
-		const glm::vec3& GetPosition() const { return m_Position; }
-		void SetPosition(float x, float y, float z);
+		void Update() override;
+		void Render() const override;
+
+		const glm::vec3& GetWorldPosition();
+		const glm::vec3& GetLocalPosition() const;
+
+		void UpdateWorldPosition();
+
+		void SetLocalPosition(const glm::vec3& pos);
+		void SetPositionDirty() { m_IsPosDirty = true; }
 
 	private:
-		glm::vec3 m_Position;
+		glm::vec3 m_LocalPosition;
+		glm::vec3 m_WorldPosition;
+
+		bool m_IsPosDirty{ false };
 	};
 }

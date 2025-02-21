@@ -12,8 +12,8 @@ namespace dae
 	class TextureRenderer final : public BComponent
 	{
 	public:
-		TextureRenderer(GameObject* obj);
-		~TextureRenderer() = default;
+		virtual ~TextureRenderer() = default;
+		explicit TextureRenderer(GameObject& obj);
 
 		TextureRenderer(const TextureRenderer&) = delete;
 		TextureRenderer(TextureRenderer&&) noexcept = delete;
@@ -21,8 +21,6 @@ namespace dae
 		TextureRenderer& operator=(TextureRenderer&&) noexcept = delete;
 
 		void Update() override;
-		void FixedUpdate() override;
-
 		void Render() const override;
 
 		void SetTexture( const std::string& path );

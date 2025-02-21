@@ -17,8 +17,8 @@ namespace dae
 	class TextRenderer final : public BComponent
 	{
 	public:
-		TextRenderer(GameObject* obj);
 		virtual ~TextRenderer() = default;
+		explicit TextRenderer(GameObject& obj);
 
 		TextRenderer(const TextRenderer& other) = delete;
 		TextRenderer(TextRenderer&& other) = delete;

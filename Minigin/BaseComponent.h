@@ -7,21 +7,24 @@ namespace dae
 	class BComponent
 	{
 	public:
-		BComponent(GameObject* obj) { obj; };
 		virtual ~BComponent() = default;
 
+		BComponent(const BComponent& other) = delete;
+		BComponent(BComponent&& other) noexcept = delete;
+		BComponent& operator=(const BComponent& other) = delete;
+		BComponent& operator=(BComponent&& other)	noexcept = delete;
 
-		BComponent(const BComponent& other) = default;
-		BComponent(BComponent&& other) noexcept = default;
-		BComponent& operator=(const BComponent& other) = default;
-		BComponent& operator=(BComponent&& other)	noexcept = default;
 
+		virtual void Update() = 0;
+		virtual void Render() const = 0;
 
-		virtual void Update() {};
-		virtual void FixedUpdate() {};
-
-		virtual void Render() const { };
 	protected:
+
+		explicit BComponent(GameObject& obj) { m_pOwner = &obj; };
+		GameObject* GetOwner() { return m_pOwner; }
+
+	private:
+		GameObject* m_pOwner;
 	};
 }
 

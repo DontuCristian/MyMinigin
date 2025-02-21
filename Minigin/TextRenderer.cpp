@@ -5,12 +5,12 @@
 #include "ResourceManager.h"
 #include "GameObject.h"
 
-dae::TextRenderer::TextRenderer(GameObject* obj) :
+dae::TextRenderer::TextRenderer(GameObject& obj) :
 	BComponent(obj),
 	m_TextTexture(nullptr),
 	m_NeedsUpdate(false)
 {
-	m_Transform = obj->GetComponent<Transform>();
+	m_Transform = BComponent::GetOwner()->GetTransform();
 }
 
 void dae::TextRenderer::Update()
@@ -53,6 +53,11 @@ void dae::TextRenderer::SetText(const std::string& text)
 
 void dae::TextRenderer::SetFont(const std::string& fontPath, int size)
 {
+	if (m_Text.empty())
+	{
+		m_Text = "No Text To Render";
+	}
+
 	auto font = ResourceManager::GetInstance().LoadFont(fontPath, static_cast<uint8_t>(size));
 	m_Font = std::move(font);
 	m_NeedsUpdate = true;

@@ -69,6 +69,9 @@
     <ClInclude Include="FPSRenderer.h">
       <Filter>Componets</Filter>
     </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Componets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -117,6 +120,9 @@
       <Filter>Componets</Filter>
     </ClCompile>
     <ClCompile Include="TextureRenderer.cpp">
+      <Filter>Componets</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
       <Filter>Componets</Filter>
     </ClCompile>
   </ItemGroup>

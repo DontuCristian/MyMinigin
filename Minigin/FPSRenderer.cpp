@@ -4,26 +4,31 @@
 #include "GameObject.h"
 
 
-dae::FPSRenderer::FPSRenderer(GameObject* obj):
+dae::FPSRenderer::FPSRenderer(GameObject& obj):
 	BComponent(obj)
 {
-	m_TextRenderer = obj->GetComponent<TextRenderer>();
+	//The FPSComp is dependendent on having a text renderer, so if there isn't one 
+	//on the object it should add it
+	if (obj.HasComponent<TextRenderer>())
+	{
+		m_TextRenderer = obj.GetComponent<TextRenderer>();
+	}
+	else
+	{
+		obj.AddComponent<TextRenderer>();
+		m_TextRenderer = obj.GetComponent<TextRenderer>();
+	}
 }
 
 void dae::FPSRenderer::Update()
 {
-	if (!m_FixedFramerate)
-	{
-		m_TextRenderer->SetText("FPS: " + std::to_string(Timer::GetInstance().GetFPS()));
-	}
+	std::stringstream fpsStream{};
+
+	fpsStream << std::format("FPS: {:.1f}",Timer::GetInstance().GetFPS());
+	m_TextRenderer->SetText(fpsStream.str());
 }
 
 void dae::FPSRenderer::Render() const
 {
 	m_TextRenderer->Render();
-}
-
-void dae::FPSRenderer::FixedFPS(bool myBool)
-{
-	m_FixedFramerate = myBool;
 }

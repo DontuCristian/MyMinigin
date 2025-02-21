@@ -17,10 +17,10 @@ namespace dae
 		float GetDeltaTime() const { return m_DeltaTime; }
 		float GetFixedDeltaTime() const { return m_FixedDeltaTime; }
 		float GetFPS() const { return m_FPS; }
-		float GetFixedFPS() const { return 1.f / m_FixedDeltaTime; }
 		float GetFrameCount() const { return m_FrameCount; }
 		float GetFixedFrameCount() const { return m_FixedFrameCount; }
-		std::chrono::high_resolution_clock::time_point GetCurrentTime() const { return std::chrono::high_resolution_clock::now(); }
+		std::chrono::high_resolution_clock::time_point GetThisMoment() const { return std::chrono::high_resolution_clock::now(); }
+		int GetTimeStep() const;
 
 	private:
 
@@ -37,7 +37,7 @@ namespace dae
 		//The time of the last update call
 		std::chrono::high_resolution_clock::time_point m_StartTime;
 
-		float m_Lag;
+		float m_Lag{};
 
 		//=====================
 		//CONSTANTS

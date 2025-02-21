@@ -98,7 +98,8 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	bool doContinue = true;
 	while (doContinue)
 	{
-
+		auto frameStart{ Timer::GetInstance().GetThisMoment() };
+        
 		doContinue = input.ProcessInput();
 
 		timer.Update();
@@ -115,5 +116,9 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 		renderer.Render();
 
+		auto smth = timer.GetThisMoment();
+		const auto sleepTime{ frameStart + std::chrono::milliseconds(16) - smth };
+		std::this_thread::sleep_for(sleepTime);
 	}
+
 }
