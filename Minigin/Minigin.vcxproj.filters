@@ -72,6 +72,9 @@
     <ClInclude Include="SpriteRenderer.h">
       <Filter>Componets</Filter>
     </ClInclude>
+    <ClInclude Include="Orbiter.h">
+      <Filter>Componets</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -123,6 +126,9 @@
       <Filter>Componets</Filter>
     </ClCompile>
     <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Componets</Filter>
+    </ClCompile>
+    <ClCompile Include="Orbiter.cpp">
       <Filter>Componets</Filter>
     </ClCompile>
   </ItemGroup>

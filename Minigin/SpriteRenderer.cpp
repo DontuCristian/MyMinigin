@@ -45,7 +45,7 @@ void dae::SpriteRenderer::Render() const
 {
 	auto pos = BComponent::GetOwner()->GetTransform()->GetWorldPosition();
 
-	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y ,m_SourceRect);
+	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x - m_FrameWidth / 2, pos.y - m_FrameHeight / 2,m_SourceRect);
 }
 
 void dae::SpriteRenderer::SetSpriteSheet(const std::string& path, int rows, int columns)
