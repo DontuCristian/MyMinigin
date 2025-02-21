@@ -1,8 +1,8 @@
 #include "Transform.h"
 #include "GameObject.h"
 
-dae::Transform::Transform(GameObject& obj):
-	BComponent(obj),
+dae::Transform::Transform(GameObject& owner):
+	BComponent(owner),
 	m_LocalPosition{ 0, 0, 0 },
 	m_WorldPosition{ 0, 0, 0 }
 {

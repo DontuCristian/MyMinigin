@@ -12,7 +12,7 @@ namespace dae
 	{
 	public:
 		virtual ~FPSRenderer() = default;
-		explicit FPSRenderer(GameObject& obj);
+		explicit FPSRenderer(GameObject& owner);
 
 		FPSRenderer(const FPSRenderer& other) = delete;
 		FPSRenderer(FPSRenderer&& other) = delete;

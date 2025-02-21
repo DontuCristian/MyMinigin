@@ -4,19 +4,19 @@
 #include "GameObject.h"
 
 
-dae::FPSRenderer::FPSRenderer(GameObject& obj):
-	BComponent(obj)
+dae::FPSRenderer::FPSRenderer(GameObject& owner):
+	BComponent(owner)
 {
 	//The FPSComp is dependendent on having a text renderer, so if there isn't one 
 	//on the object it should add it
-	if (obj.HasComponent<TextRenderer>())
+	if (owner.HasComponent<TextRenderer>())
 	{
-		m_TextRenderer = obj.GetComponent<TextRenderer>();
+		m_TextRenderer = owner.GetComponent<TextRenderer>();
 	}
 	else
 	{
-		obj.AddComponent<TextRenderer>();
-		m_TextRenderer = obj.GetComponent<TextRenderer>();
+		owner.AddComponent<TextRenderer>();
+		m_TextRenderer = owner.GetComponent<TextRenderer>();
 	}
 }
 

@@ -20,8 +20,8 @@ namespace dae
 
 	protected:
 
-		explicit BComponent(GameObject& obj) { m_pOwner = &obj; };
-		GameObject* GetOwner() { return m_pOwner; }
+		explicit BComponent(GameObject& owner) { m_pOwner = &owner; };
+		GameObject* GetOwner() const { return m_pOwner; }
 
 	private:
 		GameObject* m_pOwner;

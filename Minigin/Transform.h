@@ -10,7 +10,7 @@ namespace dae
 	{
 	public:
 		virtual ~Transform() = default;
-		explicit Transform(GameObject& obj);
+		explicit Transform(GameObject& owner);
 
 		Transform(const Transform& other) = delete;
 		Transform(Transform&& other) = delete;

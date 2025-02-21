@@ -5,8 +5,8 @@
 #include "ResourceManager.h"
 #include "GameObject.h"
 
-dae::TextureRenderer::TextureRenderer(GameObject& obj):
-	BComponent(obj),
+dae::TextureRenderer::TextureRenderer(GameObject& owner):
+	BComponent(owner),
 	m_Texture(nullptr)
 {
 	m_Transform = BComponent::GetOwner()->GetTransform();

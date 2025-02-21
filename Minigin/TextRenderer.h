@@ -18,7 +18,7 @@ namespace dae
 	{
 	public:
 		virtual ~TextRenderer() = default;
-		explicit TextRenderer(GameObject& obj);
+		explicit TextRenderer(GameObject& owner);
 
 		TextRenderer(const TextRenderer& other) = delete;
 		TextRenderer(TextRenderer&& other) = delete;

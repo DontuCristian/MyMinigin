@@ -4,3 +4,4 @@
 #include "TextRenderer.h"
 #include "TextureRenderer.h"
 #include "FPSRenderer.h"
+#include "SpriteRenderer.h"

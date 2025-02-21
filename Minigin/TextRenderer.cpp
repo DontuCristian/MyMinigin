@@ -5,8 +5,8 @@
 #include "ResourceManager.h"
 #include "GameObject.h"
 
-dae::TextRenderer::TextRenderer(GameObject& obj) :
-	BComponent(obj),
+dae::TextRenderer::TextRenderer(GameObject& owner) :
+	BComponent(owner),
 	m_TextTexture(nullptr),
 	m_NeedsUpdate(false)
 {
