@@ -6,12 +6,10 @@
 #include <typeindex>
 #include <assert.h>
 #include <string>
+#include "ComponentsIncludes.h"
 
 namespace dae
 {
-	class Transform;
-	class BComponent;
-
 	class GameObject final
 	{
 	public:

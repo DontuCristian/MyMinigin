@@ -52,3 +52,9 @@ void dae::Transform::SetLocalPosition(const glm::vec3& pos)
 	m_LocalPosition = pos;
 	SetPositionDirty();
 }
+
+void dae::Transform::SetLocalPosition(float x, float y, float z)
+{
+	glm::vec3 pos{x,y,z};
+	SetLocalPosition(pos);
+}

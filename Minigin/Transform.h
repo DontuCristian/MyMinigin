@@ -26,6 +26,7 @@ namespace dae
 		void UpdateWorldPosition();
 
 		void SetLocalPosition(const glm::vec3& pos);
+		void SetLocalPosition(float x, float y, float z);
 		void SetPositionDirty() { m_IsPosDirty = true; }
 
 	private:

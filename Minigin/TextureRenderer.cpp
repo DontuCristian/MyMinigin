@@ -18,7 +18,7 @@ void dae::TextureRenderer::Update()
 
 void dae::TextureRenderer::Render() const
 {
-	const auto& pos = m_Transform->GetPosition();
+	const auto& pos = m_Transform->GetWorldPosition();
 	Renderer::GetInstance().RenderTexture(*m_Texture, pos.x, pos.y);
 }
 

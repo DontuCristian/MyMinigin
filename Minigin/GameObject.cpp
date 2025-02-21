@@ -1,7 +1,6 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
-#include "ComponentsIncludes.h"
 
 
 dae::Transform* dae::GameObject::GetTransform()
@@ -74,6 +73,8 @@ bool dae::GameObject::SetParent(GameObject* parent, bool keepWorldPos)
 	{
 		m_Parent->AddChild(this);
 	}
+
+	return true;
 
 }
 
