@@ -6,6 +6,14 @@
 
 namespace dae
 {
+	struct FrameData
+	{
+		int			FrameWidth{ -1 }, FrameHeight{ -1 };
+		float		FrameDelay{};
+		float		AccumulatedTime{};
+		int			CurrentFrame{};
+	};
+
 	class GameObject;
 	class Texture2D;
 	class Transform;
@@ -29,21 +37,15 @@ namespace dae
 		void StopAnim();
 		void ResetAnim();
 
-		void SetFrameDelay(float delay) { m_FrameDelay = delay; };
+		void SetFrameDelay(float delay) { m_FrameData->FrameDelay = delay; };
 
 	private:
 
-		std::shared_ptr<Texture2D> m_Texture{};
-		SDL_Rect	m_SourceRect{};
-		Transform*  m_Transform{};
+		std::shared_ptr<Texture2D>	m_Texture{};
+		SDL_Rect					m_SourceRect{};
+		Transform*					m_Transform{};
 
-		bool		m_IsAnimated{ false };
-		int			m_Rows{}, m_Columns{};
-		int			m_FrameWidth{ -1 }, m_FrameHeight{ -1 };
-		float		m_FrameDelay{};
-		float		m_AccumulatedTime{};
-		int			m_CurrentFrame{};
-		int			m_RowIdx{}, m_ColIdx{};
+		std::unique_ptr<FrameData>  m_FrameData{};
 	};
 
 }
