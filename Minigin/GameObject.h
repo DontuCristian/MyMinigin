@@ -10,12 +10,12 @@
 
 namespace dae
 {
-	class GameObject final
+	class GameObject
 	{
 	public:
-		void Update();
-		void FixedUpdate();
-		void Render() const;
+		virtual void Update();
+		virtual void FixedUpdate();
+		virtual void Render() const;
 
 		bool SetParent(GameObject* parent, bool keepWorldPos);
 

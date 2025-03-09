@@ -33,9 +33,6 @@ namespace dae
 		void Render() const override;
 
 		void SetSpriteSheet(const std::string& path, int rows, int columns);
-		void PlayAnim();
-		void StopAnim();
-		void ResetAnim();
 
 		void SetFrameDelay(float delay) { m_FrameData->FrameDelay = delay; };
 

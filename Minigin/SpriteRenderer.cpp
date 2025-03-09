@@ -26,22 +26,18 @@ void dae::SpriteRenderer::Update()
 							 static_cast<int>(m_FrameData->FrameWidth),
 							 static_cast<int>(m_FrameData->FrameHeight) };
 
-	//if (m_IsAnimated)
-	//{
-		//Time counter to control the framerate
-		m_FrameData->AccumulatedTime += Timer::GetInstance().GetDeltaTime();
+	//Time counter to control the framerate
+	m_FrameData->AccumulatedTime += Timer::GetInstance().GetDeltaTime();
 
-		if (m_FrameData->AccumulatedTime > m_FrameData->FrameDelay)
+	if (m_FrameData->AccumulatedTime > m_FrameData->FrameDelay)
+	{
+		++m_FrameData->CurrentFrame;
+		if (m_FrameData->CurrentFrame >= columns)
 		{
-			++m_FrameData->CurrentFrame;
-			if (m_FrameData->CurrentFrame >= columns)
-			{
-				m_FrameData->CurrentFrame = 0;
-			}
-			m_FrameData->AccumulatedTime -= m_FrameData->FrameDelay;
+			m_FrameData->CurrentFrame = 0;
 		}
-	//}
-
+		m_FrameData->AccumulatedTime -= m_FrameData->FrameDelay;
+	}
 }
 
 void dae::SpriteRenderer::Render() const
@@ -58,19 +54,4 @@ void dae::SpriteRenderer::SetSpriteSheet(const std::string& path, int rows, int 
 
 	m_FrameData->FrameWidth = m_Texture->GetSize().x / columns;
 	m_FrameData->FrameHeight = m_Texture->GetSize().y / rows;
-}
-
-void dae::SpriteRenderer::PlayAnim()
-{
-	//m_IsAnimated = true;
-}
-
-void dae::SpriteRenderer::StopAnim()
-{
-	//m_IsAnimated = false;
-}
-
-void dae::SpriteRenderer::ResetAnim()
-{
-	m_FrameData->CurrentFrame = 0;
 }

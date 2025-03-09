@@ -16,6 +16,7 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "Timer.h"
+#include "Xinput.h"
 
 SDL_Window* g_window{};
 
@@ -84,12 +85,22 @@ dae::Minigin::~Minigin()
 
 void dae::Minigin::Run(const std::function<void()>& load)
 {
-	load();
 
 	auto& renderer = Renderer::GetInstance();
 	auto& sceneManager = SceneManager::GetInstance();
 	auto& input = InputManager::GetInstance();
 	auto& timer = Timer::GetInstance();
+
+	input.CreateActionWithController("SnakeMoveLeft",	XINPUT_GAMEPAD_DPAD_LEFT);
+	input.CreateActionWithController("SnakeMoveRight", XINPUT_GAMEPAD_DPAD_RIGHT);
+	input.CreateActionWithController("SnakeMoveUp",	XINPUT_GAMEPAD_DPAD_UP);
+	input.CreateActionWithController("SnakeMoveDown",	XINPUT_GAMEPAD_DPAD_DOWN);
+	input.CreateActionWithKeyboard("QBertMoveLeft" ,SDLK_a);
+	input.CreateActionWithKeyboard("QBertMoveRight",SDLK_d);
+	input.CreateActionWithKeyboard("QBertMoveUp"   ,SDLK_w);
+	input.CreateActionWithKeyboard("QBertMoveDown" ,SDLK_s);
+
+	load();
 
 	timer.Init();
 
