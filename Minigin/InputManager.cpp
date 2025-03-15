@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include "backends/imgui_impl_sdl2.h"
 #include <iostream>
+#include <algorithm>
 #include "Xinput.h"
 
 
@@ -10,115 +11,89 @@ bool dae::InputManager::ProcessInput()
 {
 	CheckForConnectedGamepads();
 
-	//Single key presses
 	SDL_Event e;
-	while (SDL_PollEvent(&e)) 
+	while (SDL_PollEvent(&e))
 	{
 		switch (e.type)
 		{
 		case SDL_QUIT:
 			return false;
-		case SDL_KEYDOWN:
-			{
-				//For every action
-				for (const auto& action : m_Actions)
-				{
-					if (action.Event == TriggerEvent::Down)
-					{
-						//For every button in the action
-						for (const auto& button : action.KeyboardButtons)
-						{
-							if (e.key.keysym.sym == button)
-							{
-							}
-						}
-					}
-
-				}
-			}
-			break;
-		case SDL_KEYUP:
-			//For every action
-			for (const auto& action : m_Actions)
-			{
-				if (action.Event == TriggerEvent::Up)
-				{
-					for (const auto& button : action.KeyboardButtons)
-					{
-						if (e.key.keysym.sym == button)
-						{
-							action.Command->Execute();
-						}
-					}
-				}
-			}
-			break;
-		}
-
-		//Process input for ImGui
-		ImGui_ImplSDL2_ProcessEvent(&e);
-	}
-
-	//Continous key presses
-	Uint8* keystate = const_cast<Uint8*>(SDL_GetKeyboardState(nullptr));
-
-	//For every action
-	for (const auto& action : m_Actions)
-	{
-		if (action.Event == TriggerEvent::Pressed)
-		{
-			//For every button in the action
-			for (const auto& button : action.KeyboardButtons)
-			{
-				if (keystate[SDL_GetScancodeFromKey(button)])
-				{
-					action.Command->Execute();
-				}
-			}
 		}
 	}
 
-	// Process input for all connected gamepads
-	for (int idx{}; idx<m_Gamepads.size();++idx)
+	//Process input for all gamepads
+	for (DWORD idx{}; idx<m_Gamepads.size(); idx++)
 	{
 		m_Gamepads[idx]->ProcessInput(idx);
 
 		//For every action
-		for (const auto& action : m_Actions)
+		for (auto& action : m_ControllerActions)
 		{
-			switch (action.Event)
+			switch (action.second->Event)
 			{
-			case TriggerEvent::Pressed:
-				//For every button in the action
-				for (const auto& button : action.Buttons)
+				case TriggerEvent::Pressed:
 				{
-					if (m_Gamepads[idx]->IsPressed(button))
+					if (m_Gamepads[idx]->IsPressed(action.second->Button))
 					{
-						action.Command->Execute();
+						action.second->Command->Execute();
 					}
 				}
-				break;
-			case TriggerEvent::Down:
-				for (const auto& button : action.Buttons)
+					break;
+				case TriggerEvent::Down:
 				{
-					if (m_Gamepads[idx]->IsDownThisFrame(button))
+					if (m_Gamepads[idx]->IsDownThisFrame(action.second->Button))
 					{
-						action.Command->Execute();
+						action.second->Command->Execute();
 					}
 				}
-				break;
-			case TriggerEvent::Up:
-				for (const auto& button : action.Buttons)
+					break;
+				case TriggerEvent::Up:
 				{
-					if (m_Gamepads[idx]->IsUpThisFrame(button))
+					if (m_Gamepads[idx]->IsUpThisFrame(action.second->Button))
 					{
-						action.Command->Execute();
+						action.second->Command->Execute();
 					}
 				}
-				break;
+					break;
 			}
 		}
 	}
+	//Process input for the keyboard
+	m_Keyboard->ProcessInput();
+
+	//For every keyboard action
+	//For every action
+	for (auto& action : m_KeyActions)
+	{
+		switch (action.second->Event)
+		{
+		case TriggerEvent::Pressed:
+		{
+			if (m_Keyboard->IsPressed(action.second->Key))
+			{
+				action.second->Command->Execute();
+			}
+		}
+		break;
+		case TriggerEvent::Down:
+		{
+			if (m_Keyboard->IsDownThisFrame(action.second->Key))
+			{
+				action.second->Command->Execute();
+			}
+		}
+		break;
+		case TriggerEvent::Up:
+		{
+			if (m_Keyboard->IsUpThisFrame(action.second->Key))
+			{
+				action.second->Command->Execute();
+			}
+		}
+		break;
+		}
+	}
+
 
 	return true;
 }
@@ -145,74 +120,59 @@ void dae::InputManager::CheckForConnectedGamepads()
 			std::cout << "New controller connected: " << idx << std::endl;
 		}
 	}
-}
 
-void dae::InputManager::CreateActionWithController(const std::string& name, uint32_t button)
-{
-	Action action{};
-	action.Buttons.push_back(button);
-	action.Name = name;
-	m_Actions.push_back(std::move(action));
-}
-
-void dae::InputManager::CreateActionWithKeyboard(const std::string& name, SDL_KeyCode key)
-{
-	Action action{};
-	action.KeyboardButtons.push_back(key);
-	action.Name = name;
-	m_Actions.push_back(std::move(action));
-}
-
-void dae::InputManager::AddKeyToAction(const std::string& name, SDL_KeyCode key)
-{
-	//Search for the action
-	auto it = std::find_if(m_Actions.begin(), m_Actions.end(), [&name](const Action& action) {
-		return action.Name == name;
-		});
-	if (it != m_Actions.end())
+	if (m_Keyboard == nullptr)
 	{
-		//Add the button to the action
-		it->KeyboardButtons.push_back(key);
+		m_Keyboard = std::make_unique<Keyboard>();
 	}
 }
 
-void dae::InputManager::ChangeKeyToAction(const std::string& name, SDL_KeyCode key, int idx)
+void dae::InputManager::AddAction(const std::string& name, const uint32_t button, const TriggerEvent state, std::unique_ptr<Command> command, const uint32_t controllerIndex)
 {
-	//Search for the action
-	auto it = std::find_if(m_Actions.begin(), m_Actions.end(), [&name](const Action& action) {
-		return action.Name == name;
-		});
-	if (it != m_Actions.end())
-	{
-		//Change the button to the action
-		it->KeyboardButtons[idx] = key;
-	}
+    assert(!m_ControllerActions.contains(name));
+
+    auto tempAction = std::make_unique<Action>();
+    tempAction->Button = button;
+    tempAction->Command = std::move(command);
+    tempAction->ControllerIdx = controllerIndex;
+    tempAction->Event = state;
+
+    m_ControllerActions.insert({name, std::move(tempAction)});
 }
 
-void dae::InputManager::AddButtonToAction(const std::string& name, uint32_t button)
+void dae::InputManager::AddAction(const std::string& name, const uint8_t key, const TriggerEvent state, std::unique_ptr<Command> command)
 {
-	//Search for the action
-	auto it = std::find_if(m_Actions.begin(), m_Actions.end(), [&name](const Action& action) {
-		return action.Name == name;
-		});
-	if (it != m_Actions.end())
-	{
-		//Add the button to the action
-		it->Buttons.push_back(button);
-	}
+	assert(!m_KeyActions.contains(name));
+
+	auto tempAction = std::make_unique<KeyAction>();
+	tempAction->Key = key;
+	tempAction->Command = std::move(command);
+	tempAction->Event = state;
+
+	m_KeyActions.insert({ name, std::move(tempAction) });
 }
 
-void dae::InputManager::ChangeButtonToAction(const std::string& name, uint32_t button, int idx)
+void dae::InputManager::RemoveKeyAction(const std::string& name)
 {
-	//Search for the action
-	auto it = std::find_if(m_Actions.begin(), m_Actions.end(), [&name](const Action& action) {
-		return action.Name == name;
-		});
-	if (it != m_Actions.end())
-	{
-		//Change the button to the action
-		it->Buttons[idx] = button;
-	}
+	assert(!m_KeyActions.contains(name));
+
+	m_KeyActions.erase(name);
+}
+
+void dae::InputManager::RemoveGamepadAction(const std::string& name)
+{
+	assert(m_ControllerActions.contains(name));
+
+	m_ControllerActions.erase(name);
+}
+
+void dae::InputManager::RemoveAction(const std::string& name)
+{
+	assert(!m_KeyActions.contains(name));
+	assert(!m_ControllerActions.contains(name));
+
+	m_KeyActions.erase(name);
+	m_ControllerActions.erase(name);
 }
 
 

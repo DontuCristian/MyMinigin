@@ -19,6 +19,9 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{301f1e1f-6d61-4176-a84e-24a2f07f2bca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Commands">
+      <UniqueIdentifier>{1679780d-d856-4524-9d65-fd0878bd3e1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -108,14 +111,11 @@
     <ClInclude Include="Gamepad.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameActor.h">
+    <ClInclude Include="Keyboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Snake.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="QBert.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="MoveCommand.h">
+      <Filter>Commands</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,17 +194,14 @@
     <ClCompile Include="..\3rdParty\imgui-1.91.8\backends\imgui_impl_sdl2.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Gamepad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Snake.cpp">
+    <ClCompile Include="Keyboard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="QBert.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="MoveCommand.cpp">
+      <Filter>Commands</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
