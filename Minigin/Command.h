@@ -1,26 +1,43 @@
 #pragma once  
 #include <functional>  
-#include "GameActor.h"  
-#include "GameObject.h"  
 
 namespace dae
 {
+	class GameObject;
+
 	class Command
 	{
 	public:
 		Command() = default;
 		virtual ~Command() = default;
-		void Execute()
-		{
-			if(m_Command)
-				m_Command();
-		}
 
-		void SetCommand(std::function<void()> command)
-		{
-			m_Command = command;
-		}
+		Command(const Command& other) = delete;
+		Command(Command&& other) = delete;
+		Command& operator=(const Command& other) = delete;
+		Command& operator=(Command&& other) = delete;
+
+		virtual void Execute() = 0;
+
+	};
+
+	//Pretty bad name, but this is for the commands that are going to be executed by game objects
+	class CommandObject : public Command
+	{
+	public:
+		CommandObject(GameObject& obj) { m_pGameObject = &obj; }
+		virtual ~CommandObject() = default;
+
+		CommandObject(const CommandObject& other) = delete;
+		CommandObject(CommandObject&& other) = delete;
+		CommandObject& operator=(const CommandObject& other) = delete;
+		CommandObject& operator=(CommandObject&& other) = delete;
+
+	protected:
+
+		GameObject* GetGameObject() { return m_pGameObject; }
+
 	private:
-		std::function<void()> m_Command{};
+
+		GameObject* m_pGameObject;
 	};
 }
