@@ -30,7 +30,6 @@ bool dae::InputManager::ProcessInput()
 						{
 							if (e.key.keysym.sym == button)
 							{
-								action.Command->Execute();
 							}
 						}
 					}
