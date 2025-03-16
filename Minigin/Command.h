@@ -1,5 +1,4 @@
 #pragma once  
-#include <functional>  
 
 namespace dae
 {
@@ -20,7 +19,7 @@ namespace dae
 
 	};
 
-	//Pretty bad name, but this is for the commands that are going to be executed by game objects
+	//Pretty bad name, but this is for the commands that are going to be executed on game objects
 	class CommandObject : public Command
 	{
 	public:
