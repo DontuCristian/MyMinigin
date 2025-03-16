@@ -135,6 +135,15 @@
     <ClInclude Include="HealthHUD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Score.h">
+      <Filter>Componets</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreHUD.h">
+      <Filter>Componets</Filter>
+    </ClInclude>
+    <ClInclude Include="IncreaseScoreCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -235,6 +244,15 @@
     </ClCompile>
     <ClCompile Include="HealthHUD.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Score.cpp">
+      <Filter>Componets</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreHUD.cpp">
+      <Filter>Componets</Filter>
+    </ClCompile>
+    <ClCompile Include="IncreaseScoreCommand.cpp">
+      <Filter>Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

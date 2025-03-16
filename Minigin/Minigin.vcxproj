@@ -200,6 +200,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll" "$(OutputPat
     <ClInclude Include="Event.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HealthHUD.h" />
+    <ClInclude Include="IncreaseScoreCommand.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSRenderer.h" />
@@ -215,6 +216,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll" "$(OutputPat
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Score.h" />
+    <ClInclude Include="ScoreHUD.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="Subject.h" />
@@ -236,6 +239,7 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll" "$(OutputPat
     <ClCompile Include="BaseComponent.cpp" />
     <ClCompile Include="Health.cpp" />
     <ClCompile Include="HealthHUD.cpp" />
+    <ClCompile Include="IncreaseScoreCommand.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSRenderer.cpp" />
@@ -251,6 +255,8 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll" "$(OutputPat
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Score.cpp" />
+    <ClCompile Include="ScoreHUD.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="TakeDamageCommand.cpp" />

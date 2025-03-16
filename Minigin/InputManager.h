@@ -57,8 +57,8 @@ namespace dae
 		std::vector<std::unique_ptr<Gamepad>> m_Gamepads{};
 		std::unique_ptr<Keyboard> m_Keyboard{};
 
-		std::unordered_map<std::string, std::unique_ptr<Action>> m_ControllerActions;
-		std::unordered_map<std::string, std::unique_ptr<KeyAction>> m_KeyActions;
+		std::unordered_multimap<std::string, std::unique_ptr<Action>> m_ControllerActions;
+		std::unordered_multimap<std::string, std::unique_ptr<KeyAction>> m_KeyActions;
 
 	};
 
