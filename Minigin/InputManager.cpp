@@ -129,8 +129,6 @@ void dae::InputManager::CheckForConnectedGamepads()
 
 void dae::InputManager::AddAction(const std::string& name, const uint32_t button, const TriggerEvent state, std::unique_ptr<Command> command, const uint32_t controllerIndex)
 {
-    assert(!m_ControllerActions.contains(name));
-
     auto tempAction = std::make_unique<Action>();
     tempAction->Button = button;
     tempAction->Command = std::move(command);
@@ -142,15 +140,12 @@ void dae::InputManager::AddAction(const std::string& name, const uint32_t button
 
 void dae::InputManager::AddKeyToAction(const std::string& name, SDL_KeyCode key)
 {
-	//Search for the action
-	auto it = std::find_if(m_Actions.begin(), m_Actions.end(), [&name](const Action& action) {
-		return action.Name == name;
-		});
-	if (it != m_Actions.end())
-	{
-		//Add the button to the action
-		it->KeyboardButtons.push_back(key);
-	}
+	auto tempAction = std::make_unique<KeyAction>();
+	tempAction->Key = key;
+	tempAction->Command = std::move(command);
+	tempAction->Event = state;
+
+	m_KeyActions.insert({ name, std::move(tempAction) });
 }
 
 void dae::InputManager::RemoveKeyAction(const std::string& name)
