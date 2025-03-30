@@ -5,8 +5,3 @@
 #include "TextureRenderer.h"
 #include "FPSRenderer.h"
 #include "SpriteRenderer.h"
-#include "Orbiter.h"
-#include "Health.h"
-#include "HealthHUD.h"
-#include "Score.h"
-#include "ScoreHUD.h"

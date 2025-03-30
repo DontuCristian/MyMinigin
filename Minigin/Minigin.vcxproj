@@ -39,13 +39,13 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -122,6 +122,7 @@
       <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\imgui-1.91.8;$(SolutionDir)\3rdParty\steamworks\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,6 +138,9 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll" "$(OutputPat
 xcopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll" "$(OutputPath)" /Y
 xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -172,6 +176,7 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
       <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\imgui-1.91.8;$(SolutionDir)\3rdParty\steamworks\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -189,6 +194,9 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll" "$(OutputPat
 xcopy "$(SolutionDir)3rdParty\steamworks\redistributable_bin\win64\*.dll" "$(OutputPath)" /Y
 xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\3rdParty\imgui-1.91.8\backends\imgui_impl_opengl3.h" />
@@ -205,27 +213,19 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSRenderer.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="ComponentsIncludes.h" />
+    <ClInclude Include="EngineComponentsIncludes.h" />
     <ClInclude Include="Gamepad.h" />
-    <ClInclude Include="Health.h" />
-    <ClInclude Include="HealthHUD.h" />
-    <ClInclude Include="IncreaseScoreCommand.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Minigin.h" />
-    <ClInclude Include="MoveCommand.h" />
     <ClInclude Include="Observer.h" />
-    <ClInclude Include="Orbiter.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Score.h" />
-    <ClInclude Include="ScoreHUD.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="Subject.h" />
-    <ClInclude Include="TakeDamageCommand.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="TextureRenderer.h" />
@@ -241,29 +241,20 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     <ClCompile Include="..\3rdParty\imgui-1.91.8\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\imgui-1.91.8\imgui_widgets.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
-    <ClCompile Include="Health.cpp" />
-    <ClCompile Include="HealthHUD.cpp" />
-    <ClCompile Include="IncreaseScoreCommand.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSRenderer.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gamepad.cpp" />
     <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Minigin.cpp" />
-    <ClCompile Include="MoveCommand.cpp" />
     <ClCompile Include="Observer.cpp" />
-    <ClCompile Include="Orbiter.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Score.cpp" />
-    <ClCompile Include="ScoreHUD.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Subject.cpp" />
-    <ClCompile Include="TakeDamageCommand.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="TextureRenderer.cpp" />
