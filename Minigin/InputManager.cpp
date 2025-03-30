@@ -138,7 +138,7 @@ void dae::InputManager::AddAction(const std::string& name, const uint32_t button
     m_ControllerActions.insert({name, std::move(tempAction)});
 }
 
-void dae::InputManager::AddKeyToAction(const std::string& name, SDL_KeyCode key)
+void dae::InputManager::AddAction(const std::string& name, const uint8_t key, const TriggerEvent state, std::unique_ptr<Command> command)
 {
 	auto tempAction = std::make_unique<KeyAction>();
 	tempAction->Key = key;

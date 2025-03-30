@@ -9,8 +9,6 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
-//Steam
-#include <steam_api.h>
 //Minigin includes
 #include "Minigin.h"
 #include "InputManager.h"
@@ -107,7 +105,6 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 		timer.Update();
 		sceneManager.Update();
-		SteamAPI_RunCallbacks();
 
 		lag += timer.GetDeltaTime();
 
