@@ -80,14 +80,14 @@ namespace dae
 		virtual ~GameObject();
 
 		GameObject(const GameObject& other) = delete;
-		GameObject(GameObject&& other) = delete;
+		GameObject(GameObject&& other) noexcept = delete;
 		GameObject& operator=(const GameObject& other) = delete;
-		GameObject& operator=(GameObject&& other) = delete;
+		GameObject& operator=(GameObject&& other) noexcept = delete;
 
 	private:
 
 		//Components
-		std::unique_ptr<Transform> m_Transform;
+		std::unique_ptr<Transform> m_pTransform;
 		std::unordered_map<std::type_index, std::unique_ptr<BComponent>> m_ComponentsMap{};
 
 		//For the scene graph

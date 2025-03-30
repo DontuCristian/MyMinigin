@@ -5,13 +5,13 @@
 
 dae::Transform* dae::GameObject::GetTransform()
 {
-	assert(m_Transform.get() != nullptr);
-	return m_Transform.get();
+	assert(m_pTransform.get() != nullptr);
+	return m_pTransform.get();
 }
 
 dae::GameObject::GameObject()
 {
-    m_Transform = std::make_unique<Transform>(*this);
+	m_pTransform = std::make_unique<Transform>(*this);
 }
 dae::GameObject::~GameObject() = default;
 
@@ -53,13 +53,13 @@ bool dae::GameObject::SetParent(GameObject* parent, bool keepWorldPos)
 
 	if (parent == nullptr) 
 	{
-		m_Transform->SetLocalPosition(m_Transform->GetWorldPosition());
+		m_pTransform->SetLocalPosition(m_pTransform->GetWorldPosition());
 	}	
 	else 
 	{
 		if (keepWorldPos)
-			m_Transform->SetLocalPosition(m_Transform->GetWorldPosition() - parent->m_Transform->GetWorldPosition());
-		m_Transform->SetPositionDirty();
+			m_pTransform->SetLocalPosition(m_pTransform->GetWorldPosition() - parent->m_pTransform->GetWorldPosition());
+		m_pTransform->SetPositionDirty();
 	}
 
 	//Check if this object is a child

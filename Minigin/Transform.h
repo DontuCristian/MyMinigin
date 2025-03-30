@@ -27,6 +27,10 @@ namespace dae
 
 		void SetLocalPosition(const glm::vec3& pos);
 		void SetLocalPosition(float x, float y, float z);
+
+		//Question for Alex or Tom
+		
+		//Alex said that this needs to be recursive, what would be the base case?
 		void SetPositionDirty() { m_IsPosDirty = true; }
 
 	private:

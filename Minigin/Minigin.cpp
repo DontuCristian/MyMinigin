@@ -105,6 +105,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 		timer.Update();
 		sceneManager.Update();
+		SteamAPI_RunCallbacks();
 
 		lag += timer.GetDeltaTime();
 
