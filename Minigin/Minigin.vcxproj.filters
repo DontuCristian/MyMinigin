@@ -254,9 +254,6 @@
     <ClCompile Include="TakeDamageCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameActor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />

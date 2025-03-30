@@ -237,7 +237,6 @@ xcopy "$(SolutionDir)3rdParty\SDL2_ttf\lib\$(PlatformTarget)\*.dll" "$(OutputPat
     <ClCompile Include="..\3rdParty\imgui-1.91.8\imgui_tables.cpp" />
     <ClCompile Include="..\3rdParty\imgui-1.91.8\imgui_widgets.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
-    <ClCompile Include="GameActor.cpp" />
     <ClCompile Include="Health.cpp" />
     <ClCompile Include="HealthHUD.cpp" />
     <ClCompile Include="IncreaseScoreCommand.cpp" />
