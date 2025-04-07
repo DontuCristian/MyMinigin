@@ -16,6 +16,9 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "Timer.h"
+#include "ServiceLocator.h"
+#include "SoundService.h"
+#include <mutex>
 
 SDL_Window* g_window{};
 
@@ -84,42 +87,42 @@ dae::Minigin::~Minigin()
 
 void dae::Minigin::Run(const std::function<void()>& load)
 {
+    auto& renderer = Renderer::GetInstance();
+    auto& sceneManager = SceneManager::GetInstance();
+    auto& input = InputManager::GetInstance();
+    auto& timer = Timer::GetInstance();
 
-	auto& renderer = Renderer::GetInstance();
-	auto& sceneManager = SceneManager::GetInstance();
-	auto& input = InputManager::GetInstance();
-	auto& timer = Timer::GetInstance();
 
-	load();
+    load();
 
-	timer.Init();
+    timer.Init();
 
-	float lag{};
+    float lag{};
 
-	bool doContinue = true;
-	while (doContinue)
-	{
-		auto frameStart{ Timer::GetInstance().GetThisMoment() };
+    bool doContinue = true;
+
+    while (doContinue)
+    {
+        auto frameStart{ Timer::GetInstance().GetThisMoment() };
         
-		doContinue = input.ProcessInput();
+        doContinue = input.ProcessInput();
 
-		timer.Update();
-		sceneManager.Update();
+        timer.Update();
+        sceneManager.Update();
 
-		lag += timer.GetDeltaTime();
+        lag += timer.GetDeltaTime();
 
-		while (lag >= timer.GetFixedDeltaTime())
-		{
-			sceneManager.FixedUpdate();
-			timer.FixedUpdate();
-			lag -= timer.GetFixedDeltaTime();
-		}
+        while (lag >= timer.GetFixedDeltaTime())
+        {
+            sceneManager.FixedUpdate();
+            timer.FixedUpdate();
+            lag -= timer.GetFixedDeltaTime();
+        }
 
-		renderer.Render();
+        renderer.Render();
 
-		auto smth = timer.GetThisMoment();
-		const auto sleepTime{ frameStart + std::chrono::milliseconds(16) - smth };
-		std::this_thread::sleep_for(sleepTime);
-	}
-
+        auto smth = timer.GetThisMoment();
+        const auto sleepTime{ frameStart + std::chrono::milliseconds(16) - smth };
+        std::this_thread::sleep_for(sleepTime);
+    }
 }

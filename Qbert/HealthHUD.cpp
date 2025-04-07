@@ -1,6 +1,7 @@
 #include "HealthHUD.h"  
 #include "TextRenderer.h"  
 #include "GameObject.h"
+#include "ServiceLocator.h"
 
 dae::HealthHUD::HealthHUD(GameObject& obj):  
    BComponent(obj)  

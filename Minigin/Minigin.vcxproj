@@ -119,7 +119,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\imgui-1.91.8;$(SolutionDir)\3rdParty\steamworks\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\imgui-1.91.8;$(SolutionDir)\3rdParty\glm;$(SolutionDir)\3rdParty\SDL\include;$(SolutionDir)\3rdParty\SDL_image\include;$(SolutionDir)\3rdParty\SDL_ttf\include;$(SolutionDir)\3rdParty\SDL_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
@@ -140,6 +140,7 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutputDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -173,7 +174,7 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\imgui-1.91.8;$(SolutionDir)\3rdParty\steamworks\public\steam;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\3rdParty\imgui-1.91.8;$(SolutionDir)\3rdParty\glm;$(SolutionDir)\3rdParty\SDL\include;$(SolutionDir)\3rdParty\SDL_image\include;$(SolutionDir)\3rdParty\SDL_ttf\include;$(SolutionDir)\3rdParty\SDL_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
@@ -196,6 +197,7 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     </PostBuildEvent>
     <Lib>
       <AdditionalDependencies>xinput.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(OutputDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -215,15 +217,21 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="EngineComponentsIncludes.h" />
     <ClInclude Include="Gamepad.h" />
+    <ClInclude Include="Hash.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Logging_SoundSystem.h" />
     <ClInclude Include="Minigin.h" />
+    <ClInclude Include="Null_SoundService.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="SDL_SoundSystem.h" />
+    <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SoundService.h" />
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="Subject.h" />
     <ClInclude Include="TextRenderer.h" />
@@ -247,12 +255,16 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gamepad.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Logging_SoundSystem.cpp" />
     <ClCompile Include="Minigin.cpp" />
+    <ClCompile Include="Null_SoundService.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SDL_SoundSystem.cpp" />
+    <ClCompile Include="SoundService.cpp" />
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Subject.cpp" />
     <ClCompile Include="TextRenderer.cpp" />

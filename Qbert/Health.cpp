@@ -1,5 +1,6 @@
 #include "Health.h"
 #include "Event.h"
+#include "ServiceLocator.h"
 #include <algorithm>
 
 dae::Health::Health(GameObject& obj):
@@ -29,4 +30,6 @@ void dae::Health::ReduceHealth(int ammmount)
 	Event event(make_sdbm_hash("HealthChanged"));
 	event.args[0] = static_cast<std::any>(m_CurrentHealth);
 	NotifyObservers(event);
+
+	ServiceLocator::GetSoundService().PlaySound("../Data/Sounds/QBertJump.mp3", 0.5f, false);
 }

@@ -1,4 +1,3 @@
-#include <SDL.h>
 
 #if _DEBUG
 // ReSharper disable once CppUnusedIncludeDirective
@@ -16,12 +15,22 @@
 #include "GameCommands.h"
 #include "GameComponentsIncludes.h"
 #include "EngineComponentsIncludes.h"
+#include "ServiceLocator.h"
+#include "Logging_SoundSystem.h"
+#include "SDL_SoundSystem.h"
 #include <iostream>
 
 void load()
 {
 	auto& scene = dae::SceneManager::GetInstance().CreateScene("Demo");
 	auto& input = dae::InputManager::GetInstance();
+
+#ifdef _DEBUG
+	dae::ServiceLocator::RegisterSoundService(std::make_unique<dae::Logging_SoundSystem>(std::make_unique<dae::SDL_SoundSystem>()));
+#else
+	dae::ServiceLocator::RegisterSoundService(std::make_unique<dae::SDL_SoundSystem>());
+#endif
+
 
 	auto go = std::make_shared<dae::GameObject>();
 	go->AddComponent<dae::TextureRenderer>();
