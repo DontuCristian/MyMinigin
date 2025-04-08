@@ -31,5 +31,5 @@ void dae::Health::ReduceHealth(int ammmount)
 	event.args[0] = static_cast<std::any>(m_CurrentHealth);
 	NotifyObservers(event);
 
-	ServiceLocator::GetSoundService().PlaySound("../Data/Sounds/QBertJump.mp3", 0.5f, false);
+	ServiceLocator::GetSoundService().PlaySound("../Data/Sounds/QBertJump.mp3", 0,0.5f, false);
 }

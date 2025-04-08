@@ -4,23 +4,36 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
-#include <vector>
 #include <string>
+#include <unordered_map>
+
+// This code is a simple sound system using SDL2 and SDL_mixer. It allows you to play sound effects and music, manage their volume, and handle multiple sound events in a separate thread. The implementation uses mutexes and condition variables to ensure thread safety when accessing the sound events map.
 
 class dae::SDL_SoundSystem::SDL_SoundSystemImpl
 {
 public:
 	SDL_SoundSystemImpl();
 	~SDL_SoundSystemImpl();
-	void PlaySound(const dae::SoundId& sound, const float volume, bool loops = false);
-	void PlayMusic(const dae::SoundId& sound, const float volume, bool loops = false);
+	void PlaySound(const std::string& path, dae::SoundId sound, const float volume, bool loops = false);
+	void PlayMusic(const std::string& path, dae::SoundId sound, const float volume, bool loops = false);
+	void StopSound(const SoundId& sound);
+	void StopMusic(const SoundId& sound);
+	void PauseSound(const SoundId& sound);
+	void PauseMusic(const SoundId& sound);
+
 	void Update();
 
+	void Cleanup();
+
+	static void HandleSoundEndings(int channel);
+
 private:
-	std::vector<Sound> m_SoundEvents;
+	std::unordered_map<SoundId,Sound> m_SoundEvents;
 	std::mutex m_Mutex;
 	std::condition_variable m_CondVar;
-	std::jthread m_SoundThread;
+	std::thread m_SoundThread;
+
+	bool m_IsRunning{ true };
 };
 
 dae::SDL_SoundSystem::SDL_SoundSystem() :
@@ -30,22 +43,42 @@ dae::SDL_SoundSystem::SDL_SoundSystem() :
 
 dae::SDL_SoundSystem::~SDL_SoundSystem()
 {
+	//This needs to be called before the m_pImpl's destructor
+	m_pImpl->Cleanup();
 }
 
-void dae::SDL_SoundSystem::PlaySound(const SoundId& sound, const float volume, bool loops)
+void dae::SDL_SoundSystem::PlaySound(const std::string& path, SoundId sound, const float volume, bool loops)
 {
-	m_pImpl->PlaySound(sound, volume, loops);
+	m_pImpl->PlaySound(path, sound, volume, loops);
 }
 
-void dae::SDL_SoundSystem::PlayMusic(const SoundId& sound, const float volume, bool loops)
+void dae::SDL_SoundSystem::PlayMusic(const std::string& path, SoundId sound, const float volume, bool loops)
 {
-	m_pImpl->PlayMusic(sound, volume, loops);
+	m_pImpl->PlayMusic(path, sound, volume, loops);
 }
 
 void dae::SDL_SoundSystem::Update()
 {
 	m_pImpl->Update();
 }
+
+void dae::SDL_SoundSystem::StopSound(SoundId sound)
+{
+	m_pImpl->StopSound(sound);
+}
+void dae::SDL_SoundSystem::StopMusic(SoundId sound)
+{
+	m_pImpl->StopMusic(sound);
+}
+void dae::SDL_SoundSystem::PauseSound(SoundId sound)
+{
+	m_pImpl->PauseSound(sound);
+}
+void dae::SDL_SoundSystem::PauseMusic(SoundId sound)
+{
+	m_pImpl->PauseMusic(sound);
+}
+
 
 dae::SDL_SoundSystem::SDL_SoundSystemImpl::SDL_SoundSystemImpl()
 {
@@ -63,73 +96,74 @@ dae::SDL_SoundSystem::SDL_SoundSystemImpl::SDL_SoundSystemImpl()
 	}
 
 	//Create a thread to handle sound events when you create the sound system
-	m_SoundThread = std::jthread([this]()
+	m_SoundThread = std::thread([this]()
 		{
-			while (true)
-			{
-				Update();
-			}
+			Update();		
 		});
 }
 
 dae::SDL_SoundSystem::SDL_SoundSystemImpl::~SDL_SoundSystemImpl()
 {
-	Mix_Quit();
+	if (m_SoundThread.joinable()) {
+		m_SoundThread.join();
+	}
 }
 
 void dae::SDL_SoundSystem::SDL_SoundSystemImpl::Update()
 {
-	std::unique_lock<std::mutex> lock(m_Mutex);
-	// Wait for a sound event to be added
-	m_CondVar.wait(lock, [this] { return !m_SoundEvents.empty(); });
-
-	// Process all sound events
-	for (auto& sound : m_SoundEvents)
+	while (m_IsRunning)
 	{
-		if (sound.isEffect)
+		Mix_ChannelFinished(&dae::SDL_SoundSystem::SDL_SoundSystemImpl::HandleSoundEndings);
+
+		std::unique_lock<std::mutex> lock(m_Mutex);
+
+		// Wait for a sound event to be added
+		m_CondVar.wait_for(lock, std::chrono::milliseconds(500), [this] { return !m_SoundEvents.empty(); });
+
+		// Process all sound events
+		for (auto& sound : m_SoundEvents)
 		{
-			//Set the volume
-			Mix_Volume(-1, static_cast<int>(sound.volume * MIX_MAX_VOLUME));
-
-			//Load the audio chunk and play it
-			Mix_Chunk* chunk = Mix_LoadWAV(sound.path.c_str());
-			if (!chunk)
+			if (sound.second.isEffect)
 			{
-				std::cout << "Failed to load sound effect: " << Mix_GetError() << "\n";
-				continue;
+				//Set the volume
+				Mix_Volume(-1, static_cast<int>(sound.second.volume * MIX_MAX_VOLUME));
+				
+				//Load the audio chunk and play it
+				Mix_Chunk* chunk = Mix_LoadWAV(sound.second.path.c_str());
+				if (!chunk)
+				{
+					std::cout << "Failed to load sound effect: " << Mix_GetError() << "\n";
+					continue;
+				}
+				sound.second.channel = Mix_PlayChannel(-1, chunk, (sound.second.loops) ? -1 : 0);
 			}
-			int channel = Mix_PlayChannel(-1, chunk, (sound.loops) ? -1:0);
-
-            //Free the chunk
-			if (!Mix_Playing(channel))
+			else
 			{
-				Mix_FreeChunk(chunk);
+				//Set the volume
+				Mix_VolumeMusic(static_cast<int>(sound.second.volume * MIX_MAX_VOLUME));
+				//Load the music and play it
+				Mix_Music* music = Mix_LoadMUS(sound.second.path.c_str());
+				if (!music)
+				{
+					std::cout << "Failed to load music: " << Mix_GetError() << "\n";
+					continue;
+				}
+
+				sound.second.channel = Mix_PlayMusic(music, (sound.second.loops) ? -1 : 0);
+
+				//Free the music
+				if (!Mix_Playing(sound.second.channel))
+				{
+					Mix_FreeMusic(music);
+				}
 			}
 		}
-		else
-		{
-			//Set the volume
-			Mix_VolumeMusic(static_cast<int>(sound.volume * MIX_MAX_VOLUME));
-			//Load the music and play it
-			Mix_Music* music = Mix_LoadMUS(sound.path.c_str());
-			if (!music)
-			{
-				std::cout << "Failed to load music: " << Mix_GetError() << "\n";
-				continue;
-			}
 
-			int channel = Mix_PlayMusic(music, (sound.loops) ? -1 : 0);
-			//Free the music
-			if (!Mix_Playing(channel))
-			{
-				Mix_FreeMusic(music);
-			}
-		}
 		m_SoundEvents.clear();
 	}
 }
 
-void dae::SDL_SoundSystem::SDL_SoundSystemImpl::PlaySound(const SoundId& sound, const float volume, bool loops)
+void dae::SDL_SoundSystem::SDL_SoundSystemImpl::PlaySound(const std::string& path, SoundId sound, const float volume, bool loops)
 {
 	std::unique_lock<std::mutex> lock(m_Mutex);
 
@@ -137,15 +171,15 @@ void dae::SDL_SoundSystem::SDL_SoundSystemImpl::PlaySound(const SoundId& sound, 
 	m_CondVar.notify_one();
 
 	Sound tempSound{};
-	tempSound.path = sound;
+	tempSound.path = path;
 	tempSound.volume = volume;
 	tempSound.loops = loops;
 	tempSound.isEffect = true;
 
-	m_SoundEvents.push_back(tempSound);
+	m_SoundEvents.insert({ sound, tempSound });
 }
 
-void dae::SDL_SoundSystem::SDL_SoundSystemImpl::PlayMusic(const dae::SoundId& sound, const float volume, bool loops)
+void dae::SDL_SoundSystem::SDL_SoundSystemImpl::PlayMusic(const std::string& path, dae::SoundId sound, const float volume, bool loops)
 {
 	std::unique_lock<std::mutex> lock(m_Mutex);
 
@@ -154,10 +188,54 @@ void dae::SDL_SoundSystem::SDL_SoundSystemImpl::PlayMusic(const dae::SoundId& so
 
 	// Create a new sound event
 	Sound tempSound{};
-	tempSound.path = sound;
+	tempSound.path = path;
 	tempSound.volume = volume;
 	tempSound.loops = loops;
 	tempSound.isEffect = false;
 
-	m_SoundEvents.push_back(tempSound);
+	m_SoundEvents.insert({ sound, tempSound });
+}
+void dae::SDL_SoundSystem::SDL_SoundSystemImpl::StopSound(const SoundId& sound)
+{
+	std::unique_lock<std::mutex> lock(m_Mutex);
+	Mix_HaltChannel(m_SoundEvents[sound].channel);
+	m_SoundEvents.erase(sound);
+}
+
+void dae::SDL_SoundSystem::SDL_SoundSystemImpl::StopMusic(const SoundId& sound)
+{
+	std::unique_lock<std::mutex> lock(m_Mutex);
+	Mix_HaltMusic();
+	m_SoundEvents.erase(sound);
+}
+
+void dae::SDL_SoundSystem::SDL_SoundSystemImpl::PauseSound(const SoundId& sound)
+{
+	std::unique_lock<std::mutex> lock(m_Mutex);
+	Mix_Pause(-1);
+	m_SoundEvents.erase(sound);
+}
+
+void dae::SDL_SoundSystem::SDL_SoundSystemImpl::PauseMusic(const SoundId& sound)
+{
+	std::unique_lock<std::mutex> lock(m_Mutex);
+	Mix_PauseMusic();
+	m_SoundEvents.erase(sound);
+}
+
+
+void dae::SDL_SoundSystem::SDL_SoundSystemImpl::HandleSoundEndings(int channel)
+{
+	Mix_FreeChunk(Mix_GetChunk(channel));
+	std::cout << "Sound: "<< Mix_GetChunk(channel) <<"ended on channel : " << channel << "\n";
+}
+
+void dae::SDL_SoundSystem::SDL_SoundSystemImpl::Cleanup()
+{
+	m_IsRunning = false;
+	m_CondVar.notify_one();
+	Mix_CloseAudio();
+	Mix_Quit();
+	SDL_Quit();
+	std::cout << "Sound system cleaned up\n";
 }

@@ -97,3 +97,7 @@ bool dae::GameObject::HasParent()
 {
 	return m_Parent != nullptr;
 }
+const std::vector<dae::GameObject*>& dae::GameObject::GetChildren() const
+{
+	return m_Children;
+}

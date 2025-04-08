@@ -22,6 +22,9 @@
     <Filter Include="Commands">
       <UniqueIdentifier>{1679780d-d856-4524-9d65-fd0878bd3e1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{02ce5bbb-c06a-4140-bda5-651ba046b01a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -141,6 +144,18 @@
     <ClInclude Include="Hash.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsComponents.h">
+      <Filter>Componets</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsService.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="Collisions.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB_Physics.h">
+      <Filter>Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ResourceManager.cpp">
@@ -235,6 +250,12 @@
     </ClCompile>
     <ClCompile Include="Logging_SoundSystem.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponents.cpp">
+      <Filter>Componets</Filter>
+    </ClCompile>
+    <ClCompile Include="AABB_Physics.cpp">
+      <Filter>Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

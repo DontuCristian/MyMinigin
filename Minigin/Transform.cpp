@@ -58,3 +58,12 @@ void dae::Transform::SetLocalPosition(float x, float y, float z)
 	glm::vec3 pos{x,y,z};
 	SetLocalPosition(pos);
 }
+
+void dae::Transform::SetPositionDirty()
+{
+	m_IsPosDirty = true;
+	for (auto& child : GetOwner()->GetChildren())
+	{
+		child->GetTransform()->SetPositionDirty();
+	}
+}

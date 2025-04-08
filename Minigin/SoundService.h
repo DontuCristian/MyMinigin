@@ -3,7 +3,7 @@
 
 namespace dae
 {
-	using SoundId = std::string;
+	using SoundId = uint16_t;
 
 	class SoundService
 	{
@@ -12,10 +12,13 @@ namespace dae
 		SoundService() = default;
 		virtual ~SoundService() = default;
 
-		virtual void PlaySound(const SoundId& path, const float volume, bool loops = false) = 0;
-		virtual void PlayMusic(const SoundId& path, const float volume, bool loops = false) = 0;
+		virtual void PlaySound(const std::string& path,SoundId id, const float volume, bool loops = false) = 0;
+		virtual void PlayMusic(const std::string& path,SoundId id, const float volume, bool loops = false) = 0;
+		virtual void StopSound( SoundId id) = 0;
+		virtual void StopMusic( SoundId id) = 0;
+		virtual void PauseSound( SoundId id) = 0;
+		virtual void PauseMusic( SoundId id) = 0;
 
-		virtual void Update() = 0;
 	};
 }
 

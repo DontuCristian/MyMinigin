@@ -44,14 +44,14 @@ namespace dae
 		}
 
 		template <typename Component>
-		void AddComponent()
+		void AddComponent() //Adds a component of that type to the object, the component is default initialized
 		{
 			auto component = std::make_unique<Component>(*this);
 			m_ComponentsMap.insert({ std::type_index(typeid(Component)), std::move(component) });
 		}
 
 		template <typename Component>
-		bool HasComponent()
+		bool HasComponent() const //Checks if a component of the given type exists
 		{
 			auto it = m_ComponentsMap.find(std::type_index(typeid(Component)));
 
@@ -64,7 +64,7 @@ namespace dae
 		}
 
 		template <typename Component>
-		void RemoveComponent()
+		void RemoveComponent() //Removes the first component of the given type
 		{
 			m_ComponentsMap.erase(std::type_index(typeid(Component)));
 		}
@@ -72,9 +72,10 @@ namespace dae
 
 
 
-		Transform* GetTransform();
-		GameObject* GetParent();
-		bool HasParent();
+		Transform* GetTransform(); //Returns a pointer to the transform component
+		GameObject* GetParent(); //Returns the object's parent
+		const std::vector<GameObject*>& GetChildren() const;
+		bool HasParent(); //Checks if a parent exists
 	
 		GameObject();
 		virtual ~GameObject();
