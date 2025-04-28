@@ -3,8 +3,8 @@
 
 dae::Transform::Transform(GameObject& owner):
 	BComponent(owner),
-	m_LocalPosition{ 0, 0, 0 },
-	m_WorldPosition{ 0, 0, 0 }
+	m_LocalPosition{ 0, 0 },
+	m_WorldPosition{ 0, 0 }
 {
 }
 
@@ -16,14 +16,14 @@ void dae::Transform::Render() const
 {
 }
 
-const glm::vec3& dae::Transform::GetWorldPosition()
+const glm::vec2& dae::Transform::GetWorldPosition()
 {
 	if (m_IsPosDirty)
 		UpdateWorldPosition();
 	return m_WorldPosition;
 }
 
-const glm::vec3& dae::Transform::GetLocalPosition() const
+const glm::vec2& dae::Transform::GetLocalPosition() const
 {
 	return m_LocalPosition;
 }
@@ -47,15 +47,15 @@ void dae::Transform::UpdateWorldPosition()
 	m_IsPosDirty = false;
 }
 
-void dae::Transform::SetLocalPosition(const glm::vec3& pos)
+void dae::Transform::SetLocalPosition(const glm::vec2& pos)
 {
 	m_LocalPosition = pos;
 	SetPositionDirty();
 }
 
-void dae::Transform::SetLocalPosition(float x, float y, float z)
+void dae::Transform::SetLocalPosition(float x, float y)
 {
-	glm::vec3 pos{x,y,z};
+	glm::vec2 pos{x,y};
 	SetLocalPosition(pos);
 }
 

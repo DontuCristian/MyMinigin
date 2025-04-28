@@ -30,6 +30,7 @@ namespace dae
 		void PauseMusic(SoundId sound) override;
 
 
+
 		void Update();
 
 	private:

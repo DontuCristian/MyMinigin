@@ -22,21 +22,24 @@ void dae::SpriteRenderer::Update()
 
 	//Updating the SourceRect
 	m_SourceRect = SDL_Rect{ static_cast<int>(colIdx * m_FrameData->FrameWidth),
-							 0,
+							 static_cast<int>(m_FrameData->RowIdx * m_FrameData->FrameHeight),
 							 static_cast<int>(m_FrameData->FrameWidth),
 							 static_cast<int>(m_FrameData->FrameHeight) };
 
-	//Time counter to control the framerate
-	m_FrameData->AccumulatedTime += Timer::GetInstance().GetDeltaTime();
-
-	if (m_FrameData->AccumulatedTime > m_FrameData->FrameDelay)
+	if (m_isAnimated)
 	{
-		++m_FrameData->CurrentFrame;
-		if (m_FrameData->CurrentFrame >= columns)
+		//Time counter to control the framerate
+		m_FrameData->AccumulatedTime += Timer::GetInstance().GetDeltaTime();
+
+		if (m_FrameData->AccumulatedTime > m_FrameData->FrameDelay)
 		{
-			m_FrameData->CurrentFrame = 0;
+			++m_FrameData->CurrentFrame;
+			if (m_FrameData->CurrentFrame >= columns)
+			{
+				m_FrameData->CurrentFrame = 0;
+			}
+			m_FrameData->AccumulatedTime -= m_FrameData->FrameDelay;
 		}
-		m_FrameData->AccumulatedTime -= m_FrameData->FrameDelay;
 	}
 }
 

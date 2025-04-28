@@ -1,10 +1,25 @@
 #include "AABB_Physics.h"
 #include "Collisions.h"
 #include "PhysicsComponents.h"
+#include "Timer.h"
+#include "Transform.h"
 
 
 void dae::physics::AABB_Physics::FixedUpdate()
 {
+	for (RigidBody* rb : m_RigidBodies)
+	{
+		glm::vec2 gravity = rb->Gravity * rb->GravityScale;
+		rb->Force += gravity * rb->Mass; // Apply gravity to the force
+		rb->Velocity += rb->Force / rb->Mass * Timer::GetInstance().GetFixedDeltaTime(); // Update velocity based on force
+
+		glm::vec2 positionOffset = rb->pTransform->GetLocalPosition() + rb->Velocity;
+		rb->pTransform->SetLocalPosition(positionOffset); // Update position based on velocity
+
+		//Reset the force for the next frame
+		rb->Force = glm::vec2{ 0,0 };
+	}
+
 	ResolveCollisions();
 }
 
@@ -32,38 +47,98 @@ void dae::physics::AABB_Physics::RemoveCollider(const Collider* col)
 
 void dae::physics::AABB_Physics::ResolveCollisions()
 {
-	for (size_t i = 0; i < m_Colliders.size(); ++i)
+	std::vector<Collision> collisions;
+	for (Collider* colliderA: m_Colliders)
 	{
-		for (size_t j = i + 1; j < m_Colliders.size(); ++j)
+		for (Collider* colliderB : m_Colliders)
 		{
-			CollisionPoints points = TestCollisions(*m_Colliders[i], *m_Colliders[j]);
-			if (points.Depth > 0)
+			//Break if we are comparing the same collider
+			if (colliderA == colliderB)
+				break;
+
+			CollisionPoints points = TestCollisions(*colliderA, *colliderB);
+
+			if (points.IsColliding)
 			{
-				Collision collision;
-				collision.pColliderA = m_Colliders[i];
-				collision.pColliderB = m_Colliders[j];
-				collision.points = points;
+				collisions.emplace_back(colliderA, colliderB, points);
 			}
 		}
 	}
+
+	for (auto& solver : m_Solvers)
+	{
+		for (auto& collision : collisions)
+		{
+			solver->SolveCollision(collision);
+		}
+	}
+
+	SendCollisionCallback(collisions);
 }
 
-dae::physics::CollisionPoints TestCollisions(const dae::physics::Collider& a, const dae::physics::Collider& b)
+void dae::physics::AABB_Physics::SendCollisionCallback(std::vector<Collision>& collisions)
 {
-
-	glm::vec2 aMin = a.pTransform->GetLocalPosition() + a.Offset;
-	glm::vec2 aMax = aMin + glm::vec2(a.Width, a.Height);
-	glm::vec2 bMin = b.pTransform->GetLocalPosition() + b.Offset;
-	glm::vec2 bMax = bMin + glm::vec2(b.Width, b.Height);
-	dae::physics::CollisionPoints points;
-	if (aMax.x < bMin.x || aMin.x > bMax.x || aMax.y < bMin.y || aMin.y > bMax.y)
+	for (Collision& collision : collisions)
 	{
-		points.Depth = 0;
-		return points;
+		collision.pColliderA->OnCollision(collision);
+		collision.pColliderB->OnCollision(collision);
 	}
-	points.Depth = std::min(aMax.x - bMin.x, std::min(bMax.x - aMin.x, std::min(aMax.y - bMin.y, bMax.y - aMin.y)));
-	points.Normal = glm::normalize(points.A - points.B);
+}
+
+dae::physics::CollisionPoints dae::physics::AABB_Physics::TestCollisions(const Collider& a, const Collider& b)
+{
+	// Get the positions of the colliders
+	glm::vec2 aPos = a.pTransform->GetWorldPosition() + a.Offset;
+	glm::vec2 bPos = b.pTransform->GetWorldPosition() + b.Offset;
+
+	// Calculate the bounds of each collider
+	float aLeft = aPos.x;
+	float aRight = aPos.x + a.Width;
+	float aTop = aPos.y;
+	float aBottom = aPos.y + a.Height;
+
+	float bLeft = bPos.x;
+	float bRight = bPos.x + b.Width;
+	float bTop = bPos.y;
+	float bBottom = bPos.y + b.Height;
+
+	// Check for overlap
+	bool isColliding = (aLeft < bRight && aRight > bLeft &&
+		aTop < bBottom && aBottom > bTop);
+
+	CollisionPoints points;
+	points.IsColliding = isColliding;
+
+	if (isColliding)
+	{
+		// Calculate the penetration depth (optional, for more advanced collision resolution)
+		float overlapX = std::min(aRight, bRight) - std::max(aLeft, bLeft);
+		float overlapY = std::min(aBottom, bBottom) - std::max(aTop, bTop);
+
+        points.Depth = std::min(overlapX, overlapY);
+
+		if (overlapX < overlapY)
+		{
+			points.Normal = (aPos.x < bPos.x) ? glm::vec2(-1.0f, 0.0f) : glm::vec2(1.0f, 0.0f);
+		}
+		else
+		{
+			points.Normal = (aPos.y < bPos.y) ? glm::vec2(0.0f, -1.0f) : glm::vec2(0.0f, 1.0f);
+		}
+	}
+
 	return points;
+}
 
+void dae::physics::AABB_Physics::RemoveSolver(int solverIdx)
+{
+	if (solverIdx >= 0 && solverIdx < static_cast<int>(m_Solvers.size()))
+	{
+		m_Solvers.erase(m_Solvers.begin() + solverIdx);
+	}
+}
 
+void dae::physics::AABB_Physics::AddSolver(std::unique_ptr<Solver>&& solver)
+{
+	m_Solvers.push_back(std::move(solver));
 }

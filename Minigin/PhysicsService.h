@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <vector>
 
 namespace dae::physics
 {
@@ -8,6 +9,9 @@ namespace dae::physics
 	struct Collider;
 	struct RigidBody;
 	struct CollisionPoints;
+	struct Collision;
+
+	class Solver;
 
 	class PhysicsService
 	{
@@ -26,7 +30,12 @@ namespace dae::physics
 
 		virtual void ResolveCollisions() = 0;
 
+		virtual void AddSolver(std::unique_ptr<Solver>&& solver) = 0;
+		virtual void RemoveSolver(int solverIdx) = 0;
+
 		virtual CollisionPoints TestCollisions(const Collider& a, const Collider& b) = 0;
+
+		virtual void SendCollisionCallback(std::vector<Collision>& collisions) = 0;
 
 
 	};

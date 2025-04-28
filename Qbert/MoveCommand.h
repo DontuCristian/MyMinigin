@@ -11,7 +11,7 @@ namespace dae
 	{
 	public:
 
-		MoveCommand(GameObject& object, glm::vec3 direction, float speed);
+		MoveCommand(GameObject& object, glm::vec2 direction, float speed);
 		virtual ~MoveCommand() {};
 
 		virtual void Execute() override;
@@ -23,8 +23,8 @@ namespace dae
 
 	private:
 
-		glm::vec3 m_Direction{};
-		float m_Speed{20.f};
+		glm::vec2 m_Direction{};
+		float m_Force{};
 	};
 }
 

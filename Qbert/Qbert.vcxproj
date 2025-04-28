@@ -147,10 +147,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Block.cpp" />
     <ClCompile Include="Health.cpp" />
     <ClCompile Include="HealthHUD.cpp" />
     <ClCompile Include="IncreaseScoreCommand.cpp" />
     <ClCompile Include="MoveCommand.cpp" />
+    <ClCompile Include="PlatformSolver.cpp" />
     <ClCompile Include="Qbert.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpp20</LanguageStandard>
@@ -160,12 +162,14 @@
     <ClCompile Include="TakeDamageCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Block.h" />
     <ClInclude Include="GameCommands.h" />
     <ClInclude Include="GameComponentsIncludes.h" />
     <ClInclude Include="Health.h" />
     <ClInclude Include="HealthHUD.h" />
     <ClInclude Include="IncreaseScoreCommand.h" />
     <ClInclude Include="MoveCommand.h" />
+    <ClInclude Include="PlatformSolver.h" />
     <ClInclude Include="Score.h" />
     <ClInclude Include="ScoreHUD.h" />
     <ClInclude Include="TakeDamageCommand.h" />

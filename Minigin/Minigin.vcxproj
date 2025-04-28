@@ -224,6 +224,7 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Logging_SoundSystem.h" />
     <ClInclude Include="Minigin.h" />
+    <ClInclude Include="Null_PhysicsService.h" />
     <ClInclude Include="Null_SoundService.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="PhysicsComponents.h" />
@@ -262,7 +263,6 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Logging_SoundSystem.cpp" />
     <ClCompile Include="Minigin.cpp" />
-    <ClCompile Include="Null_SoundService.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="PhysicsComponents.cpp" />
     <ClCompile Include="Renderer.cpp" />

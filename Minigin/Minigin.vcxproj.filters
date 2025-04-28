@@ -25,6 +25,12 @@
     <Filter Include="Physics">
       <UniqueIdentifier>{02ce5bbb-c06a-4140-bda5-651ba046b01a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Services">
+      <UniqueIdentifier>{add20ffc-1566-4237-b749-d2c44cac65d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sound">
+      <UniqueIdentifier>{df8add3e-76ae-43d7-a92b-9c5262fc0305}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Singleton.h">
@@ -126,19 +132,7 @@
     <ClInclude Include="EngineComponentsIncludes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServiceLocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SoundService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SDL_SoundSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Null_SoundService.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Logging_SoundSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Hash.h">
@@ -147,14 +141,29 @@
     <ClInclude Include="PhysicsComponents.h">
       <Filter>Componets</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsService.h">
-      <Filter>Physics</Filter>
-    </ClInclude>
     <ClInclude Include="Collisions.h">
       <Filter>Physics</Filter>
     </ClInclude>
     <ClInclude Include="AABB_Physics.h">
       <Filter>Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ServiceLocator.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsService.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Null_SoundService.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Null_PhysicsService.h">
+      <Filter>Services</Filter>
+    </ClInclude>
+    <ClInclude Include="Logging_SoundSystem.h">
+      <Filter>Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="SDL_SoundSystem.h">
+      <Filter>Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -239,23 +248,20 @@
     <ClCompile Include="Subject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SoundService.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SDL_SoundSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Null_SoundService.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Logging_SoundSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PhysicsComponents.cpp">
       <Filter>Componets</Filter>
     </ClCompile>
     <ClCompile Include="AABB_Physics.cpp">
       <Filter>Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundService.cpp">
+      <Filter>Services</Filter>
+    </ClCompile>
+    <ClCompile Include="Logging_SoundSystem.cpp">
+      <Filter>Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="SDL_SoundSystem.cpp">
+      <Filter>Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

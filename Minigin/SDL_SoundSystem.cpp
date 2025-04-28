@@ -227,7 +227,7 @@ void dae::SDL_SoundSystem::SDL_SoundSystemImpl::PauseMusic(const SoundId& sound)
 void dae::SDL_SoundSystem::SDL_SoundSystemImpl::HandleSoundEndings(int channel)
 {
 	Mix_FreeChunk(Mix_GetChunk(channel));
-	std::cout << "Sound: "<< Mix_GetChunk(channel) <<"ended on channel : " << channel << "\n";
+	std::cout << "Sound: "<< Mix_GetChunk(channel) <<" ended on channel : " << channel << "\n";
 }
 
 void dae::SDL_SoundSystem::SDL_SoundSystemImpl::Cleanup()
