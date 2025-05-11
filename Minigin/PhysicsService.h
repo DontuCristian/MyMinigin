@@ -33,7 +33,7 @@ namespace dae::physics
 		virtual void AddSolver(std::unique_ptr<Solver>&& solver) = 0;
 		virtual void RemoveSolver(int solverIdx) = 0;
 
-		virtual CollisionPoints TestCollisions(const Collider& a, const Collider& b) = 0;
+		virtual CollisionPoints TestCollisions(Collider& a, Collider& b) = 0;
 
 		virtual void SendCollisionCallback(std::vector<Collision>& collisions) = 0;
 

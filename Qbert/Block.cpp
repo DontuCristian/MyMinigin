@@ -8,25 +8,24 @@
 dae::Block::Block(GameObject& obj)  
 : BComponent(obj)  
 {  
-  m_pSpriteRenderer = obj.GetComponent<SpriteRenderer>();  
-
-  m_OnCollisionCallback = std::bind(&Block::UpdateScore, this, std::placeholders::_1);
-  obj.GetComponent<physics::Collider>()->SetCollisionCallback(m_OnCollisionCallback);
+    m_pSpriteRenderer = obj.GetComponent<SpriteRenderer>();
 }  
 
-void dae::Block::UpdateScore(physics::Collision& collision)  
-{  
-    //Used later 
-    collision;
+int dae::Block::CollidedWithPlayer()  
+{
+    ++m_ColorChangeCounter;
 
-  ++m_ColorChangeCounter;  
-  if (m_ColorChangeCounter >= m_NrOfColorChanges)  
-  {  
-      m_ColorChangeCounter = 0;  
-      m_pSpriteRenderer->SetRowIdx(m_ColorChangeCounter + 1);  
-  }  
-  else  
-  {  
-      m_pSpriteRenderer->SetRowIdx(m_ColorChangeCounter + 1);  
-  }  
+	if (m_ColorChangeCounter < m_NrOfColorChanges)
+	{
+		m_pSpriteRenderer->SetRowIdx(m_ColorChangeCounter);
+		return 15;
+	}
+	else if (m_ColorChangeCounter == m_NrOfColorChanges)
+	{
+		m_pSpriteRenderer->SetRowIdx(m_ColorChangeCounter);
+		return 30;
+	}
+
+	return 0;
+
 }

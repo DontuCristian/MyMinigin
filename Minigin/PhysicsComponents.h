@@ -3,6 +3,8 @@
 #include "glm.hpp"
 #include "Renderer.h"
 #include <functional>
+#include <unordered_set>
+#include <iostream>
 
 namespace dae
 {
@@ -11,7 +13,7 @@ namespace dae
 
 namespace dae::physics
 {
-	struct Collision;
+	struct CollisionPoints;
 
 	struct RigidBody : public BComponent
 	{
@@ -41,7 +43,7 @@ namespace dae::physics
 		~Collider() override;	
 
 		void Update() override {};
-		void Render() const override {  };
+		void Render() const override;
 
 		dae::Transform* pTransform; // Pointer to the Transform component of our owner
 
@@ -50,15 +52,31 @@ namespace dae::physics
 		float Width;
 		float Height;
 
-		void SetCollisionCallback(std::function<void(Collision&)>& callback) { m_OnCollision = callback; };
-
-		void OnCollision(Collision& collision) 
+		void SetCollisionCallback(std::function<void(const Collider*, const CollisionPoints&)>& callback)
 		{ 
-			if(m_OnCollision) 
-				m_OnCollision(collision); 
+			m_OnCollisionCallbacks.push_back(callback);
+		};
+
+		void OnCollision(const Collider* other, const CollisionPoints& points)
+		{ 
+			for (const auto& onCollision : m_OnCollisionCallbacks)
+			{
+#ifdef _DEBUG
+				std::cout << "WasColliding: " << WasColliding << " IsColliding: " << IsColliding << std::endl;
+#endif // _DEBUG
+
+				if (onCollision && (!WasColliding && IsColliding))
+				{
+					onCollision(other, points);
+				}
+			}
 		}
 
+		bool WasColliding{ false }; // Was the collider colliding last frame?
+		bool IsColliding{ false }; // Is the collider colliding this frame?
+
 	private:
-		std::function<void(Collision&)> m_OnCollision{};
+
+		std::vector<std::function<void(const Collider*, const CollisionPoints&)>> m_OnCollisionCallbacks;
 	};
 }

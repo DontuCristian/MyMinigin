@@ -28,13 +28,13 @@ namespace dae
 		void Update() override {};
 		void Render() const override {};
 
-		void UpdateScore(physics::Collision&);
+		int CollidedWithPlayer();
+
 	private:
 
-		const int m_NrOfColorChanges{ 1 };
+		const int m_NrOfColorChanges{ 2 };
 		int m_ColorChangeCounter{ 0 };
 
 		SpriteRenderer* m_pSpriteRenderer{ nullptr };
-		std::function<void(physics::Collision&)> m_OnCollisionCallback{};
 	};
 }

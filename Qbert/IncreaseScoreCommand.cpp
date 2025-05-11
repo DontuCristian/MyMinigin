@@ -1,6 +1,6 @@
 #include "IncreaseScoreCommand.h"
 #include "GameObject.h"
-#include "Score.h"
+#include "PlayerScore.h"
 #include <cassert>
 
 dae::IncreaseScoreCommand::IncreaseScoreCommand(GameObject& obj, int score) :
@@ -11,7 +11,7 @@ dae::IncreaseScoreCommand::IncreaseScoreCommand(GameObject& obj, int score) :
 
 void dae::IncreaseScoreCommand::Execute()
 {
-	assert(GetGameObject()->HasComponent<Score>());
+	assert(GetGameObject()->HasComponent<PlayerScore>());
 
-	GetGameObject()->GetComponent<Score>()->IncreaseScore(m_ScoreAmmount);
+	GetGameObject()->GetComponent<PlayerScore>()->IncreaseScore(m_ScoreAmmount);
 }

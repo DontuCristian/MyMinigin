@@ -30,7 +30,7 @@
     <ClCompile Include="MoveCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Score.cpp">
+    <ClCompile Include="PlayerScore.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScoreHUD.cpp">
@@ -59,7 +59,7 @@
     <ClInclude Include="MoveCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Score.h">
+    <ClInclude Include="PlayerScore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScoreHUD.h">

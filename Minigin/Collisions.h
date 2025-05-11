@@ -12,7 +12,6 @@ namespace dae::physics
 		glm::vec2 B; //Furthest point of object B
 		glm::vec2 Normal; //Normal of the collision
 		float Depth; //Depth of the collision
-		bool IsColliding; //Did the collision happen?
 
 	};
 

@@ -157,7 +157,7 @@
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpp20</LanguageStandard>
     </ClCompile>
-    <ClCompile Include="Score.cpp" />
+    <ClCompile Include="PlayerScore.cpp" />
     <ClCompile Include="ScoreHUD.cpp" />
     <ClCompile Include="TakeDamageCommand.cpp" />
   </ItemGroup>
@@ -170,7 +170,7 @@
     <ClInclude Include="IncreaseScoreCommand.h" />
     <ClInclude Include="MoveCommand.h" />
     <ClInclude Include="PlatformSolver.h" />
-    <ClInclude Include="Score.h" />
+    <ClInclude Include="PlayerScore.h" />
     <ClInclude Include="ScoreHUD.h" />
     <ClInclude Include="TakeDamageCommand.h" />
   </ItemGroup>

@@ -19,7 +19,7 @@ namespace dae::physics
 		void AddSolver(std::unique_ptr<Solver>&&) override { /*No operation*/ }
 		void RemoveSolver(int) override { /*No operation*/ }
 		void ResolveCollisions() override { /*No operation*/ }
-		CollisionPoints TestCollisions(const Collider& , const Collider& ) override 
+		CollisionPoints TestCollisions(Collider& , Collider& ) override 
 		{ 
 			/*No operation*/ 
 			return CollisionPoints{};

@@ -29,7 +29,7 @@ namespace dae::physics
 		void ResolveCollisions() override;
 		void SendCollisionCallback(std::vector<Collision>& collisions) override;
 
-		CollisionPoints TestCollisions(const Collider& a, const Collider& b) override;
+		CollisionPoints TestCollisions(Collider& a, Collider& b) override;
 
 	private:
 		std::vector<RigidBody*> m_RigidBodies;

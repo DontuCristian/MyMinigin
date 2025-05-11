@@ -43,3 +43,16 @@ dae::physics::Collider::~Collider()
 	//Remove the Collider from the physics service
 	ServiceLocator::GetPhysicsService().RemoveCollider(this);
 }
+
+void dae::physics::Collider::Render() const
+{
+
+#ifdef _DEBUG
+	//Draw the collider
+	glm::vec2 pos = pTransform->GetWorldPosition() + Offset;
+	glm::vec2 size{ Width, Height };
+	SDL_Rect rect{ static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(size.x), static_cast<int>(size.y) };
+	Renderer::GetInstance().RenderRect(rect, SDL_Color{ 255,0,0,255 });
+#endif
+
+};

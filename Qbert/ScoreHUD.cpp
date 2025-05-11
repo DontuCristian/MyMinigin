@@ -26,7 +26,7 @@ void dae::ScoreHUD::OnNotify(Event event, Subject*)
     if (event.id == make_sdbm_hash("ScoreChanged"))
     {
         int healthValue = std::any_cast<int>(event.args[0]);
-        m_pTextRenderer->SetText("Score: " + std::to_string(healthValue));
+        m_pTextRenderer->SetText(std::to_string(healthValue));
     }
 }
 

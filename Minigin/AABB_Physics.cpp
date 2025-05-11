@@ -48,7 +48,12 @@ void dae::physics::AABB_Physics::RemoveCollider(const Collider* col)
 void dae::physics::AABB_Physics::ResolveCollisions()
 {
 	std::vector<Collision> collisions;
-	for (Collider* colliderA: m_Colliders)
+	for (Collider* collider : m_Colliders)
+	{
+		collider->IsColliding = false; // Reset collision state for the next frame
+	}
+
+ 	for (Collider* colliderA : m_Colliders)
 	{
 		for (Collider* colliderB : m_Colliders)
 		{
@@ -58,7 +63,7 @@ void dae::physics::AABB_Physics::ResolveCollisions()
 
 			CollisionPoints points = TestCollisions(*colliderA, *colliderB);
 
-			if (points.IsColliding)
+			if (colliderA->IsColliding && colliderB->IsColliding)
 			{
 				collisions.emplace_back(colliderA, colliderB, points);
 			}
@@ -74,18 +79,24 @@ void dae::physics::AABB_Physics::ResolveCollisions()
 	}
 
 	SendCollisionCallback(collisions);
-}
 
-void dae::physics::AABB_Physics::SendCollisionCallback(std::vector<Collision>& collisions)
-{
-	for (Collision& collision : collisions)
+	for (Collider* collider : m_Colliders)
 	{
-		collision.pColliderA->OnCollision(collision);
-		collision.pColliderB->OnCollision(collision);
+		collider->WasColliding = collider->IsColliding; 
 	}
 }
 
-dae::physics::CollisionPoints dae::physics::AABB_Physics::TestCollisions(const Collider& a, const Collider& b)
+void dae::physics::AABB_Physics::SendCollisionCallback(std::vector<Collision>& collisions)  
+{  
+	for (Collision& collision : collisions)
+	{
+
+		collision.pColliderA->OnCollision(collision.pColliderB, collision.points);
+		collision.pColliderB->OnCollision(collision.pColliderA, collision.points);
+	}
+}
+
+dae::physics::CollisionPoints dae::physics::AABB_Physics::TestCollisions(Collider& a, Collider& b)
 {
 	// Get the positions of the colliders
 	glm::vec2 aPos = a.pTransform->GetWorldPosition() + a.Offset;
@@ -106,8 +117,7 @@ dae::physics::CollisionPoints dae::physics::AABB_Physics::TestCollisions(const C
 	bool isColliding = (aLeft < bRight && aRight > bLeft &&
 		aTop < bBottom && aBottom > bTop);
 
-	CollisionPoints points;
-	points.IsColliding = isColliding;
+	CollisionPoints points{};
 
 	if (isColliding)
 	{
@@ -125,6 +135,9 @@ dae::physics::CollisionPoints dae::physics::AABB_Physics::TestCollisions(const C
 		{
 			points.Normal = (aPos.y < bPos.y) ? glm::vec2(0.0f, -1.0f) : glm::vec2(0.0f, 1.0f);
 		}
+
+		a.IsColliding = true;
+		b.IsColliding = true;
 	}
 
 	return points;
