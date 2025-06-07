@@ -8,6 +8,9 @@
 
 void dae::physics::PlatformSolver::SolveCollision(const Collision& collision)
 {
+    if (collision.pColliderA->IsTrigger || collision.pColliderB->IsTrigger)
+        return;// Only resolve collisions for non-trigger colliders
+
     glm::vec2 normal = collision.points.Normal;
 
     if (!collision.pRigidBodyA && !collision.pRigidBodyB)

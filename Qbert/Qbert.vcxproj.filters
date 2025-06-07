@@ -24,9 +24,6 @@
     <ClCompile Include="HealthHUD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="IncreaseScoreCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MoveCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,13 +33,13 @@
     <ClCompile Include="ScoreHUD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TakeDamageCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PlatformSolver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Block.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLoop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,9 +50,6 @@
     <ClInclude Include="HealthHUD.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IncreaseScoreCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MoveCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -63,9 +57,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScoreHUD.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TakeDamageCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameComponentsIncludes.h">
@@ -78,6 +69,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLoop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IntroState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EndState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

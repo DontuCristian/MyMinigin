@@ -41,18 +41,18 @@ void load()
 	const float cubeSize = 32.f; //Size in pixels
 	const float offset = 8.f;
 	int cubeIndex = 0;
-
+	
 	glm::vec2 startPos{ 320.f,156.f };
-
+	
 	for (int row = 0; row < totalRows; ++row) {
 		for (int col = 0; col <= row; ++col) {
 			bool isOutside = (col == 0) || (col == row);
-
+	
 			auto cube = std::make_shared<dae::GameObject>();
-
+	
 			cube->AddComponent<dae::SpriteRenderer>();
 			cube->GetComponent<dae::SpriteRenderer>()->SetSpriteSheet("Level1_Blocks.png", 6, 2);
-
+	
 			if (isOutside)
 			{
 				cube->GetComponent<dae::SpriteRenderer>()->SetFrameIdx(0);
@@ -61,26 +61,75 @@ void load()
 			{
 				cube->GetComponent<dae::SpriteRenderer>()->SetFrameIdx(1);
 			}
-
+	
 			float x = startPos.x + (col - row * 0.5f) * cubeSize;
 			float y = startPos.y - (-row * (cubeSize - offset));
-
+	
 			cube->GetTransform()->SetLocalPosition(x, y);
 			cube->AddComponent<dae::physics::Collider>();
 			cube->GetComponent<dae::physics::Collider>()->Width = 8;
 			cube->GetComponent<dae::physics::Collider>()->Height = 16;
-			cube->GetComponent<dae::physics::Collider>()->Offset = { -4, 0 };
+			cube->GetComponent<dae::physics::Collider>()->Offset = { -4, -8 };
+			cube->GetComponent<dae::physics::Collider>()->SetTag("Block");
 			cube->AddComponent<dae::Block>();
-
+	
 			std::cout << "Cube " << cubeIndex << " Position: ("
 				<< x << ", " << y << ", " << ") "
 				<< (isOutside ? "[OUTSIDE]\n" : "[INSIDE]\n");
-
+	
 			scene.Add(cube);
-
+	
 			cubeIndex++;
 		}
 	}
+	
+	glm::vec2 deathStartPos = startPos - glm::vec2{offset,cubeSize};
+	
+	for (int row = 1; row < totalRows + 1; ++row) {
+		for (int col = 0; col <= row; ++col) {
+			bool isOutside = (col == 0) || (col == row);
+	
+			if (isOutside)
+			{
+				auto cube = std::make_shared<dae::GameObject>();
+	
+				float x = deathStartPos.x + (col - row * 0.5f) * cubeSize;
+				float y = deathStartPos.y - (-row * (cubeSize - offset));
+	
+				cube->GetTransform()->SetLocalPosition(x, y);
+				cube->AddComponent<dae::physics::Collider>();
+				cube->GetComponent<dae::physics::Collider>()->Width = 24;
+				cube->GetComponent<dae::physics::Collider>()->Height = 24;
+				cube->GetComponent<dae::physics::Collider>()->Offset = { -4,0 };
+				cube->GetComponent<dae::physics::Collider>()->IsTrigger = true;
+				cube->GetComponent<dae::physics::Collider>()->SetTag("KillZone");
+	
+	
+				std::cout << "Cube " << cubeIndex << " Position: ("
+					<< x << ", " << y << ", " << ") "
+					<< (isOutside ? "[OUTSIDE]\n" : "[INSIDE]\n");
+	
+				scene.Add(cube);
+			}
+	
+			cubeIndex++;
+		}
+	}
+
+	//auto gameObject = std::make_shared<dae::GameObject>();
+	//gameObject->GetTransform()->SetLocalPosition(320.f, 250.f);
+	//gameObject->AddComponent<dae::physics::Collider>();
+	//gameObject->GetComponent<dae::physics::Collider>()->Width = 40;
+	//gameObject->GetComponent<dae::physics::Collider>()->Height = 16;
+	//scene.Add(gameObject);
+
+	//gameObject = std::make_shared<dae::GameObject>();
+	//gameObject->GetTransform()->SetLocalPosition(320.f, 230.f);
+	//gameObject->AddComponent<dae::physics::Collider>();
+	//gameObject->GetComponent<dae::physics::Collider>()->Width = 40;
+	//gameObject->GetComponent<dae::physics::Collider>()->Height = 16;
+	//gameObject->GetComponent<dae::physics::Collider>()->IsTrigger = true;
+	//scene.Add(gameObject);
 
 	auto to = std::make_shared<dae::GameObject>();
 	to->AddComponent<dae::FPSRenderer>();
@@ -88,12 +137,12 @@ void load()
 	to->GetTransform()->SetLocalPosition(20, 30);
 	scene.Add(to);
 
-	//auto qBertHealth = std::make_shared<dae::GameObject>();
-	//qBertHealth->AddComponent<dae::HealthHUD>();
-	//qBertHealth->GetComponent<dae::HealthHUD>()->SetFont("Lingua.otf", 15);
-	//qBertHealth->GetComponent<dae::HealthHUD>()->SetText("HP: 100");
-	//qBertHealth->GetTransform()->SetLocalPosition(30, 70);
-	//scene.Add(qBertHealth);
+	auto qBertHealth = std::make_shared<dae::GameObject>();
+	qBertHealth->AddComponent<dae::HealthHUD>();
+	qBertHealth->GetComponent<dae::HealthHUD>()->SetFont("Lingua.otf", 15);
+	qBertHealth->GetComponent<dae::HealthHUD>()->SetText("Lives: 3");
+	qBertHealth->GetTransform()->SetLocalPosition(30, 70);
+	scene.Add(qBertHealth);
 
 	auto qBertScore = std::make_shared<dae::GameObject>();
 	qBertScore->AddComponent<dae::ScoreHUD>();
@@ -107,13 +156,13 @@ void load()
 	qBert->AddComponent<dae::SpriteRenderer>();
 	qBert->GetComponent<dae::SpriteRenderer>()->SetSpriteSheet("QBertMoving.png", 4, 2);
 	qBert->GetComponent<dae::SpriteRenderer>()->SetFrameDelay(0.3f);
-	//qBert->AddComponent<dae::Health>();
-	//qBert->GetComponent<dae::Health>()->AddObserver(qBertHealth->GetComponent<dae::HealthHUD>());
 	qBert->AddComponent<dae::physics::RigidBody>();
 	qBert->AddComponent<dae::physics::Collider>();
 	qBert->GetComponent<dae::physics::Collider>()->Width = 8;
 	qBert->GetComponent<dae::physics::Collider>()->Height = 16;
-	qBert->GetComponent<dae::physics::Collider>()->Offset = { -4, 0 };
+	qBert->GetComponent<dae::physics::Collider>()->Offset = { -4, -8 };
+	qBert->AddComponent<dae::Health>();
+	qBert->GetComponent<dae::Health>()->AddObserver(qBertHealth->GetComponent<dae::HealthHUD>());
 	qBert->AddComponent<dae::PlayerScore>();
 	qBert->GetComponent<dae::PlayerScore>()->AddObserver(qBertScore->GetComponent<dae::ScoreHUD>());
 	scene.Add(qBert);
@@ -122,7 +171,6 @@ void load()
 	input.GetInstance().AddAction("MoveRight", SDL_SCANCODE_D, dae::TriggerEvent::Down, std::make_unique<dae::MoveCommand>(*qBert.get(),glm::vec2{ 1,-2.5 }, 92.5f));
 	input.GetInstance().AddAction("MoveUp", SDL_SCANCODE_W, dae::TriggerEvent::Down, std::make_unique<dae::MoveCommand>(*qBert.get(), glm::vec2{ 1,-5.4 }, 187.f));
 	input.GetInstance().AddAction("MoveDown", SDL_SCANCODE_S, dae::TriggerEvent::Down, std::make_unique<dae::MoveCommand>(*qBert.get(), glm::vec2{ -1,-2.5 }, 92.5f));
-	input.GetInstance().AddAction("TakeDamage", SDL_SCANCODE_C, dae::TriggerEvent::Down, std::make_unique<dae::TakeDamageCommand>(*qBert.get(), 20),0);
 
 	//auto snakeHealth = std::make_shared<dae::GameObject>();
 	//snakeHealth->AddComponent<dae::HealthHUD>();

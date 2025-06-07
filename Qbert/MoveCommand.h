@@ -29,7 +29,7 @@ namespace dae
 		MoveCommand& operator=(const MoveCommand& other) = delete;
 		MoveCommand& operator=(MoveCommand&& other) = delete;
 
-		void OnCollision(const physics::Collider*, const physics::CollisionPoints& points);
+		void OnCollision(const physics::Collider* other, const physics::CollisionPoints& points);
 
 	private:
 

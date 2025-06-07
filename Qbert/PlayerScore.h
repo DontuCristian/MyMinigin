@@ -32,7 +32,7 @@ namespace dae
 
 		private:
 			int m_CurrentScore{ 0 };
-			int m_MaxScore{1000};
+			int m_MaxScore{10000};
 
 			std::function<void(const physics::Collider*, const physics::CollisionPoints&)> m_OnCollisionCallback{};
     };

@@ -41,8 +41,13 @@ void dae::PlayerScore::OnCollision(const physics::Collider* other, const physics
 
 	if (points.Normal.y < 0 && points.Normal.x == 0)
 	{
-		int score = other->GetOwner()->GetComponent<dae::Block>()->CollidedWithPlayer();
-		IncreaseScore(score);
+		auto* block = other->GetOwner()->GetComponent<dae::Block>();
+
+		if (block)
+		{
+			int score = block->CollidedWithPlayer();
+			IncreaseScore(score);
+		}
 	}
 }
 

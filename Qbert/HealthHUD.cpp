@@ -26,8 +26,8 @@ void dae::HealthHUD::OnNotify(Event event, Subject*)
 {  
    if (event.id == make_sdbm_hash("HealthChanged"))  
    {  
-       int healthValue = std::any_cast<int>(event.args[0]);  
-       m_pTextRenderer->SetText("HP: " + std::to_string(healthValue));
+       int nrLives = std::any_cast<int>(event.args[0]);  
+       m_pTextRenderer->SetText("Lives: " + std::to_string(nrLives));
    }  
 }
 

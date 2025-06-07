@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 //Hash function used by the event
 template <int length> struct sdbm_hash
@@ -21,3 +22,10 @@ template <size_t N> constexpr unsigned int make_sdbm_hash(const char(&text)[N]) 
 	return sdbm_hash<N - 1>::calculate(text);
 }
 
+inline unsigned int make_sdbm_hash_str(const std::string& text)
+{
+	unsigned int hash = 0;
+	for (char c : text)
+		hash = c + (hash << 6) + (hash << 16) - hash;
+	return hash;
+}

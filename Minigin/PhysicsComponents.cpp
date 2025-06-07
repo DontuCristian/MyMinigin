@@ -49,10 +49,35 @@ void dae::physics::Collider::Render() const
 
 #ifdef _DEBUG
 	//Draw the collider
-	glm::vec2 pos = pTransform->GetWorldPosition() + Offset;
-	glm::vec2 size{ Width, Height };
-	SDL_Rect rect{ static_cast<int>(pos.x), static_cast<int>(pos.y), static_cast<int>(size.x), static_cast<int>(size.y) };
-	Renderer::GetInstance().RenderRect(rect, SDL_Color{ 255,0,0,255 });
+	glm::vec2 pos = pTransform->GetWorldPosition();
+
+	SDL_Rect rect{ static_cast<int>(pos.x) + static_cast<int>(Offset.x), static_cast<int>(pos.y) + static_cast<int>(Offset.y), static_cast<int>(Width), static_cast<int>(Height) };
+
+	if (IsColliding)
+	{
+		Renderer::GetInstance().RenderRect(rect, SDL_Color{ 0,255,0,255 });
+	}
+	else
+	{
+		Renderer::GetInstance().RenderRect(rect, SDL_Color{ 255,0,0,255 });
+	}
 #endif
 
-};
+}
+bool dae::physics::Collider::CompareTag(const std::string& tag) const
+{
+	if(tag.empty())
+		return false;
+
+	auto hash = make_sdbm_hash_str(tag);
+
+	return 	hash == m_Tag;
+}
+
+void dae::physics::Collider::SetTag(const std::string& tag)
+{
+	if (tag.empty())
+		return;
+	m_Tag = make_sdbm_hash_str(tag);
+}
+

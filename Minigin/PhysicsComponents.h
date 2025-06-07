@@ -2,6 +2,7 @@
 #include "BaseComponent.h"
 #include "glm.hpp"
 #include "Renderer.h"
+#include "Hash.h"
 #include <functional>
 #include <unordered_set>
 #include <iostream>
@@ -37,6 +38,8 @@ namespace dae::physics
 
 	};
 
+	using ColliderTag = uint32_t;
+
 	struct Collider : public BComponent
 	{
 		Collider(dae::GameObject& obj);
@@ -51,32 +54,74 @@ namespace dae::physics
 		glm::vec2 Offset; // Offset from the object's position
 		float Width;
 		float Height;
+		bool IsTrigger{ false };
+
+		bool WasColliding{ false }; // Was the collider colliding last frame?
+		bool IsColliding{ false }; // Is the collider colliding this frame?
+
+		bool WasCollidingTrigger{ false }; // Was the collider colliding with a trigger last frame?
+		bool IsCollidingTrigger{ false }; // Is the collider colliding with a trigger this frame?
+
+		bool CompareTag(const std::string& tag) const;
+
+		void SetTag(const std::string& tag);
 
 		void SetCollisionCallback(std::function<void(const Collider*, const CollisionPoints&)>& callback)
 		{ 
 			m_OnCollisionCallbacks.push_back(callback);
 		};
 
+		void SetTriggerCallback(std::function<void(const Collider*, const CollisionPoints&)>& callback)
+		{ 
+			m_OnTriggerCallbacks.push_back(callback);
+		};
+
 		void OnCollision(const Collider* other, const CollisionPoints& points)
 		{ 
-			for (const auto& onCollision : m_OnCollisionCallbacks)
+			if (other->IsTrigger == false)
 			{
+				for (const auto& onCollision : m_OnCollisionCallbacks)
+				{
+					if (onCollision && (!WasColliding && IsColliding))
+					{
 #ifdef _DEBUG
-				std::cout << "WasColliding: " << WasColliding << " IsColliding: " << IsColliding << std::endl;
+						//std::cout << "WasColliding: " << WasColliding << " IsColliding: " << IsColliding << std::endl;
+						std::cout << "OnCollision called! " << std::endl;
+#endif // _DEBUG
+						onCollision(other, points);
+					}
+				}
+
+			}
+		}
+
+		void OnTrigger(const Collider* other, const CollisionPoints& points)
+		{
+			if (other->IsTrigger == true)
+			{
+				for (const auto& onTrigger : m_OnTriggerCallbacks)
+				{
+#ifdef _DEBUG
+					std::cout << "WasCollidingTrigger: " << WasCollidingTrigger << " IsCollidingTrigger: " << IsCollidingTrigger << std::endl;
 #endif // _DEBUG
 
-				if (onCollision && (!WasColliding && IsColliding))
-				{
-					onCollision(other, points);
+
+					if (onTrigger && (!WasCollidingTrigger && IsCollidingTrigger))
+					{
+						#ifdef _DEBUG
+					std::cout << "OnTrigger called! " << std::endl;
+#endif // _DEBUG
+						onTrigger(other, points);
+					}
 				}
 			}
 		}
 
-		bool WasColliding{ false }; // Was the collider colliding last frame?
-		bool IsColliding{ false }; // Is the collider colliding this frame?
-
 	private:
 
 		std::vector<std::function<void(const Collider*, const CollisionPoints&)>> m_OnCollisionCallbacks;
+		std::vector<std::function<void(const Collider*, const CollisionPoints&)>> m_OnTriggerCallbacks;
+
+		ColliderTag m_Tag{ 0 };
 	};
 }

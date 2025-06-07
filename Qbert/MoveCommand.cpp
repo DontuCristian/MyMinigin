@@ -27,7 +27,9 @@ void dae::MoveCommand::Execute()
 		GetGameObject()->GetComponent<physics::RigidBody>()->AddForce(m_Direction, m_Force);
 		ServiceLocator::GetSoundService().PlaySound("../Data/Sounds/QBertJump.mp3", 0, 4);
 
+#ifdef _DEBUG
 		std::cout << "Direction: " << m_Direction.x << ", " << m_Direction.y << std::endl;
+#endif
 
 		if(m_Direction.x > 0 && m_Direction.y < -0.98)
 			m_pSpriteRenderer->SetRowIdx(0);
@@ -45,11 +47,14 @@ void dae::MoveCommand::Execute()
 	}
 }
 
-void dae::MoveCommand::OnCollision(const physics::Collider*, const physics::CollisionPoints& points)
+void dae::MoveCommand::OnCollision(const physics::Collider* other, const physics::CollisionPoints& points)
 {
-	if (points.Normal.y < 0 && points.Normal.x == 0)
+	if (!other->IsTrigger)
 	{
-		m_pSpriteRenderer->StopAnim();
-		m_isGrounded = true;
+		if (points.Normal.y < 0 && points.Normal.x == 0)
+		{
+			m_pSpriteRenderer->StopAnim();
+			m_isGrounded = true;
+		}
 	}
 }
