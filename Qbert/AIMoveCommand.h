@@ -14,28 +14,26 @@ namespace dae
 
 	class GameObject;
 	class SpriteRenderer;
-	
-	class MoveCommand final : public CommandObject
+
+	class AIMoveCommand final :public CommandObject
 	{
 	public:
+		AIMoveCommand(GameObject& object, glm::vec2 direction, float force);
+		virtual ~AIMoveCommand() {};
 
-		MoveCommand(GameObject& object, glm::vec2 direction, float force);
-		virtual ~MoveCommand() {};
+		void Execute() override;
 
-		virtual void Execute() override;
-
-		MoveCommand(const MoveCommand& other) = delete;
-		MoveCommand(MoveCommand&& other) = delete;
-		MoveCommand& operator=(const MoveCommand& other) = delete;
-		MoveCommand& operator=(MoveCommand&& other) = delete;
+		AIMoveCommand(const AIMoveCommand& other) = delete;
+		AIMoveCommand(AIMoveCommand&& other) = delete;
+		AIMoveCommand& operator=(const AIMoveCommand& other) = delete;
+		AIMoveCommand& operator=(AIMoveCommand&& other) = delete;
 
 		void OnCollision(const physics::Collider* other, const physics::CollisionPoints& points);
 
-	protected:
-
+	private:
 		glm::vec2 m_Direction{};
 		float m_Force{};
-		inline static bool m_isGrounded{};
+		bool m_isGrounded{};
 
 		SpriteRenderer* m_pSpriteRenderer{ nullptr };
 

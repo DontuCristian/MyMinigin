@@ -9,15 +9,19 @@ void dae::physics::AABB_Physics::FixedUpdate()
 {
 	for (RigidBody* rb : m_RigidBodies)
 	{
-		glm::vec2 gravity = rb->Gravity * rb->GravityScale;
-		rb->Force += gravity * rb->Mass; // Apply gravity to the force
-		rb->Velocity += rb->Force / rb->Mass * Timer::GetInstance().GetFixedDeltaTime(); // Update velocity based on force
+		if (!rb->IsKinematic)
+		{
+			glm::vec2 gravity = rb->Gravity * rb->GravityScale;
+			rb->Force += gravity * rb->Mass; // Apply gravity to the force
 
-		glm::vec2 positionOffset = rb->pTransform->GetLocalPosition() + rb->Velocity;
-		rb->pTransform->SetLocalPosition(positionOffset); // Update position based on velocity
+			rb->Velocity += rb->Force / rb->Mass * Timer::GetInstance().GetFixedDeltaTime(); // Update velocity based on force
 
-		//Reset the force for the next frame
-		rb->Force = glm::vec2{ 0,0 };
+			glm::vec2 positionOffset = rb->pTransform->GetLocalPosition() + rb->Velocity;
+			rb->pTransform->SetLocalPosition(positionOffset); // Update position based on velocity
+
+			//Reset the force for the next frame
+			rb->Force = glm::vec2{ 0,0 };
+		}
 	}
 
 	ResolveCollisions();
@@ -50,23 +54,28 @@ void dae::physics::AABB_Physics::ResolveCollisions()
 	std::vector<Collision> collisions;
 	for (Collider* collider : m_Colliders)
 	{
-		collider->IsColliding = false; // Reset collision state for the next frame
-		collider->IsCollidingTrigger = false; // Reset trigger state for the next frame
+		collider->IsColliding = false;
+		collider->CollidingWithThisFrame.clear(); // Clear for this frame
 	}
 
- 	for (Collider* colliderA : m_Colliders)
+	for (Collider* colliderA : m_Colliders)
 	{
 		for (Collider* colliderB : m_Colliders)
 		{
-			//Break if we are comparing the same collider
 			if (colliderA == colliderB)
 				break;
 
 			CollisionPoints points = TestCollisions(*colliderA, *colliderB);
 
-			if ((colliderA->IsColliding || colliderA->IsCollidingTrigger) && (colliderB->IsColliding || colliderB->IsCollidingTrigger))
+			bool isColliding = (colliderA->IsColliding && colliderB->IsColliding);
+
+			if (isColliding)
 			{
 				collisions.emplace_back(colliderA, colliderB, points);
+
+				// Track this collision for both colliders
+				colliderA->CollidingWithThisFrame.insert(colliderB);
+				colliderB->CollidingWithThisFrame.insert(colliderA);
 			}
 		}
 	}
@@ -79,12 +88,13 @@ void dae::physics::AABB_Physics::ResolveCollisions()
 		}
 	}
 
+	// Callbacks for new collisions
 	SendCollisionCallback(collisions);
 
+	// Update last frame set
 	for (Collider* collider : m_Colliders)
 	{
-		collider->WasColliding = collider->IsColliding; 
-		collider->WasCollidingTrigger = collider->IsCollidingTrigger;
+		collider->CollidingWithLastFrame = std::move(collider->CollidingWithThisFrame);
 	}
 }
 
@@ -92,11 +102,25 @@ void dae::physics::AABB_Physics::SendCollisionCallback(std::vector<Collision>& c
 {  
 	for (Collision& collision : collisions)
 	{
-		collision.pColliderA->OnCollision(collision.pColliderB, collision.points);
-		collision.pColliderB->OnCollision(collision.pColliderA, collision.points);
+		// Only send OnCollision if this is a new collision for A
+		if (collision.pColliderA->CollidingWithLastFrame.find(collision.pColliderB) == collision.pColliderA->CollidingWithLastFrame.end())
+		{
+			collision.pColliderA->OnCollision(collision.pColliderB, collision.points);
+		}
+		// Only send OnCollision if this is a new collision for B
+		if (collision.pColliderB->CollidingWithLastFrame.find(collision.pColliderA) == collision.pColliderB->CollidingWithLastFrame.end())
+		{
+			collision.pColliderB->OnCollision(collision.pColliderA, collision.points);
+		}
 
-		collision.pColliderA->OnTrigger(collision.pColliderB, collision.points);
-		collision.pColliderB->OnTrigger(collision.pColliderA, collision.points);
+		// Triggers (if you want to handle them similarly)
+		if (collision.pColliderA->IsTrigger || collision.pColliderB->IsTrigger)
+		{
+			if (collision.pColliderA->CollidingWithLastFrame.find(collision.pColliderB) == collision.pColliderA->CollidingWithLastFrame.end())
+				collision.pColliderA->OnTrigger(collision.pColliderB, collision.points);
+			if (collision.pColliderB->CollidingWithLastFrame.find(collision.pColliderA) == collision.pColliderB->CollidingWithLastFrame.end())
+				collision.pColliderB->OnTrigger(collision.pColliderA, collision.points);
+		}
 	}
 }
 
@@ -139,24 +163,9 @@ dae::physics::CollisionPoints dae::physics::AABB_Physics::TestCollisions(Collide
 		{
 			points.Normal = (aPos.y < bPos.y) ? glm::vec2(0.0f, -1.0f) : glm::vec2(0.0f, 1.0f);
 		}
-
-		if (b.IsTrigger)
-		{
-			a.IsCollidingTrigger = true;
-		}
-		else
-		{
-			a.IsColliding = true;
-		}
-
-		if (a.IsTrigger)
-		{
-			b.IsCollidingTrigger = true;
-		}
-		else
-		{
-			b.IsColliding = true;
-		}
+		
+		a.IsColliding = true;
+		b.IsColliding = true;
 	}
 
 	return points;

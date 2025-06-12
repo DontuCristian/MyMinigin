@@ -3,6 +3,7 @@
 namespace dae
 {
 	class GameObject;
+	class Transform;
 
 	class BComponent
 	{
@@ -19,6 +20,24 @@ namespace dae
 		virtual void Render() const = 0;
 
 		GameObject* GetOwner() const { return m_pOwner; }
+
+		//Helper functions to access components of the owner GameObject thorugh other components
+		//template <typename Component>
+		//	requires std::derived_from<Component, BComponent>
+		//Component* GetOwnerComponent() const
+		//{
+		//	return m_pOwner->GetComponent<Component>();
+		//}
+		//
+		//template <typename Component>
+		//	requires std::derived_from<Component, BComponent>
+		//bool HasOwnerComponent() const
+		//{
+		//	return m_pOwner->HasComponent<Component>();
+		//}
+
+		Transform* GetOwnerTransform() const;
+
 	protected:
 
 		explicit BComponent(GameObject& owner) { m_pOwner = &owner; };

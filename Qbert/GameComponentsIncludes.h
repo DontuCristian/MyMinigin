@@ -4,4 +4,8 @@
 #include "PlayerScore.h"
 #include "ScoreHUD.h"
 #include "PhysicsComponents.h"
+#include "DeathHandlerComponent.h"
+#include "Platform.h"
 #include "Block.h"
+#include "WrongWay.h"
+#include "Coily.h"

@@ -30,10 +30,14 @@ namespace dae
 
 		int CollidedWithPlayer();
 
+		void SetIsEdge(bool isEdge) { m_IsEdge = isEdge; }
+		bool IsEdge() { return m_IsEdge; }
+
 	private:
 
 		const int m_NrOfColorChanges{ 2 };
 		int m_ColorChangeCounter{ 0 };
+		bool m_IsEdge{ false };
 
 		SpriteRenderer* m_pSpriteRenderer{ nullptr };
 	};

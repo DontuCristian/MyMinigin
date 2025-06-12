@@ -28,13 +28,12 @@ namespace dae
 
 			void IncreaseScore(int ammmount);
 
-			void OnCollision(const physics::Collider* other, const physics::CollisionPoints& points);
-
 		private:
 			int m_CurrentScore{ 0 };
 			int m_MaxScore{10000};
 
 			std::function<void(const physics::Collider*, const physics::CollisionPoints&)> m_OnCollisionCallback{};
+			void OnCollision(const physics::Collider* other, const physics::CollisionPoints& points);
     };
 }
 

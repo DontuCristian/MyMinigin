@@ -9,19 +9,19 @@ void dae::SceneManager::Update()
 	}
 }
 
-void dae::SceneManager::FixedUpdate()
-{
-	for (auto& scene : m_scenes)
-	{
-		scene->FixedUpdate();
-	}
-}
-
 void dae::SceneManager::Render()
 {
 	for (const auto& scene : m_scenes)
 	{
 		scene->Render();
+	}
+}
+
+void dae::SceneManager::Cleanup()
+{
+	for (auto& scene : m_scenes)
+	{
+		scene->Cleanup();
 	}
 }
 

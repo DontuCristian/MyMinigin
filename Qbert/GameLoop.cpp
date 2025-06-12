@@ -12,8 +12,8 @@ void dae::GameLoop::ChangeState(std::unique_ptr<GameState> newState) {
 
     m_pCurrentState = std::move(newState);
 
-    if (m_pCurrentState)
-        m_pCurrentState->Enter();
+    //if (m_pCurrentState)
+    //    m_pCurrentState->Enter();
 }
 
 dae::GameState* dae::GameLoop::GetCurrentState() const {

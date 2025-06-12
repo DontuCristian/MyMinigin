@@ -28,7 +28,7 @@ void dae::MoveCommand::Execute()
 		ServiceLocator::GetSoundService().PlaySound("../Data/Sounds/QBertJump.mp3", 0, 4);
 
 #ifdef _DEBUG
-		std::cout << "Direction: " << m_Direction.x << ", " << m_Direction.y << std::endl;
+		//std::cout << "Direction: " << m_Direction.x << ", " << m_Direction.y << std::endl;
 #endif
 
 		if(m_Direction.x > 0 && m_Direction.y < -0.98)
@@ -49,7 +49,7 @@ void dae::MoveCommand::Execute()
 
 void dae::MoveCommand::OnCollision(const physics::Collider* other, const physics::CollisionPoints& points)
 {
-	if (!other->IsTrigger)
+	if (!other->IsTrigger && other->CompareTag("Block"))
 	{
 		if (points.Normal.y < 0 && points.Normal.x == 0)
 		{

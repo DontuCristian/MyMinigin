@@ -34,19 +34,25 @@ void Scene::Update()
 	}
 }
 
-void dae::Scene::FixedUpdate()
-{
-	for (auto& object : m_objects)
-	{
-		object->FixedUpdate();
-	}
-}
-
 void Scene::Render() const
 {
 	for (const auto& object : m_objects)
 	{
 		object->Render();
+	}
+}
+
+void Scene::Cleanup()
+{
+	for (auto& object : m_objects)
+	{
+		if (object != nullptr)
+		{
+			if (object->ShouldBeDeleted())
+			{
+				Remove(object);
+			}
+		}
 	}
 }
 

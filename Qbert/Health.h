@@ -26,14 +26,13 @@ namespace dae
 		void Update() override;
 		void Render() const override;
 
-		void LoseLife();
-
-		void OnTrigger(const physics::Collider* other, const physics::CollisionPoints&);
+		void LoseLife(bool byEnemy);
 		
 	private:
 		int m_NrLives{ 3 };
 		int m_MaxNrLives{ 3 };
 
+		void OnTrigger(const physics::Collider* other, const physics::CollisionPoints& points);
 		std::function<void(const physics::Collider*, const physics::CollisionPoints&)> m_OnTriggerCallback{};
 	};
 }

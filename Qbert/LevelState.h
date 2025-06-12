@@ -5,13 +5,15 @@
 
 namespace dae
 {
+    class GameObject;
+
     class LevelState : public GameState {
     public:
         LevelState(int levelNumber);
 
-        void Enter() override;
-        void Update() override;
-        void Render() override;
+        void Enter(GameObject& obj) override;
+        GameState* Update() override { return this; };
+        void Render() const override {};
         void Exit() override;
 
         bool IsLevelComplete() const;

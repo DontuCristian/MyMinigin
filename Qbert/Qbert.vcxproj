@@ -148,20 +148,35 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Block.cpp" />
+    <ClCompile Include="Coily.cpp" />
+    <ClCompile Include="CoilyBallState.cpp" />
+    <ClCompile Include="CoilySnakeState.cpp" />
+    <ClCompile Include="CoilySnakeStateAI.cpp" />
+    <ClCompile Include="CoilyState.cpp" />
+    <ClCompile Include="DeathHandlerComponent.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Health.cpp" />
     <ClCompile Include="HealthHUD.cpp" />
     <ClCompile Include="MoveCommand.cpp" />
+    <ClCompile Include="AIMoveCommand.cpp" />
+    <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlatformSolver.cpp" />
     <ClCompile Include="Qbert.cpp">
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdcpp20</LanguageStandard>
       <LanguageStandard Condition="'$(Configuration)|$(Platform)'=='Release|x64'">stdcpp20</LanguageStandard>
     </ClCompile>
     <ClCompile Include="PlayerScore.cpp" />
+    <ClCompile Include="WrongWay.cpp" />
     <ClCompile Include="ScoreHUD.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Block.h" />
+    <ClInclude Include="Coily.h" />
+    <ClInclude Include="CoilyBallState.h" />
+    <ClInclude Include="CoilySnakeState.h" />
+    <ClInclude Include="CoilySnakeStateAI.h" />
+    <ClInclude Include="CoilyState.h" />
+    <ClInclude Include="DeathHandlerComponent.h" />
     <ClInclude Include="EndState.h" />
     <ClInclude Include="GameCommands.h" />
     <ClInclude Include="GameComponentsIncludes.h" />
@@ -172,12 +187,19 @@
     <ClInclude Include="IntroState.h" />
     <ClInclude Include="LevelState.h" />
     <ClInclude Include="MoveCommand.h" />
+    <ClInclude Include="AIMoveCommand.h" />
+    <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformSolver.h" />
     <ClInclude Include="PlayerScore.h" />
+    <ClInclude Include="WrongWay.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ScoreHUD.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Qbert.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

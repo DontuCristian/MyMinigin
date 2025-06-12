@@ -19,6 +19,11 @@ void dae::Health::Update()
 		Event event(make_sdbm_hash("PlayerDied"));
 		NotifyObservers(event);
 	}
+
+	if (GetOwner()->GetTransform()->GetWorldPosition().y > 480)
+	{
+		LoseLife(false);
+	}
 }
 
 void dae::Health::Render() const
@@ -26,22 +31,37 @@ void dae::Health::Render() const
 	//The health component doesn't render anything
 }
 
-void dae::Health::LoseLife()
+void dae::Health::LoseLife(bool byEnemy)
 {
 	m_NrLives --;
 	m_NrLives = std::clamp(m_NrLives,0,m_MaxNrLives);
 
-	Event event(make_sdbm_hash("HealthChanged"));
-	event.args[0] = static_cast<std::any>(m_NrLives);
-	NotifyObservers(event);
+	Event healthChangedEvent(make_sdbm_hash("HealthChanged"));
+	healthChangedEvent.args[0] = static_cast<std::any>(m_NrLives);
+	NotifyObservers(healthChangedEvent);
+
+	if (byEnemy)
+	{
+		Event playerDeathEvent(make_sdbm_hash("PlayerKilledByEnemy"));
+		NotifyObservers(playerDeathEvent);
+	}
+	else
+	{
+		Event playerDeathEvent(make_sdbm_hash("PlayerKilledByKillZone"));
+		NotifyObservers(playerDeathEvent);
+	}
 
 	ServiceLocator::GetSoundService().PlaySound("../Data/Sounds/QBertJump.mp3", 0,0.5f, false);
 }
 
-void dae::Health::OnTrigger(const physics::Collider* other, const physics::CollisionPoints&)
+void dae::Health::OnTrigger(const physics::Collider* other, const physics::CollisionPoints& points)
 {
 	if (other->CompareTag("KillZone"))
 	{
-		LoseLife();
+		if (points.Normal.y < 0 && points.Normal.x == 0)
+		{
+			LoseLife(false);
+		}
 	}
 }
+

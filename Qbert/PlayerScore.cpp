@@ -37,16 +37,17 @@ void dae::PlayerScore::IncreaseScore(int ammmount)
 
 void dae::PlayerScore::OnCollision(const physics::Collider* other, const physics::CollisionPoints& points)
 {
-	std::cout << "Player collided with something, HEY!!! " << std::endl;
-
-	if (points.Normal.y < 0 && points.Normal.x == 0)
+	if (other->CompareTag("Block"))
 	{
-		auto* block = other->GetOwner()->GetComponent<dae::Block>();
-
-		if (block)
+		if (points.Normal.y < 0 && points.Normal.x == 0)
 		{
-			int score = block->CollidedWithPlayer();
-			IncreaseScore(score);
+			auto* block = other->GetOwner()->GetComponent<dae::Block>();
+
+			if (block)
+			{
+				int score = block->CollidedWithPlayer();
+				IncreaseScore(score);
+			}
 		}
 	}
 }

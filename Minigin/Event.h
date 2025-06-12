@@ -18,5 +18,6 @@ namespace dae
 		EventArgs args[MAX_ARGS];
 
 		Event(EventId _id) :id{ _id } {}
+
 	};
 }

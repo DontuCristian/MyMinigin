@@ -14,7 +14,6 @@ namespace dae
 	{
 	public:
 		virtual void Update();
-		virtual void FixedUpdate();
 		virtual void Render() const;
 
 		bool SetParent(GameObject* parent, bool keepWorldPos);
@@ -29,6 +28,7 @@ namespace dae
 		//The GameObject owns the components and manages it's lifetime that's why we 
 		//return a normal pointer
 		template <typename Component>
+			requires std::derived_from<Component, BComponent>
 		Component* GetComponent() const
 		{
 			auto it = m_ComponentsMap.find(std::type_index(typeid(Component)));
@@ -43,14 +43,16 @@ namespace dae
 			return nullptr;
 		}
 
-		template <typename Component>
-		void AddComponent() //Adds a component of that type to the object, the component is default initialized
+		template <typename Component, typename... Args>
+			requires std::derived_from<Component, BComponent>
+		void AddComponent(Args... args) //Adds a component of that type to the object, the component is default initialized
 		{
-			auto component = std::make_unique<Component>(*this);
+			auto component = std::make_unique<Component>(*this, std::forward<Args>(args)...);
 			m_ComponentsMap.insert({ std::type_index(typeid(Component)), std::move(component) });
 		}
 
 		template <typename Component>
+			requires std::derived_from<Component, BComponent>
 		bool HasComponent() const //Checks if a component of the given type exists
 		{
 			auto it = m_ComponentsMap.find(std::type_index(typeid(Component)));
@@ -76,6 +78,9 @@ namespace dae
 		GameObject* GetParent(); //Returns the object's parent
 		const std::vector<GameObject*>& GetChildren() const;
 		bool HasParent(); //Checks if a parent exists
+
+		void FlagForDeletion();  // Flag for deleteion and remove all children
+		bool ShouldBeDeleted() const { return m_ShouldBeDeleted; } //Checks if the object should be deleted
 	
 		GameObject();
 		virtual ~GameObject();
@@ -94,6 +99,8 @@ namespace dae
 		//For the scene graph
 		GameObject* m_Parent{};
 		std::vector<GameObject*> m_Children{};
+
+		bool m_ShouldBeDeleted{ false }; //Flag to mark the object for deletion
 
 		//Private members
 		bool IsChild(GameObject* obj);

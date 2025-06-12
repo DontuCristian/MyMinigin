@@ -25,43 +25,53 @@ void dae::physics::PlatformSolver::SolveCollision(const Collision& collision)
     if (velocityAlongNormal > 0)
         return;
 
-    if (collision.points.Normal.y < 0 && collision.points.Normal.x == 0)
+    if ((collision.pRigidBodyA && !collision.pRigidBodyB) && !collision.pRigidBodyA->IsKinematic) 
     {
-        if (collision.pRigidBodyA) {
+        if (collision.pColliderA->CompareTag("WrongWay"))
+        {
+            auto dot = glm::dot(normal, collision.pRigidBodyA->Gravity);
+            dot;
+        }
 
+        if (glm::dot(normal, collision.pRigidBodyA->Gravity) == -1)
+        {
             // Apply impulse to counteract gravity if collision is mostly vertical
             float gravityCounterImpulse = collision.pRigidBodyA->GravityScale;
             collision.pRigidBodyA->AddForce(-collision.pRigidBodyA->Gravity, gravityCounterImpulse);
             collision.pRigidBodyA->Velocity = glm::vec2(0.0f, 0.0f);
 
             // Slightly push the character out to prevent sticking
-            //collision.pColliderA->pTransform->SetLocalPosition(collision.pColliderA->pTransform->GetLocalPosition() + normal * collision.points.Depth);
+            //collision.pColliderA->pTransform->SetLocalPosition(collision.pColliderA->pTransform->GetLocalPosition() + normal * (collision.points.Depth*0.2f));
 
+            //Center the character on the collider
+            auto colBPosX = collision.pColliderB->pTransform->GetWorldPosition().x;
+            auto colAPosY = collision.pColliderA->pTransform->GetWorldPosition().y;
+
+            collision.pColliderA->pTransform->SetLocalPosition(colBPosX, colAPosY);
         }
-        if (collision.pRigidBodyB) {
+    }
+    if ((collision.pRigidBodyB && !collision.pRigidBodyA) && !collision.pRigidBodyB->IsKinematic)
+    {
+            auto dot = glm::dot(normal, collision.pRigidBodyB->Gravity);
+            dot;       
+
+        if (glm::dot(normal, collision.pRigidBodyB->Gravity) == -1)
+        {
             // Apply impulse to counteract gravity if collision is mostly vertical
             float gravityCounterImpulse = collision.pRigidBodyB->GravityScale;
             collision.pRigidBodyB->AddForce(-collision.pRigidBodyB->Gravity, gravityCounterImpulse);
             collision.pRigidBodyB->Velocity = glm::vec2(0.0f, 0.0f);
 
             // Slightly push the character out to prevent sticking
-            // collision.pColliderB->pTransform->SetLocalPosition(collision.pColliderB->pTransform->GetLocalPosition() + normal * collision.points.Depth);
-        }
-
-        //Center the carachter on the collider
-        if (collision.pRigidBodyA && !collision.pRigidBodyB)
-        {
-            auto colBPosX = collision.pColliderB->pTransform->GetWorldPosition().x;
-            auto colAPosY = collision.pColliderA->pTransform->GetWorldPosition().y;
-
-            collision.pColliderA->pTransform->SetLocalPosition(colBPosX, colAPosY);
-        }
-        if (collision.pRigidBodyB && !collision.pRigidBodyB)
-        {
+            //collision.pColliderB->pTransform->SetLocalPosition(collision.pColliderB->pTransform->GetLocalPosition() + normal * collision.points.Depth);
+            
+            //Center the character on the collider
             auto colBPosX = collision.pColliderA->pTransform->GetWorldPosition().x;
             auto colAPosY = collision.pColliderB->pTransform->GetWorldPosition().y;
 
             collision.pColliderB->pTransform->SetLocalPosition(colBPosX, colAPosY);
+        
         }
     }
+
 }

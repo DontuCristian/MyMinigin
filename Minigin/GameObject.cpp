@@ -29,15 +29,6 @@ void dae::GameObject::Update()
 	}
 }
 
-void dae::GameObject::FixedUpdate() 
-{
-	for (auto& [type, component] : m_ComponentsMap)
-	{
-		//Fix it, for later me to deal with it
-		//component->FixedUpdate();
-	}
-}
-
 void dae::GameObject::Render() const
 {
 	for (auto& [type, component] : m_ComponentsMap)
@@ -96,6 +87,15 @@ dae::GameObject* dae::GameObject::GetParent()
 bool dae::GameObject::HasParent()
 {
 	return m_Parent != nullptr;
+}
+void dae::GameObject::FlagForDeletion()
+{
+	m_ShouldBeDeleted = true;
+
+	for (auto* child : m_Children)
+	{
+		child->SetParent(nullptr, true);
+	}
 }
 const std::vector<dae::GameObject*>& dae::GameObject::GetChildren() const
 {

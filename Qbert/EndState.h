@@ -3,14 +3,16 @@
 
 namespace dae
 {
+    class GameObject;
+
     class EndState : public GameState {
     public:
-        void Enter() override;
-        void Update() override;
-        void Render() override;
+        void Enter(GameObject& obj) override;
+        GameState* Update() override { return this; };
+        void Render() const override {};
         void Exit() override;
 
     private:
-        bool m_restart = false;
+        bool m_Restart = false;
     };
 }

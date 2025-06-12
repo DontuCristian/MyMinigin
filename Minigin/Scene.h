@@ -13,8 +13,8 @@ namespace dae
 		void RemoveAll();
 
 		void Update();
-		void FixedUpdate();
 		void Render() const;
+		void Cleanup();
 
 		~Scene();
 		Scene(const Scene& other) = delete;

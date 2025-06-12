@@ -115,13 +115,13 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
         while (lag >= timer.GetFixedDeltaTime())
         {
-            sceneManager.FixedUpdate();
 			physics.FixedUpdate();
             timer.FixedUpdate();
             lag -= timer.GetFixedDeltaTime();
         }
 
         renderer.Render();
+		SceneManager::GetInstance().Cleanup();
 
         auto smth = timer.GetThisMoment();
         const auto sleepTime{ frameStart + std::chrono::milliseconds(16) - smth };
