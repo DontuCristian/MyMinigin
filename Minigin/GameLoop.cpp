@@ -1,9 +1,15 @@
 #include "GameLoop.h"
 #include "GameState.h"
 
-dae::GameLoop::~GameLoop() {
+dae::GameLoop::~GameLoop() 
+{
     if (m_pCurrentState)
         m_pCurrentState->Exit();
+}
+
+void dae::GameLoop::Update()
+{
+    m_pCurrentState->Update();
 }
 
 void dae::GameLoop::ChangeState(std::unique_ptr<GameState> newState) {
@@ -12,8 +18,8 @@ void dae::GameLoop::ChangeState(std::unique_ptr<GameState> newState) {
 
     m_pCurrentState = std::move(newState);
 
-    //if (m_pCurrentState)
-    //    m_pCurrentState->Enter();
+    if (m_pCurrentState)
+        m_pCurrentState->Enter();
 }
 
 dae::GameState* dae::GameLoop::GetCurrentState() const {

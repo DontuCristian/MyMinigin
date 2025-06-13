@@ -27,6 +27,8 @@ namespace dae
 		void Render() const override;
 
 		void LoseLife(bool byEnemy);
+
+		bool IsDead() const { return m_NrLives <= 0; }
 		
 	private:
 		int m_NrLives{ 3 };
@@ -34,6 +36,9 @@ namespace dae
 
 		void OnTrigger(const physics::Collider* other, const physics::CollisionPoints& points);
 		std::function<void(const physics::Collider*, const physics::CollisionPoints&)> m_OnTriggerCallback{};
+
+		void OnCollision(const physics::Collider* other, const physics::CollisionPoints&);
+		std::function<void(const physics::Collider*, const physics::CollisionPoints&)> m_OnCollisionCallback{};
 	};
 }
 

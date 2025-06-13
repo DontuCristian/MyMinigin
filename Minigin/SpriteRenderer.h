@@ -38,14 +38,23 @@ namespace dae
 		void SetFrameIdx(int frame) { m_FrameData->CurrentFrame = frame; };
 		void SetRowIdx(int row) { m_FrameData->RowIdx = row; };
 
-		int GetFrameWidth() { return m_FrameData->FrameWidth; }
-		int GeyFrameHeight() { return m_FrameData->FrameHeight; }
+		int GetFrameWidth() 
+		{ 
+			return m_FrameData->FrameWidth; 
+		}
+		int GeyFrameHeight() 
+		{ 
+			return m_FrameData->FrameHeight;
+		 }
 
 		void PlayAnim() { m_isAnimated = true; };
 		void StopAnim() 
 		{ 
-			m_isAnimated = false; 
-			m_FrameData->CurrentFrame = 0;
+			if (m_FrameData.get())
+			{
+				m_isAnimated = false;
+				m_FrameData->CurrentFrame = 0;
+			}
 		};
 		void PauseAnim() { m_isAnimated = false; }
 	private:

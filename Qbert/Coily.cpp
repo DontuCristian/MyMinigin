@@ -13,7 +13,6 @@ dae::Coily::Coily(GameObject& obj, Transform* playerTransform):
 
 dae::Coily::~Coily()
 {
-	delete m_pCoilyState;
 }
 
 void dae::Coily::Update()

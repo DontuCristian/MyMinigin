@@ -65,6 +65,7 @@ void dae::physics::AABB_Physics::ResolveCollisions()
 			if (colliderA == colliderB)
 				break;
 
+
 			CollisionPoints points = TestCollisions(*colliderA, *colliderB);
 
 			bool isColliding = (colliderA->IsColliding && colliderB->IsColliding);
@@ -113,7 +114,7 @@ void dae::physics::AABB_Physics::SendCollisionCallback(std::vector<Collision>& c
 			collision.pColliderB->OnCollision(collision.pColliderA, collision.points);
 		}
 
-		// Triggers (if you want to handle them similarly)
+		// Triggers
 		if (collision.pColliderA->IsTrigger || collision.pColliderB->IsTrigger)
 		{
 			if (collision.pColliderA->CollidingWithLastFrame.find(collision.pColliderB) == collision.pColliderA->CollidingWithLastFrame.end())
@@ -147,9 +148,13 @@ dae::physics::CollisionPoints dae::physics::AABB_Physics::TestCollisions(Collide
 
 	CollisionPoints points{};
 
+	a.IsColliding = false;
+	b.IsColliding = false;
+
 	if (isColliding)
 	{
-		// Calculate the penetration depth (optional, for more advanced collision resolution)
+
+		// Calculate the penetration depth
 		float overlapX = std::min(aRight, bRight) - std::max(aLeft, bLeft);
 		float overlapY = std::min(aBottom, bBottom) - std::max(aTop, bTop);
 
@@ -163,7 +168,7 @@ dae::physics::CollisionPoints dae::physics::AABB_Physics::TestCollisions(Collide
 		{
 			points.Normal = (aPos.y < bPos.y) ? glm::vec2(0.0f, -1.0f) : glm::vec2(0.0f, 1.0f);
 		}
-		
+
 		a.IsColliding = true;
 		b.IsColliding = true;
 	}

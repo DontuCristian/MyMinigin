@@ -216,9 +216,11 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     <ClInclude Include="Event.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FPSRenderer.h" />
+    <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="EngineComponentsIncludes.h" />
     <ClInclude Include="Gamepad.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="Hash.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Keyboard.h" />
@@ -255,6 +257,7 @@ xcopy "$(SolutionDir)3rdParty\steam_appid.txt" "$(OutputPath)" /Y</Command>
     <ClCompile Include="..\3rdParty\imgui-1.91.8\imgui_widgets.cpp" />
     <ClCompile Include="AABB_Physics.cpp" />
     <ClCompile Include="BaseComponent.cpp" />
+    <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FPSRenderer.cpp" />

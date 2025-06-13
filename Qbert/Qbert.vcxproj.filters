@@ -42,12 +42,6 @@
     <ClCompile Include="Block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameLoop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DeathHandlerComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Platform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -78,8 +72,23 @@
     <ClCompile Include="CoilySnakeState.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="CoilyState.cpp">
+    <ClCompile Include="LevelBuilder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelState.cpp">
       <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyDeathHandler.cpp">
+      <Filter>EnemiesComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathHandlerComponent.cpp">
+      <Filter>PlayerComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuSelector.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -96,9 +105,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Block.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameLoop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -121,12 +127,6 @@
     </ClInclude>
     <ClInclude Include="Health.h">
       <Filter>PlayerComponents</Filter>
-    </ClInclude>
-    <ClInclude Include="DeathHandlerComponent.h">
-      <Filter>Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>States</Filter>
     </ClInclude>
     <ClInclude Include="LevelState.h">
       <Filter>States</Filter>
@@ -154,6 +154,21 @@
     </ClInclude>
     <ClInclude Include="CoilyState.h">
       <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathHandlerComponent.h">
+      <Filter>PlayerComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyDeathHandler.h">
+      <Filter>EnemiesComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuSelector.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

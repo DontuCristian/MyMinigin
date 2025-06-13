@@ -27,11 +27,8 @@ void dae::physics::PlatformSolver::SolveCollision(const Collision& collision)
 
     if ((collision.pRigidBodyA && !collision.pRigidBodyB) && !collision.pRigidBodyA->IsKinematic) 
     {
-        if (collision.pColliderA->CompareTag("WrongWay"))
-        {
-            auto dot = glm::dot(normal, collision.pRigidBodyA->Gravity);
-            dot;
-        }
+        auto dot = glm::dot(normal, collision.pRigidBodyA->Gravity);
+        dot;
 
         if (glm::dot(normal, collision.pRigidBodyA->Gravity) == -1)
         {
@@ -44,10 +41,20 @@ void dae::physics::PlatformSolver::SolveCollision(const Collision& collision)
             //collision.pColliderA->pTransform->SetLocalPosition(collision.pColliderA->pTransform->GetLocalPosition() + normal * (collision.points.Depth*0.2f));
 
             //Center the character on the collider
-            auto colBPosX = collision.pColliderB->pTransform->GetWorldPosition().x;
-            auto colAPosY = collision.pColliderA->pTransform->GetWorldPosition().y;
+            if (normal.y != 0)
+            {
+                auto colBPosX = collision.pColliderB->pTransform->GetWorldPosition().x;
+                auto colAPosY = collision.pColliderA->pTransform->GetWorldPosition().y;
 
-            collision.pColliderA->pTransform->SetLocalPosition(colBPosX, colAPosY);
+                collision.pColliderA->pTransform->SetLocalPosition(colBPosX, colAPosY);
+            }
+            else
+            {
+                auto colAPosY = collision.pColliderB->pTransform->GetWorldPosition().y + collision.pColliderB->Width / 2;
+                auto colBPosX = collision.pColliderA->pTransform->GetWorldPosition().x;
+
+                collision.pColliderA->pTransform->SetLocalPosition(colBPosX, colAPosY);
+            }
         }
     }
     if ((collision.pRigidBodyB && !collision.pRigidBodyA) && !collision.pRigidBodyB->IsKinematic)
@@ -66,10 +73,21 @@ void dae::physics::PlatformSolver::SolveCollision(const Collision& collision)
             //collision.pColliderB->pTransform->SetLocalPosition(collision.pColliderB->pTransform->GetLocalPosition() + normal * collision.points.Depth);
             
             //Center the character on the collider
-            auto colBPosX = collision.pColliderA->pTransform->GetWorldPosition().x;
-            auto colAPosY = collision.pColliderB->pTransform->GetWorldPosition().y;
+            if (normal.y != 0)
+            {
+                auto colBPosX = collision.pColliderA->pTransform->GetWorldPosition().x;
+                auto colAPosY = collision.pColliderB->pTransform->GetWorldPosition().y;
 
-            collision.pColliderB->pTransform->SetLocalPosition(colBPosX, colAPosY);
+                collision.pColliderB->pTransform->SetLocalPosition(colBPosX, colAPosY);
+            }
+            else
+            {
+                auto colAPosY = collision.pColliderA->pTransform->GetWorldPosition().y + collision.pColliderB->Width / 2;
+                auto colBPosX = collision.pColliderB->pTransform->GetWorldPosition().x;
+
+                collision.pColliderB->pTransform->SetLocalPosition(colBPosX, colAPosY);
+            }
+
         
         }
     }

@@ -5,14 +5,13 @@
 #include "Block.h"
 #include "Collisions.h"
 #include "PhysicsComponents.h"
+#include "MoveCommand.h"
 #include <glm.hpp>
 #include <random>
 
 
 void dae::CoilySnakeStateAI::Enter(GameObject& obj, Transform* playerTransform)
 {
-	m_OnCollisionCallback = std::bind(&CoilySnakeStateAI::OnCollision, this, std::placeholders::_1, std::placeholders::_2);
-	obj.GetComponent<physics::Collider>()->SetCollisionCallback(m_OnCollisionCallback);
 
 	m_pMoveRightCommand = std::make_unique<dae::AIMoveCommand>(obj, glm::vec2{ 1,-2.5 }, 120.5f);
 	m_pMoveLeftCommand = std::make_unique<dae::AIMoveCommand>(obj, glm::vec2{ -1,-2.5 }, 120.5f);
@@ -22,6 +21,7 @@ void dae::CoilySnakeStateAI::Enter(GameObject& obj, Transform* playerTransform)
 	m_pTransform = obj.GetTransform();
 
 	m_pQBertTransform = playerTransform;
+	m_PlayerPos = m_pQBertTransform->GetWorldPosition();
 }
 
 dae::CoilyState* dae::CoilySnakeStateAI::Update()
@@ -49,6 +49,11 @@ dae::AIMoveCommand* dae::CoilySnakeStateAI::PickMoveCommand()
 {
 	if (m_pTransform && m_pQBertTransform)
 	{
+
+		if (MoveCommand::IsGrounded())
+		{
+			m_PlayerPos = m_pQBertTransform->GetWorldPosition();
+		}
 		//Direction to the player
 		glm::vec2 direction = glm::normalize(m_pQBertTransform->GetWorldPosition() - m_pTransform->GetWorldPosition());
 
@@ -93,9 +98,4 @@ dae::AIMoveCommand* dae::CoilySnakeStateAI::PickMoveCommand()
 
 void dae::CoilySnakeStateAI::Exit()
 {
-}
-
-void dae::CoilySnakeStateAI::OnCollision(const physics::Collider*, const physics::CollisionPoints&)
-{
-
 }

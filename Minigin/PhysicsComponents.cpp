@@ -66,6 +66,7 @@ void dae::physics::Collider::Render() const
 	if (IsColliding)
 	{
 		Renderer::GetInstance().RenderRect(rect, SDL_Color{ 0,255,0,255 });
+
 	}
 	else
 	{

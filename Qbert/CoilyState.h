@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 namespace dae
 {
     // Forward declaration

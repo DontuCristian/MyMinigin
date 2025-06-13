@@ -18,6 +18,7 @@
 #include "Timer.h"
 #include "ServiceLocator.h"
 #include "SoundService.h"
+#include "GameLoop.h"
 #include <mutex>
 
 SDL_Window* g_window{};
@@ -91,6 +92,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
     auto& sceneManager = SceneManager::GetInstance();
     auto& input = InputManager::GetInstance();
     auto& timer = Timer::GetInstance();
+	auto& gameStatesLoop = GameLoop::GetInstance();
 
     load();
 
@@ -110,11 +112,13 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
         timer.Update();
         sceneManager.Update();
+		gameStatesLoop.Update();
 
         lag += timer.GetDeltaTime();
 
         while (lag >= timer.GetFixedDeltaTime())
         {
+
 			physics.FixedUpdate();
             timer.FixedUpdate();
             lag -= timer.GetFixedDeltaTime();

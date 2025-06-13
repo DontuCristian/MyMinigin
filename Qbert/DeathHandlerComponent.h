@@ -20,12 +20,14 @@ namespace dae
 
 	private:
 
+		void FallSequence();
 		void DeathSequence();
 
 		Transform* m_pTransform{ nullptr };
 
 
 		glm::vec2 m_RespawnPosition;
+		bool m_Died{ false };
 		bool m_ByEnemy{ false };
 
 	};

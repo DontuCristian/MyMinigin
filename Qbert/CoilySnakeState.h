@@ -19,13 +19,8 @@ namespace dae
 		void Enter(GameObject& obj, Transform*) override;
 		CoilyState* Update() override;
 		void Exit()	override;
-
-		void OnCollision(const physics::Collider* other, const physics::CollisionPoints& points);
 	private:
 
 		Transform* m_pTransform{ nullptr };
-
-		std::function<void(const physics::Collider*, const physics::CollisionPoints&)> m_OnCollisionCallback{};
-
 	};
 }

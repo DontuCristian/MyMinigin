@@ -8,18 +8,17 @@
 dae::Health::Health(GameObject& obj):
 	BComponent(obj)
 {
+
+
 	m_OnTriggerCallback = std::bind(&Health::OnTrigger, this, std::placeholders::_1, std::placeholders::_2);
 	obj.GetComponent<physics::Collider>()->SetTriggerCallback(m_OnTriggerCallback);
+
+	m_OnCollisionCallback = std::bind(&Health::OnCollision, this, std::placeholders::_1, std::placeholders::_2);
+	obj.GetComponent<physics::Collider>()->SetCollisionCallback(m_OnCollisionCallback);
 }
 
 void dae::Health::Update()
 {
-	if (m_NrLives <= 0)
-	{
-		Event event(make_sdbm_hash("PlayerDied"));
-		NotifyObservers(event);
-	}
-
 	if (GetOwner()->GetTransform()->GetWorldPosition().y > 480)
 	{
 		LoseLife(false);
@@ -38,18 +37,8 @@ void dae::Health::LoseLife(bool byEnemy)
 
 	Event healthChangedEvent(make_sdbm_hash("HealthChanged"));
 	healthChangedEvent.args[0] = static_cast<std::any>(m_NrLives);
+	healthChangedEvent.args[1] = static_cast<std::any>(byEnemy);
 	NotifyObservers(healthChangedEvent);
-
-	if (byEnemy)
-	{
-		Event playerDeathEvent(make_sdbm_hash("PlayerKilledByEnemy"));
-		NotifyObservers(playerDeathEvent);
-	}
-	else
-	{
-		Event playerDeathEvent(make_sdbm_hash("PlayerKilledByKillZone"));
-		NotifyObservers(playerDeathEvent);
-	}
 
 	ServiceLocator::GetSoundService().PlaySound("../Data/Sounds/QBertJump.mp3", 0,0.5f, false);
 }
@@ -64,4 +53,10 @@ void dae::Health::OnTrigger(const physics::Collider* other, const physics::Colli
 		}
 	}
 }
-
+void dae::Health::OnCollision(const physics::Collider* other, const physics::CollisionPoints&)
+{
+	if (other->CompareTag("CoilySnake") || other->CompareTag("Ugg") || other->CompareTag("WrongWay"))
+	{
+		LoseLife(true);
+	}
+}

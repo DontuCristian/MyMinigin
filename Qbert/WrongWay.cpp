@@ -5,16 +5,14 @@
 #include <glm.hpp>
 #include <random>
 
-dae::WrongWay::WrongWay(GameObject& obj, float moveInterval):
+dae::WrongWay::WrongWay(GameObject& obj, const glm::vec2& upDir, const glm::vec2& downDir, float moveInterval) :
 	BComponent(obj),
 	m_MoveInterval{moveInterval}
 {
-	m_pMoveRightCommand = std::make_unique<dae::AIMoveCommand>(obj, glm::vec2{ -2.5, 1 }, 120.5f);
-	m_pMoveLeftCommand = std::make_unique<dae::AIMoveCommand>(obj, glm::vec2{ -2.5, -1 }, 120.5f);
+	m_pMoveDownCommand = std::make_unique<dae::AIMoveCommand>(obj, downDir/*glm::vec2{  -2.5, 2.5 }*/, 120.5f);
+	m_pMoveUpCommand = std::make_unique<dae::AIMoveCommand>(obj, upDir /*glm::vec2{-2.5, -2.5}*/ , 120.5f);
 
 	m_MoveTimer = m_MoveInterval;
-
-
 }
 
 
@@ -28,13 +26,21 @@ void dae::WrongWay::Update()
 		static std::uniform_int_distribution<int> dist(0, 1);
 
 		//Switch between moving left and right
-		if (dist(engine) == 0)
+		if (m_HasMovedOnce)
 		{
-			m_pMoveLeftCommand->Execute();
+			if (dist(engine) == 0)
+			{
+				m_pMoveUpCommand->Execute();
+			}
+			else
+			{
+				m_pMoveDownCommand->Execute();
+			}
 		}
 		else
 		{
-			m_pMoveRightCommand->Execute();
+			m_pMoveUpCommand->Execute();
+			m_HasMovedOnce = true;
 		}
 
 		m_MoveTimer = m_MoveInterval;

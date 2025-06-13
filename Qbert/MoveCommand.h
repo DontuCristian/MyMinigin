@@ -31,6 +31,8 @@ namespace dae
 
 		void OnCollision(const physics::Collider* other, const physics::CollisionPoints& points);
 
+		static bool IsGrounded() { return m_isGrounded; }
+
 	protected:
 
 		glm::vec2 m_Direction{};

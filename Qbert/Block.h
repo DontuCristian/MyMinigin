@@ -35,7 +35,7 @@ namespace dae
 
 	private:
 
-		const int m_NrOfColorChanges{ 2 };
+		const int m_NrOfColorChanges{ 1 };
 		int m_ColorChangeCounter{ 0 };
 		bool m_IsEdge{ false };
 

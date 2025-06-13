@@ -38,7 +38,9 @@ void dae::AIMoveCommand::OnCollision(const physics::Collider* other, const physi
 	{
 		if (points.Normal.y < 0 && points.Normal.x == 0)
 		{
-			m_pSpriteRenderer->StopAnim();
+			if(m_pSpriteRenderer)
+				m_pSpriteRenderer->StopAnim();
+
 		}
 	}
 }

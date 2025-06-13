@@ -23,9 +23,6 @@ namespace dae
 
     private:
 
-		physics::RigidBody* m_pRigidBody{ nullptr };
-		physics::Collider* m_pCollider{ nullptr };
-
         GameObject* m_pPlayer{ nullptr };
 
         void OnCollision(const physics::Collider* other, const physics::CollisionPoints& points);

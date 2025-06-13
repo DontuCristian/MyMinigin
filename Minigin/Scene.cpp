@@ -56,3 +56,25 @@ void Scene::Cleanup()
 	}
 }
 
+std::shared_ptr<GameObject> dae::Scene::Find(const std::string& colliderTag)
+{
+
+	auto it = std::find_if(m_objects.begin(), m_objects.end(),
+
+		[&colliderTag](const std::shared_ptr<GameObject>& obj)
+		{
+			if (obj->HasComponent<physics::Collider>())
+			{
+				auto collider = obj->GetComponent<physics::Collider>();
+				return collider && collider->CompareTag(colliderTag);
+			}
+
+			return false;
+		});
+
+	if (it != m_objects.end())
+		return *it;
+
+	return nullptr;
+}
+

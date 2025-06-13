@@ -5,6 +5,7 @@
 #include "ScoreHUD.h"
 #include "PhysicsComponents.h"
 #include "DeathHandlerComponent.h"
+#include "EnemyDeathHandler.h"
 #include "Platform.h"
 #include "Block.h"
 #include "WrongWay.h"

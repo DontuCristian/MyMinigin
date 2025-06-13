@@ -82,10 +82,13 @@ namespace dae::physics
 		void OnCollision(const Collider* other, const CollisionPoints& points);
 		void OnTrigger(const Collider* other, const CollisionPoints& points);
 
-	private:
-
 		std::vector<std::function<void(const Collider*, const CollisionPoints&)>> m_OnCollisionCallbacks{};
 		std::vector<std::function<void(const Collider*, const CollisionPoints&)>> m_OnTriggerCallbacks{};
+
+	private:
+
+		
+		
 
 		ColliderTag m_Tag{ 0 };
 	};

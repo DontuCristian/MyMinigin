@@ -4,6 +4,8 @@
 #include "GameObject.h"  
 #include "PhysicsComponents.h"  
 #include "Collisions.h"  
+#include "GameLoop.h"
+#include "LevelState.h"
 
 dae::Block::Block(GameObject& obj)  
 : BComponent(obj)  
@@ -23,6 +25,13 @@ int dae::Block::CollidedWithPlayer()
 	else if (m_ColorChangeCounter == m_NrOfColorChanges)
 	{
 		m_pSpriteRenderer->SetRowIdx(m_ColorChangeCounter);
+		auto* state = dynamic_cast<LevelState*>(GameLoop::GetInstance().GetCurrentState());
+
+		if (state)
+		{
+			state->BlockReachedTargetColor();
+		}
+
 		return 30;
 	}
 

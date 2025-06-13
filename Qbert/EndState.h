@@ -7,8 +7,8 @@ namespace dae
 
     class EndState : public GameState {
     public:
-        void Enter(GameObject& obj) override;
-        GameState* Update() override { return this; };
+        void Enter() override;
+        void Update() override { return; };
         void Render() const override {};
         void Exit() override;
 

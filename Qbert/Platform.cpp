@@ -9,9 +9,6 @@ dae::Platform::Platform(GameObject& obj):
 {
 	m_OnCollisionCallback = std::bind(&Platform::OnCollision, this, std::placeholders::_1, std::placeholders::_2);
 	obj.GetComponent<physics::Collider>()->SetCollisionCallback(m_OnCollisionCallback);
-
-	m_pRigidBody = obj.GetComponent<physics::RigidBody>();
-	m_pCollider = obj.GetComponent<physics::Collider>();
 }
 
 void dae::Platform::Update()
@@ -36,9 +33,9 @@ void dae::Platform::Update()
 
 	if (GetOwnerTransform()->GetWorldPosition().x > 320)
 	{
-		m_pCollider->IsTrigger = true;
-
 		m_pPlayer->GetComponent<physics::RigidBody>()->IsKinematic = false;
+		m_pPlayer->GetComponent<physics::RigidBody>()->Velocity = {0,0};
+		m_pPlayer->GetComponent<physics::RigidBody>()->SetForce({ 0,0 },0);
 		GetOwner()->FlagForDeletion();
 	}
 }
@@ -65,6 +62,7 @@ void dae::Platform::OnCollision(const physics::Collider* other, const physics::C
 			m_pPlayer = other->GetOwner();
 
 			m_pPlayer->SetParent(this->GetOwner(), true);
+			m_pPlayer->GetTransform()->SetLocalPosition(0,-16);
 			m_pPlayer->GetComponent<physics::RigidBody>()->IsKinematic = true;
 
 			GetOwner()->GetComponent<dae::SpriteRenderer>()->PlayAnim();
