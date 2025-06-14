@@ -292,7 +292,6 @@ void dae::LevelState::SpawnWrongWay()
 
 void dae::LevelState::Exit()
 {
-	m_pScene->RemoveAll();
 	auto& input = InputManager::GetInstance();
 
 	input.RemoveAction("MoveUpLeft");
@@ -302,6 +301,8 @@ void dae::LevelState::Exit()
 	input.RemoveAction("ChangeToLevel1");
 	input.RemoveAction("ChangeToLevel2");
 	input.RemoveAction("ChangeToLevel3");
+
+	m_pScene->RemoveAll();
 }
 
 bool dae::LevelState::IsLevelComplete() const

@@ -77,10 +77,11 @@ void dae::Scoreboard::Enter()
 
 void dae::Scoreboard::Exit()
 {
-	m_pScene->RemoveAll();
     auto& input = dae::InputManager::GetInstance();
 
     input.RemoveAction("GoBack");
+
+    m_pScene->RemoveAll();
 }
 
 void dae::Scoreboard::Update()

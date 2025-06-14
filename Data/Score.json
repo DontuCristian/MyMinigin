@@ -10,5 +10,13 @@
     {
         "name": "ABA",
         "score": 100
+    },
+    {
+        "name": "DAC",
+        "score": 50
+    },
+    {
+        "name": "AZA",
+        "score": 25
     }
 ]

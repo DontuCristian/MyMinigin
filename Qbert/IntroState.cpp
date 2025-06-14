@@ -46,11 +46,12 @@ void dae::IntroState::Enter()
 
 void dae::IntroState::Exit() 
 {
-	m_pScene->RemoveAll();
 	auto& input = dae::InputManager::GetInstance();
 	input.RemoveAction("Next");
 	input.RemoveAction("Previous");
 	input.RemoveAction("Confirm");
+
+	m_pScene->RemoveAll();
 }
 
 void dae::IntroState::Update() 

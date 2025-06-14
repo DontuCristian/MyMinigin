@@ -129,12 +129,6 @@ void dae::InputManager::CheckForConnectedGamepads()
 
 void dae::InputManager::AddAction(const std::string& name, const uint32_t button, const TriggerEvent state, std::unique_ptr<Command> command, const uint32_t controllerIndex)
 {
-
-	auto it = m_ControllerActions.find(name);
-
-	// If the action already exists, we don't add it again
-	if (it == m_ControllerActions.end())
-	{
 		auto tempAction = std::make_unique<Action>();
 		tempAction->Button = button;
 		tempAction->Command = std::move(command);
@@ -142,36 +136,16 @@ void dae::InputManager::AddAction(const std::string& name, const uint32_t button
 		tempAction->Event = state;
 
 		m_ControllerActions.insert({ name, std::move(tempAction) });
-	}
-	else
-	{
-		it->second->Button = button;
-		it->second->Command = std::move(command);
-		it->second->ControllerIdx = controllerIndex;
-		it->second->Event = state;
-	}
 }
 
 void dae::InputManager::AddAction(const std::string& name, const uint8_t key, const TriggerEvent state, std::unique_ptr<Command> command)
 {
-	auto it = m_KeyActions.find(name);
-
-	// If the action already exists, we don't add it again, just update it
-	if (it == m_KeyActions.end())
-	{
 		auto tempAction = std::make_unique<KeyAction>();
 		tempAction->Key = key;
 		tempAction->Command = std::move(command);
 		tempAction->Event = state;
 
 		m_KeyActions.insert({ name, std::move(tempAction) });
-	}
-	else
-	{
-		it->second->Command = std::move(command);
-		it->second->Key = key;
-		it->second->Event = state;
-	}
 }
 
 void dae::InputManager::RemoveKeyAction(const std::string& name)

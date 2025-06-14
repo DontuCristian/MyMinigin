@@ -67,8 +67,7 @@ void dae::EndState::Render() const
 
 void dae::EndState::Exit()
 {
-	m_pScene->RemoveAll();
-
+	
 	auto& input = InputManager::GetInstance();
 
 	input.RemoveAction("Up");
@@ -76,5 +75,8 @@ void dae::EndState::Exit()
 	input.RemoveAction("Left");
 	input.RemoveAction("Right");
 	input.RemoveAction("SaveScore");
+
+	m_pScene->RemoveAll();
+
 
 }

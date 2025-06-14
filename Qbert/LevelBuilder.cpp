@@ -123,26 +123,26 @@ std::vector<std::shared_ptr<dae::GameObject>> dae::LevelBuilder::AddPlayers(cons
 
         players.push_back(player);
 
-    }
-    auto& input = InputManager::GetInstance();
-
-    const auto& controls0 = playersData[0]["controls"];
-    input.AddAction("MoveUpLeft", controls0["upLeft"], dae::TriggerEvent::Down, std::make_unique<MoveCommand>(*players[0].get(), glm::vec2{-1,-5.4}, 250.f));
-    input.AddAction("MoveDownRight", controls0["downRight"], dae::TriggerEvent::Down, std::make_unique<MoveCommand>(*players[0].get(), glm::vec2{ 1,-2.5 }, 120.5f));
-    input.AddAction("MoveUpRight", controls0["upRight"], dae::TriggerEvent::Down, std::make_unique<MoveCommand>(*players[0].get(), glm::vec2{ 1,-5.4 }, 250.f));
-    input.AddAction("MoveDownLeft", controls0["downLeft"], dae::TriggerEvent::Down, std::make_unique<MoveCommand>(*players[0].get(), glm::vec2{ -1,-2.5 }, 120.5f));
-
-    if (players.size() >= 2)
-    {
-        const auto& controls1 = playersData[1]["controls"];
-        input.AddAction("MoveUpLeft", controls1["upLeft"], dae::TriggerEvent::Down, std::make_unique<MoveCommand>(*players[1].get(), glm::vec2{ -1,-5.4 }, 250.f), 1);
-        input.AddAction("MoveDownRight", controls1["downRight"], dae::TriggerEvent::Down, std::make_unique<MoveCommand>(*players[1].get(), glm::vec2{ 1,-2.5 }, 120.5f), 1);
-        input.AddAction("MoveUpRight", controls1["upRight"], dae::TriggerEvent::Down, std::make_unique<MoveCommand>(*players[1].get(), glm::vec2{ 1,-5.4 }, 250.f), 1);
-        input.AddAction("MoveDownLeft", controls1["downLeft"], dae::TriggerEvent::Down, std::make_unique<MoveCommand>(*players[1].get(), glm::vec2{ -1,-2.5 }, 120.5f), 1);
-    }
-
+        // Load controls
+        if (playerData["controls"].is_array())
+        {
+            for (const auto& controlMap : playerData["controls"])
+            {
+                int controller = controlMap.value("controller", -1); // -1 = keyboard
+                BindPlayerControls(*player, controlMap, controller);
+            }
+        }
+        else
+        {
+            const auto& controlMap = playerData["controls"];
+            int controller = controlMap.value("controller", -1);
+            BindPlayerControls(*player, controlMap, controller);
+        }
+       }
     return players;
 }
+
+
 
 void dae::LevelBuilder::AddElevator(const json& elevatorsData, Scene* scene)
 {
@@ -202,5 +202,44 @@ void dae::LevelBuilder::AddUI(Scene* scene, const std::vector<std::shared_ptr<Ga
             player->GetComponent<PlayerScore>()->AddObserver(scoreHUD->GetComponent<ScoreHUD>());
 
         currentY += yOffset;
+    }
+}
+
+void dae::LevelBuilder::BindPlayerControls(GameObject& player, const json& controlMap, int controller)
+{
+    auto& input = InputManager::GetInstance();
+
+    glm::vec2 ul = { -1,-5.4 };
+    glm::vec2 ur = { 1,-5.4 };
+    glm::vec2 dl = { -1,-2.5 };
+    glm::vec2 dr = { 1,-2.5 };
+
+    if (controller != -1)
+    {
+        input.AddAction("MoveUpLeft", controlMap["upLeft"], dae::TriggerEvent::Down,
+            std::make_unique<MoveCommand>(player, ul, 250.f), controller);
+
+        input.AddAction("MoveUpRight", controlMap["upRight"], dae::TriggerEvent::Down,
+            std::make_unique<MoveCommand>(player, ur, 250.f), controller);
+
+        input.AddAction("MoveDownLeft", controlMap["downLeft"], dae::TriggerEvent::Down,
+            std::make_unique<MoveCommand>(player, dl, 120.5f), controller);
+
+        input.AddAction("MoveDownRight", controlMap["downRight"], dae::TriggerEvent::Down,
+            std::make_unique<MoveCommand>(player, dr, 120.5f), controller);
+    }
+    else
+    {
+        input.AddAction("MoveUpLeft", controlMap["upLeft"], dae::TriggerEvent::Down,
+            std::make_unique<MoveCommand>(player, ul, 250.f));
+
+        input.AddAction("MoveUpRight", controlMap["upRight"], dae::TriggerEvent::Down,
+            std::make_unique<MoveCommand>(player, ur, 250.f));
+
+        input.AddAction("MoveDownLeft", controlMap["downLeft"], dae::TriggerEvent::Down,
+            std::make_unique<MoveCommand>(player, dl, 120.5f));
+
+        input.AddAction("MoveDownRight", controlMap["downRight"], dae::TriggerEvent::Down,
+            std::make_unique<MoveCommand>(player, dr, 120.5f));
     }
 }

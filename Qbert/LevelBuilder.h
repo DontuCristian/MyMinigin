@@ -22,6 +22,7 @@ namespace dae
         std::vector<std::shared_ptr<GameObject>> AddPlayers(const json& playersData, Scene* scene);
         void AddElevator(const json& elevatorData, Scene* scene);
         void AddUI(Scene* scene, const std::vector<std::shared_ptr<GameObject>>& players);
+        void BindPlayerControls(GameObject& player, const json& controlMap, int controller);
 	};
 }
 
