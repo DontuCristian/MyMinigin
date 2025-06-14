@@ -1,0 +1,5 @@
+This is a small game made with a small custom engine based on Minigin. The engine has a physics system, based on the service pattern so it’s swappable. It uses an OnCollision callback mechanism and collision solvers to handle interactions between objects. The physics system features a very basic Rigidbody implementation and AABB (Axis-Aligned Bounding Box) collision detection.
+
+The engine has sound support, which is also implemented as a service. It runs on a separate thread and processes sound events through an event queue, allowing for responsive audio playback without blocking the main game loop. The Observer pattern is implemented in the engine, enabling communication between subjects and observers — for example, a Health component notifying a HUD display to update when lives change.
+
+It supports multiple scenes, each containing its own set of GameObjects. These GameObjects manage their own components and logic, allowing for a clean, modular structure. The engine also features an abstract GameState class and a singleton GameLoop class, which allows switching between game states (like Menu, Gameplay, and High Scores) from anywhere at runtime.
