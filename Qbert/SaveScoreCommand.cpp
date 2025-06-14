@@ -27,13 +27,37 @@ void dae::SaveScoreCommand::Execute()
 
 void dae::SaveScoreCommand::SaveScore(const std::string& name, int score, const std::string& path)
 {
-	json json{{"name",name},
-			 {"score",score}};
+    json scores;
 
-	std::ofstream file(path);
+    // Load existing scores
+    {
+        std::ifstream inFile(path);
+        if (inFile.is_open())
+        {
+            try {
+                inFile >> scores;
+            }
+            catch (const json::parse_error& e) {
+                std::cerr << "Failed to parse score JSON: " << e.what() << std::endl;
+                scores = json::array(); // fallback to empty array
+            }
+        }
+    }
 
-	if (!file.is_open())
-		throw std::runtime_error("Could not open file for writing: " + path);
+    if (!scores.is_array())
+        scores = json::array();
 
-	file << json.dump();
+    // Append new score
+    scores.push_back({ {"name", name}, {"score", score} });
+
+    // Keep only the last 10
+    if (scores.size() > 10)
+        scores.erase(scores.begin(), scores.begin() + (scores.size() - 10));
+
+    // Save to file
+    std::ofstream outFile(path);
+    if (!outFile.is_open())
+        throw std::runtime_error("Could not open file for writing: " + path);
+
+    outFile << scores.dump(4);
 }

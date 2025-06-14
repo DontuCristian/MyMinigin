@@ -14,7 +14,7 @@ namespace dae
     {
 
     public:
-        LevelState(int levelNumber, const std::string& mode);
+        LevelState(int levelNumber, const std::string& mode, int prevLevelScore = 0);
 
         void Enter() override;
 		void Update() override;
@@ -46,6 +46,7 @@ namespace dae
 		int m_CurrentNrBlocks{ 0 };
 
         int m_LevelNumber{1};
+        int m_PrevLevelScore{};
         bool m_IsLevelComplete = false;
         bool m_Pvp = false;
 

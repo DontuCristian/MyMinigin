@@ -16,9 +16,10 @@
 
 #include <random>
 
-dae::LevelState::LevelState(int levelNumber, const std::string& mode):
+dae::LevelState::LevelState(int levelNumber, const std::string& mode, int prevLevelScore):
 	m_LevelNumber(levelNumber),
-	m_Mode(mode)
+	m_Mode(mode),
+	m_PrevLevelScore(prevLevelScore)
 {
 	m_pScene = dae::SceneManager::GetInstance().GetScene("Level");
 	if (m_pScene == nullptr)
@@ -38,6 +39,8 @@ void dae::LevelState::Enter()
 
 	LevelBuilder::GetInstance().BuildLevel("../Data/Levels/Level"+std::to_string(m_LevelNumber)+m_Mode+".json", m_pScene);
 
+	m_pScene->Find("Player")->GetComponent<PlayerScore>()->IncreaseScore(m_PrevLevelScore);
+
 	auto& input = InputManager::GetInstance();
 
 	input.AddAction("ChangeToLevel1", SDL_SCANCODE_F1, TriggerEvent::Down, std::make_unique<ChangeLevelCommand>(1, m_Mode));
@@ -52,14 +55,15 @@ void dae::LevelState::Update()
 
 	if (IsLevelComplete())
 	{
+		const int score = m_pScene->Find("Player")->GetComponent<dae::PlayerScore>()->GetScore();
+
 		if (m_LevelNumber == 3)
 		{
-			const int score = m_pScene->Find("Player")->GetComponent<dae::PlayerScore>()->GetScore();
 			GameLoop::GetInstance().ChangeState(std::make_unique<EndState>(score));
 			return;
 		}
 		std::cout << "Level Complete!" << std::endl;
-		GameLoop::GetInstance().ChangeState(std::make_unique<LevelState>(++m_LevelNumber, m_Mode));
+		GameLoop::GetInstance().ChangeState(std::make_unique<LevelState>(++m_LevelNumber, m_Mode, score));
 		return;
 	}
 	if (IsLevelLost())

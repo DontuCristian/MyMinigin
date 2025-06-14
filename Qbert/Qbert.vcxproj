@@ -167,6 +167,7 @@
     <ClCompile Include="MenuSelector.cpp" />
     <ClCompile Include="MoveCommand.cpp" />
     <ClCompile Include="AIMoveCommand.cpp" />
+    <ClCompile Include="ChangeState.cpp" />
     <ClCompile Include="Platform.cpp" />
     <ClCompile Include="PlatformSolver.cpp" />
     <ClCompile Include="Qbert.cpp">
@@ -176,6 +177,7 @@
     <ClCompile Include="PlayerScore.cpp" />
     <ClCompile Include="SamOrSlick.cpp" />
     <ClCompile Include="SaveScoreCommand.cpp" />
+    <ClCompile Include="Scoreboard.cpp" />
     <ClCompile Include="TextInput.cpp" />
     <ClCompile Include="WrongWay.cpp" />
     <ClCompile Include="ScoreHUD.cpp" />
@@ -204,11 +206,13 @@
     <ClInclude Include="MenuSelector.h" />
     <ClInclude Include="MoveCommand.h" />
     <ClInclude Include="AIMoveCommand.h" />
+    <ClInclude Include="ChangeState.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="PlatformSolver.h" />
     <ClInclude Include="PlayerScore.h" />
     <ClInclude Include="SamOrSlick.h" />
     <ClInclude Include="SaveScoreCommand.h" />
+    <ClInclude Include="Scoreboard.h" />
     <ClInclude Include="TextInput.h" />
     <ClInclude Include="WrongWay.h" />
     <ClInclude Include="resource.h" />

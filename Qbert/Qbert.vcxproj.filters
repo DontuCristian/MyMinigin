@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Qbert.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="HealthHUD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -96,23 +93,32 @@
     <ClCompile Include="IntroState.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="SamOrSlick.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TextInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="EndState.cpp">
       <Filter>States</Filter>
     </ClCompile>
-    <ClCompile Include="InputNameCommand.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="SamOrSlick.cpp">
+      <Filter>EnemiesComponents</Filter>
     </ClCompile>
     <ClCompile Include="SaveScoreCommand.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="InputNameCommand.cpp">
+      <Filter>Commands</Filter>
     </ClCompile>
     <ClCompile Include="ChangeLevelCommand.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Qbert.cpp">
+      <Filter>PlayerComponents</Filter>
+    </ClCompile>
+    <ClCompile Include="ChangeState.cpp">
+      <Filter>Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="Scoreboard.cpp">
+      <Filter>States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -197,20 +203,26 @@
     <ClInclude Include="json.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SamOrSlick.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TextInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InputNameCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SaveScoreCommand.h">
-      <Filter>Header Files</Filter>
+      <Filter>Commands</Filter>
     </ClInclude>
     <ClInclude Include="ChangeLevelCommand.h">
-      <Filter>Header Files</Filter>
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveScoreCommand.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="SamOrSlick.h">
+      <Filter>EnemiesComponents</Filter>
+    </ClInclude>
+    <ClInclude Include="ChangeState.h">
+      <Filter>Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="Scoreboard.h">
+      <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
