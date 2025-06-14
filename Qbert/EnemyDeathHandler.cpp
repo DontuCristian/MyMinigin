@@ -4,6 +4,7 @@
 #include "Collisions.h"
 #include "PhysicsComponents.h"
 #include "Scene.h"
+#include "Event.h"
 
 dae::EnemyDeathHandlerComponent::EnemyDeathHandlerComponent(GameObject& obj):
 	BComponent(obj)
@@ -15,41 +16,35 @@ dae::EnemyDeathHandlerComponent::EnemyDeathHandlerComponent(GameObject& obj):
 }
 void dae::EnemyDeathHandlerComponent::Update()
 {
-	// Check if the player is below the screen
+	// Check if the enemy is below the screen
 	if (m_pTransform->GetWorldPosition().y > 480 || m_pTransform->GetWorldPosition().y < 0)
 	{
 		if (m_pTransform->GetWorldPosition().y > 640 || m_pTransform->GetWorldPosition().x < 0)
 		{
-			DeathSequence();
+			OnDeath();
+			GetOwner()->FlagForDeletion();
 		}
 	}
 }
 
-void dae::EnemyDeathHandlerComponent::DeathSequence()
+void dae::EnemyDeathHandlerComponent::OnDeath()
 {
 
-	//If fell from the platform
-	//Wait until the player is below the screen
-	//Play sound
-	//Teleport the player to the respawn position
-	GetOwner()->GetComponent<dae::physics::Collider>()->IsTrigger = false;
-	GetOwner()->GetComponent<dae::physics::RigidBody>()->Velocity = { 0, 0 };
-
+	Event enemyDied(make_sdbm_hash("EnemyDied"));
+	enemyDied.args[0] = static_cast<std::any>(GetOwner()->GetComponent<physics::Collider>());
 }
+
+
 
 void dae::EnemyDeathHandlerComponent::OnCollision(const physics::Collider* other, const physics::CollisionPoints& points)
 {
 	if (other->CompareTag("KillZone"))
 	{
-		auto* pRB = other->GetOwner()->GetComponent<physics::RigidBody>();
-
 		//Checks if the normal and the gravity vector are parallel and opposite
-		if (glm::dot(points.Normal, pRB->Gravity) == -1)
+		if (points.Normal.y < 0 && points.Normal.x == 0)
 		{
-
 			GetOwner()->GetComponent<dae::physics::Collider>()->IsTrigger = true;
-			GetOwner()->GetComponent<dae::physics::RigidBody>()->Velocity = { 0, 0 };
-
+			OnDeath();
 		}
 	}
 }

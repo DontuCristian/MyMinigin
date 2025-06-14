@@ -63,7 +63,6 @@ void dae::DeathHandlerComponent::DeathSequence()
 		{
 			state->ResetLevel();
 			GetOwner()->GetComponent<dae::physics::Collider>()->IsTrigger = false;
-			GetOwner()->GetComponent<dae::physics::RigidBody>()->Velocity = { 0, 0 };
 		}
 	}
 }

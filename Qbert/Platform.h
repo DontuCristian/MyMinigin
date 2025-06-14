@@ -1,5 +1,6 @@
 #pragma once
 #include <BaseComponent.h>
+#include "Subject.h"
 #include <functional>
 
 namespace dae
@@ -20,8 +21,9 @@ namespace dae
         void Render() const override {};
 
         void LiftPlayer();
-
     private:
+
+        void OnPlayerLanded(Transform* transform);
 
         GameObject* m_pPlayer{ nullptr };
 

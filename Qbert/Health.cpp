@@ -19,10 +19,6 @@ dae::Health::Health(GameObject& obj):
 
 void dae::Health::Update()
 {
-	if (GetOwner()->GetTransform()->GetWorldPosition().y > 480)
-	{
-		LoseLife(false);
-	}
 }
 
 void dae::Health::Render() const
@@ -45,7 +41,7 @@ void dae::Health::LoseLife(bool byEnemy)
 
 void dae::Health::OnTrigger(const physics::Collider* other, const physics::CollisionPoints& points)
 {
-	if (other->CompareTag("KillZone"))
+	if (other->CompareTag("KillZone") && GetOwner()->GetParent() == nullptr)
 	{
 		if (points.Normal.y < 0 && points.Normal.x == 0)
 		{
@@ -55,7 +51,7 @@ void dae::Health::OnTrigger(const physics::Collider* other, const physics::Colli
 }
 void dae::Health::OnCollision(const physics::Collider* other, const physics::CollisionPoints&)
 {
-	if (other->CompareTag("CoilySnake") || other->CompareTag("Ugg") || other->CompareTag("WrongWay"))
+	if (other->CompareTag("Coily") || other->CompareTag("Ugg") || other->CompareTag("WrongWay"))
 	{
 		LoseLife(true);
 	}

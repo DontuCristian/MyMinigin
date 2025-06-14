@@ -11,6 +11,12 @@
 #include <glm.hpp>
 #include <random>
 
+dae::CoilyBallState::CoilyBallState(bool controlledByHuman):
+	m_ControlledByHuman{controlledByHuman}
+{
+
+}
+
 void dae::CoilyBallState::Enter(GameObject& obj, Transform*)
 {
 
@@ -19,8 +25,6 @@ void dae::CoilyBallState::Enter(GameObject& obj, Transform*)
 
 	m_pMoveRightCommand = std::make_unique<dae::AIMoveCommand>(obj, glm::vec2{ 1,-2.5 }, 120.5f);
 	m_pMoveLeftCommand = std::make_unique<dae::AIMoveCommand>(obj, glm::vec2{ -1,-2.5 }, 120.5f);
-	m_pMoveUpRightCommand = std::make_unique<dae::AIMoveCommand>(obj, glm::vec2{ 1,-5.4 }, 250.f);
-	m_pMoveUpLeftCommand = std::make_unique<dae::AIMoveCommand>(obj, glm::vec2{ -1,-5.4 }, 250.f);
 
 	m_pTransform = obj.GetTransform();
 }
@@ -30,9 +34,13 @@ dae::CoilyState* dae::CoilyBallState::Update()
 	m_MoveTimer -= Timer::GetInstance().GetDeltaTime();
 
 
-	if (m_IsAtEdge)
+	if (m_IsAtEdge && !m_ControlledByHuman)
 	{
 		return new CoilySnakeStateAI();
+	}
+	else if (m_IsAtEdge && m_ControlledByHuman)
+	{
+		return new CoilySnakeState();
 	}
 
 	if (m_MoveTimer <= 0.f)

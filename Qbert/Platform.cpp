@@ -9,6 +9,8 @@ dae::Platform::Platform(GameObject& obj):
 {
 	m_OnCollisionCallback = std::bind(&Platform::OnCollision, this, std::placeholders::_1, std::placeholders::_2);
 	obj.GetComponent<physics::Collider>()->SetCollisionCallback(m_OnCollisionCallback);
+
+	m_LeftSide = GetOwnerTransform()->GetWorldPosition().x > 320 ? false : true;
 }
 
 void dae::Platform::Update()
@@ -31,7 +33,7 @@ void dae::Platform::Update()
 #endif // _DEBUG
 
 
-	if (GetOwnerTransform()->GetWorldPosition().x > 320)
+	if ((GetOwnerTransform()->GetWorldPosition().x > 320 && m_LeftSide) || (GetOwnerTransform()->GetWorldPosition().x < 320 && !m_LeftSide))
 	{
 		m_pPlayer->GetComponent<physics::RigidBody>()->IsKinematic = false;
 		m_pPlayer->GetComponent<physics::RigidBody>()->Velocity = {0,0};
@@ -46,12 +48,11 @@ void dae::Platform::LiftPlayer()
 	{
 		auto pos = GetOwnerTransform()->GetWorldPosition();
 		pos.y -= 0.89f;
-		pos.x += 0.7f;
+		pos.x += m_LeftSide ? 0.7f : -0.7f;
 
 		GetOwnerTransform()->SetLocalPosition(pos);
 	}
 }
-
 void dae::Platform::OnCollision(const physics::Collider* other, const physics::CollisionPoints& points)
 {
 

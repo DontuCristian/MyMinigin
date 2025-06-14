@@ -29,6 +29,11 @@ void dae::AIMoveCommand::Execute()
 		//std::cout << "Direction: " << m_Direction.x << ", " << m_Direction.y << std::endl;
 #endif
 
+		if (m_Direction.x > 0 && m_Direction.y < -0.98)
+			m_pSpriteRenderer->SetRowIdx(0);
+		else if (m_Direction.x < 0 && m_Direction.y < -0.98)
+			m_pSpriteRenderer->SetRowIdx(1);
+
 		m_pSpriteRenderer->PlayAnim();
 }
 

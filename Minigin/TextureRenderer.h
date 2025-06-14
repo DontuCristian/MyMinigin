@@ -13,7 +13,7 @@ namespace dae
 	{
 	public:
 		virtual ~TextureRenderer() = default;
-		explicit TextureRenderer(GameObject& owner);
+		explicit TextureRenderer(GameObject& owner, const std::string& path);
 
 		TextureRenderer(const TextureRenderer&) = delete;
 		TextureRenderer(TextureRenderer&&) noexcept = delete;

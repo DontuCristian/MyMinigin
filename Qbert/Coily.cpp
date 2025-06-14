@@ -3,11 +3,11 @@
 #include "CoilyBallState.h"
 #include "CoilySnakeStateAI.h"
 
-dae::Coily::Coily(GameObject& obj, Transform* playerTransform):
+dae::Coily::Coily(GameObject& obj, Transform* playerTransform, bool pvp):
 	BComponent(obj),
 	m_pPlayerTransform{playerTransform}
 {
-	m_pCoilyState = new CoilyBallState();
+	m_pCoilyState = new CoilyBallState(pvp);
 	m_pCoilyState->Enter(obj, GetOwnerTransform());
 }
 

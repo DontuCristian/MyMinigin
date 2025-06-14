@@ -1,0 +1,68 @@
+{
+  "pyramid": {
+    "rows": 7,
+    "blockSize": 64,
+    "offset": 16,
+    "startPosition": [
+      320,
+      110
+    ],
+    "properties": {
+      "colorChanges": 2,
+      "revertsBack": false
+    },
+    "sprites": {
+      "sheet": "Level2_Blocks.png",
+      "rows": 3,
+      "cols": 2,
+      "outsideFrame": 0,
+      "insideFrame": 1
+    }
+  },
+  "players": [
+    {
+      "position": [
+        128,
+        300
+      ],
+      "controls": {
+        "upLeft": 4,
+        "downRight": 7,
+        "upRight": 26,
+        "downLeft": 22
+      }
+    },
+    {
+      "position": [
+        512,
+        300
+      ],
+      "controls": {
+        "upLeft": 4,
+        "downRight": 8,
+        "upRight": 1,
+        "downLeft": 2
+      }
+    }
+  ],
+  "elevators": [
+    {
+      "position": [
+        128,
+        308
+      ],
+      "spriteSheet": "Level2_Elevator.png",
+      "cols": 4,
+      "frameDelay": 0.15
+    },
+    {
+      "position": [
+        250,
+        115
+      ],
+      "spriteSheet": "Level2_Elevator.png",
+      "cols": 4,
+      "frameDelay": 0.15
+    }
+  ]
+}

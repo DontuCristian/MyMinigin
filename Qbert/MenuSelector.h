@@ -9,14 +9,22 @@
 
 namespace dae
 {
-    class MenuSelector : public BComponent
-    {
-		struct Option {
-			std::string text;
-			std::unique_ptr<Command> command;
-		};
+	struct Option 
+	{
+		Option(const std::string& text, std::unique_ptr<Command>&& command)
+			: Text(text), Command(std::move(command)) {
+		}
 
-		MenuSelector(GameObject& pOwner, std::shared_ptr<Font> font,int spacing, std::shared_ptr<Texture2D> pSelectionArrowTexture);
+		std::string Text;
+		std::unique_ptr<Command> Command;
+	};
+
+	class Texture2D;
+
+    class MenuSelector : public BComponent
+    {	
+	public:
+		MenuSelector(GameObject& obj, const std::string& fontPath, int spacing, const std::string& texturePath);
 
 		void AddOption(Option&& option);
 
@@ -34,7 +42,7 @@ namespace dae
 
 		std::vector<std::shared_ptr<Texture2D>> m_OptionTextures;
 		std::vector<std::unique_ptr<Command>> m_OptionCommands;
-		std::shared_ptr<Texture2D> m_pSelectionArrowTexture;
+		std::shared_ptr<dae::Texture2D> m_pSelectionQbertTexture;
 
 		int m_CurrentOption{};
 		int m_Spacing{};

@@ -12,7 +12,6 @@
 #include "InputManager.h"
 #include "GameObject.h"
 #include "Scene.h"
-#include "GameCommands.h"
 #include "GameComponentsIncludes.h"
 #include "EngineComponentsIncludes.h"
 #include "ServiceLocator.h"
@@ -23,6 +22,7 @@
 #include "PlatformSolver.h"
 #include "GameLoop.h"
 #include "LevelState.h"
+#include "IntroState.h"
 #include <iostream>
 
 void load()
@@ -39,7 +39,7 @@ void load()
 	dae::ServiceLocator::RegisterPhysicsService(std::make_unique<dae::physics::AABB_Physics>());
 	dae::ServiceLocator::GetPhysicsService().AddSolver(std::make_unique<dae::physics::PlatformSolver>());
 
-	dae::GameLoop::GetInstance().ChangeState(std::make_unique<dae::LevelState>(1,"Single"));
+	dae::GameLoop::GetInstance().ChangeState(std::make_unique<dae::IntroState>());
 
 
 	//auto snakeHealth = std::make_shared<dae::GameObject>();

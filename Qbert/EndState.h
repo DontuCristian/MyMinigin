@@ -1,5 +1,6 @@
 #pragma once
 #include "GameState.h"
+#include "Scene.h"
 
 namespace dae
 {
@@ -7,12 +8,16 @@ namespace dae
 
     class EndState : public GameState {
     public:
+        EndState(int score);
+
         void Enter() override;
-        void Update() override { return; };
-        void Render() const override {};
+        void Update() override;
+        void Render() const override;
         void Exit() override;
 
     private:
-        bool m_Restart = false;
+        int m_Score{};
+
+        Scene* m_pScene{};
     };
 }

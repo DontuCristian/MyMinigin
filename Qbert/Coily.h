@@ -11,7 +11,7 @@ namespace dae
     class Coily : public BComponent
     {
     public:
-        Coily(GameObject& obj, Transform* playerTransform);
+        Coily(GameObject& obj, Transform* playerTransform, bool pvp);
         ~Coily();
         void Update() override;
         void Render() const override;

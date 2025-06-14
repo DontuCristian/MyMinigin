@@ -9,13 +9,11 @@ namespace dae
     class IntroState : public GameState {
     public:
         void Enter() override;
-        void Update() override { return; };
+        void Update() override;
         void Render() const override {};
         void Exit() override;
 
     private:
-        bool m_startGame = false;
-
-        Scene* m_Scene{};
+        Scene* m_pScene{};
     };
 }

@@ -26,6 +26,7 @@ namespace dae
 		uint32_t Button{};
 		uint32_t ControllerIdx{};
 		std::unique_ptr<Command> Command{};
+		bool Delete{};
 	};
 
 	struct KeyAction
@@ -33,6 +34,7 @@ namespace dae
 		TriggerEvent Event{};
 		uint8_t Key{};
 		std::unique_ptr<Command> Command{};
+		bool Delete{};
 	};
 
 	class InputManager final : public Singleton<InputManager>
@@ -53,6 +55,8 @@ namespace dae
 		void RemoveAction(const std::string& name);
 
 	private:
+
+		void Cleanup();
 
 		std::vector<std::unique_ptr<Gamepad>> m_Gamepads{};
 		std::unique_ptr<Keyboard> m_Keyboard{};

@@ -22,5 +22,7 @@ namespace dae
 
     private:
         std::unique_ptr<GameState> m_pCurrentState;
+
+        bool m_ChangeState{ false };
     };
 }

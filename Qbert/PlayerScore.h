@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseComponent.h"
 #include "Subject.h"
+#include "Observer.h"
 #include <functional>
 namespace dae 
 {
@@ -11,7 +12,7 @@ namespace dae
 	}
 
 	class GameObject;
-    class PlayerScore : public BComponent, public Subject
+    class PlayerScore : public BComponent, public Subject, public Observer
     {
 		public:
 
@@ -28,6 +29,9 @@ namespace dae
 
 			void IncreaseScore(int ammmount);
 
+			void OnNotify(Event event, Subject* subject);
+
+			int GetScore() { return m_CurrentScore; }
 		private:
 			int m_CurrentScore{ 0 };
 			int m_MaxScore{10000};

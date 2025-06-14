@@ -55,7 +55,7 @@ dae::AIMoveCommand* dae::CoilySnakeStateAI::PickMoveCommand()
 			m_PlayerPos = m_pQBertTransform->GetWorldPosition();
 		}
 		//Direction to the player
-		glm::vec2 direction = glm::normalize(m_pQBertTransform->GetWorldPosition() - m_pTransform->GetWorldPosition());
+		glm::vec2 direction = glm::normalize(m_PlayerPos - m_pTransform->GetWorldPosition());
 
 		//Predetermined movement directions
 		glm::vec2 right = glm::normalize(glm::vec2{ 1,1 });

@@ -15,7 +15,7 @@ namespace dae
 	class Block : public BComponent, public Subject
 	{
 	public:
-		Block(GameObject& obj);
+		Block(GameObject& obj, int nrOfColorChanges, bool revertsBack);
 
 		Block(const Block&) = delete;
 		Block(Block&&) = delete;
@@ -29,15 +29,17 @@ namespace dae
 		void Render() const override {};
 
 		int CollidedWithPlayer();
+		void CollidedWithSlickOrSam();
 
 		void SetIsEdge(bool isEdge) { m_IsEdge = isEdge; }
-		bool IsEdge() { return m_IsEdge; }
+		bool IsEdge() const { return m_IsEdge; }
 
 	private:
 
-		const int m_NrOfColorChanges{ 1 };
+		const int m_NrOfColorChanges;
 		int m_ColorChangeCounter{ 0 };
 		bool m_IsEdge{ false };
+		const bool m_RevertsBack;
 
 		SpriteRenderer* m_pSpriteRenderer{ nullptr };
 	};

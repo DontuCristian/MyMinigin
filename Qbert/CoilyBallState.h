@@ -11,7 +11,7 @@ namespace dae
 	class CoilyBallState final : public CoilyState
 	{
 	public:
-		CoilyBallState() = default;
+		CoilyBallState(bool controlledByHuman);
 		virtual ~CoilyBallState() = default;
 
 		void Enter(GameObject& obj, Transform*) override;
@@ -25,8 +25,6 @@ namespace dae
 
 		std::unique_ptr<AIMoveCommand> m_pMoveRightCommand;
 		std::unique_ptr<AIMoveCommand> m_pMoveLeftCommand;
-		std::unique_ptr<AIMoveCommand> m_pMoveUpRightCommand;
-		std::unique_ptr<AIMoveCommand> m_pMoveUpLeftCommand;
 
 		std::function<void(const physics::Collider*, const physics::CollisionPoints&)> m_OnCollisionCallback{};
 
@@ -34,5 +32,6 @@ namespace dae
 		float m_MoveTimer{ 2.f };
 
 		bool m_IsAtEdge{ false };
+		bool m_ControlledByHuman{ false };
 	};
 }

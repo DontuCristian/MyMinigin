@@ -23,6 +23,7 @@ namespace dae
 
         int IncreaseLevelNr() { m_LevelNumber++; }
         void BlockReachedTargetColor();
+        void BlockTargetColorReverted();
 
         void ResetLevel();
 
@@ -37,18 +38,20 @@ namespace dae
         void SpawnSam();
 		void SpawnUgg();
 		void SpawnWrongWay();
-        //void LoadLevelFromJson(const std::string& filename);
 
         float m_SpawnEnemiesTimer{ 3.f };
         float m_SpawnEnemiesInterval{ 6.f };
 
-        int m_MaxNrBlocks{ 4 };
+        int m_MaxNrBlocks{ 28 };
 		int m_CurrentNrBlocks{ 0 };
 
         int m_LevelNumber{1};
         bool m_IsLevelComplete = false;
+        bool m_Pvp = false;
 
-        Scene* m_Scene{};
+		std::string m_Mode;
+
+        Scene* m_pScene{};
         std::vector<GameObject*> m_Enemies{};
     };
 }

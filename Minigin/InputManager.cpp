@@ -94,7 +94,7 @@ bool dae::InputManager::ProcessInput()
 		}
 	}
 
-
+	Cleanup();
 	return true;
 }
 
@@ -176,25 +176,47 @@ void dae::InputManager::AddAction(const std::string& name, const uint8_t key, co
 
 void dae::InputManager::RemoveKeyAction(const std::string& name)
 {
-	assert(!m_KeyActions.contains(name));
+	auto it = m_KeyActions.find(name);
 
-	m_KeyActions.erase(name);
+	if (it != m_KeyActions.end())
+	{
+		it->second->Delete = true;
+	}
 }
 
 void dae::InputManager::RemoveGamepadAction(const std::string& name)
 {
-	assert(m_ControllerActions.contains(name));
+	auto it = m_ControllerActions.find(name);
 
-	m_ControllerActions.erase(name);
+	if (it != m_ControllerActions.end())
+	{
+		it->second->Delete = true;
+	}
 }
 
 void dae::InputManager::RemoveAction(const std::string& name)
 {
-	assert(!m_KeyActions.contains(name));
-	assert(!m_ControllerActions.contains(name));
+	RemoveGamepadAction(name);
+	RemoveKeyAction(name);
+}
 
-	m_KeyActions.erase(name);
-	m_ControllerActions.erase(name);
+void dae::InputManager::Cleanup()
+{
+	for (auto it = m_KeyActions.begin(); it != m_KeyActions.end(); )
+	{
+		if (it->second && it->second->Delete)
+			it = m_KeyActions.erase(it);
+		else
+			++it;
+	}
+
+	for (auto it = m_ControllerActions.begin(); it != m_ControllerActions.end(); )
+	{
+		if (it->second && it->second->Delete)
+			it = m_ControllerActions.erase(it);
+		else
+			++it;
+	}
 }
 
 

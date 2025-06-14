@@ -8,172 +8,41 @@
 #include "GameComponentsIncludes.h"
 #include "EngineComponentsIncludes.h"
 #include "MoveCommand.h"
+#include "ChangeLevelCommand.h"
 
 #include "GameLoop.h"
+#include "EndState.h"
+#include "LevelBuilder.h"
 
 #include <random>
 
 dae::LevelState::LevelState(int levelNumber, const std::string& mode):
-	m_LevelNumber(levelNumber)
+	m_LevelNumber(levelNumber),
+	m_Mode(mode)
 {
-	dae::SceneManager::GetInstance().CreateScene("Level");
-	m_Scene = dae::SceneManager::GetInstance().GetScene("Level");  
+	m_pScene = dae::SceneManager::GetInstance().GetScene("Level");
+	if (m_pScene == nullptr)
+	{
+		dae::SceneManager::GetInstance().CreateScene("Level");
+		m_pScene = dae::SceneManager::GetInstance().GetScene("Level");
+	}
+
+	if (m_Mode == "Pvp")
+	{
+		m_Pvp = true;
+	}
 }
 
 void dae::LevelState::Enter()
 {
 
-	const int totalRows = 7;
-	const float cubeSize = 64.f; //Size in pixels
-	const float offset = 16.f;
-	int cubeIndex = 0;
+	LevelBuilder::GetInstance().BuildLevel("../Data/Levels/Level"+std::to_string(m_LevelNumber)+m_Mode+".json", m_pScene);
 
-	glm::vec2 startPos{ 320.f,110.f };
+	auto& input = InputManager::GetInstance();
 
-	for (int row = 0; row < totalRows; ++row) {
-		for (int col = 0; col <= row; ++col) {
-			bool isOutside = (col == 0) || (col == row);
-
-			auto cube = std::make_shared<dae::GameObject>();
-
-			cube->AddComponent<dae::SpriteRenderer>();
-			cube->GetComponent<dae::SpriteRenderer>()->SetSpriteSheet("Level1_Blocks.png", 6, 2);
-
-			if (isOutside)
-			{
-				cube->GetComponent<dae::SpriteRenderer>()->SetFrameIdx(0);
-			}
-			else
-			{
-				cube->GetComponent<dae::SpriteRenderer>()->SetFrameIdx(1);
-			}
-
-			float x = startPos.x + (col - row * 0.5f) * cubeSize;
-			float y = startPos.y - (-row * (cubeSize - offset));
-
-			cube->GetTransform()->SetLocalPosition(x, y);
-			cube->AddComponent<dae::physics::Collider>(16.f, 16.f, glm::vec2{ -8.f , 0.f });
-			cube->GetComponent<dae::physics::Collider>()->SetTag("Block");
-			cube->AddComponent<dae::Block>();
-			cube->GetComponent<dae::Block>()->SetIsEdge(row == totalRows - 1);
-
-#ifdef _DEBUG
-			std::cout << "Cube " << cubeIndex << " Position: ("
-				<< x << ", " << y << ", " << ") "
-				<< (isOutside ? "[OUTSIDE]\n" : "[INSIDE]\n");
-#endif // _DEBUG
-
-			m_Scene->Add(cube);
-
-			cubeIndex++;
-		}
-	}
-
-	glm::vec2 deathStartPos = startPos - glm::vec2{ offset,cubeSize };
-
-	for (int row = 1; row < totalRows + 2; ++row) {
-		for (int col = 0; col <= row; ++col) {
-			bool isOutside = (col == 0) || (col == row);
-
-			if (isOutside)
-			{
-				auto cube = std::make_shared<dae::GameObject>();
-
-				float x = deathStartPos.x + (col - row * 0.5f) * cubeSize;
-				float y = deathStartPos.y - (-(row-1) * (cubeSize - offset));
-
-
-				if (col == 0)           // Left edge
-					x -= cubeSize / 4.f;
-				else if (col == row)    // Right edge
-					x += cubeSize / 4.f;
-
-
-				cube->GetTransform()->SetLocalPosition(x, y);
-				cube->AddComponent<dae::physics::Collider>(42.f, 16.f, glm::vec2{ -8.f ,20.f }, true);
-				cube->GetComponent<dae::physics::Collider>()->SetTag("KillZone");
-
-#ifdef _DEBUG
-				std::cout << "Cube " << cubeIndex << " Position: ("
-					<< x << ", " << y << ", " << ") "
-					<< (isOutside ? "[OUTSIDE]\n" : "[INSIDE]\n");
-#endif // _DEBUG
-
-				m_Scene->Add(cube);
-			}
-
-			cubeIndex++;
-		}
-	}
-
-	//auto gameObject = std::make_shared<dae::GameObject>();
-	//gameObject->GetTransform()->SetLocalPosition(320.f, 250.f);
-	//gameObject->AddComponent<dae::physics::Collider>();
-	//gameObject->GetComponent<dae::physics::Collider>()->Width = 40;
-	//gameObject->GetComponent<dae::physics::Collider>()->Height = 16;
-	//scene.Add(gameObject);
-
-	//gameObject = std::make_shared<dae::GameObject>();
-	//gameObject->GetTransform()->SetLocalPosition(320.f, 230.f);
-	//gameObject->AddComponent<dae::physics::Collider>();
-	//gameObject->GetComponent<dae::physics::Collider>()->Width = 40;
-	//gameObject->GetComponent<dae::physics::Collider>()->Height = 16;
-	//gameObject->GetComponent<dae::physics::Collider>()->IsTrigger = true;
-	//scene.Add(gameObject);
-
-	auto elevator = std::make_shared<dae::GameObject>();
-	elevator->GetTransform()->SetLocalPosition(startPos.x - 160, startPos.y + 150);
-	elevator->AddComponent<dae::SpriteRenderer>();
-	elevator->GetComponent<dae::SpriteRenderer>()->SetSpriteSheet("Level1_Elevator.png", 1, 4);
-	elevator->GetComponent<dae::SpriteRenderer>()->SetFrameDelay(0.15f);
-	elevator->AddComponent<dae::physics::Collider>(32.f, 10.f, glm::vec2{ -16.f,-5.f }, true);
-	elevator->GetComponent<dae::physics::Collider>()->SetTag("Elevator");
-	elevator->AddComponent<dae::Platform>();
-	
-	m_Scene->Add(elevator);
-
-	auto to = std::make_shared<dae::GameObject>();
-	to->AddComponent<dae::FPSRenderer>();
-	to->GetComponent<dae::TextRenderer>()->SetFont("Lingua.otf", 25);
-	to->GetTransform()->SetLocalPosition(20.f, 30.f);
-	m_Scene->Add(to);
-
-	auto qBertHealth = std::make_shared<dae::GameObject>();
-	qBertHealth->AddComponent<dae::HealthHUD>();
-	qBertHealth->GetComponent<dae::HealthHUD>()->SetFont("Lingua.otf", 15);
-	qBertHealth->GetComponent<dae::HealthHUD>()->SetText("Lives: 3");
-	qBertHealth->GetTransform()->SetLocalPosition(30.f, 70.f);
-	m_Scene->Add(qBertHealth);
-
-	auto qBertScore = std::make_shared<dae::GameObject>();
-	qBertScore->AddComponent<dae::ScoreHUD>();
-	qBertScore->GetComponent<dae::ScoreHUD>()->SetFont("Lingua.otf", 15);
-	qBertScore->GetComponent<dae::ScoreHUD>()->SetText("0");
-	qBertScore->GetTransform()->SetLocalPosition(30.f, 90.f);
-	m_Scene->Add(qBertScore);
-
-	auto qBert = std::make_shared<dae::GameObject>();
-	qBert->GetTransform()->SetLocalPosition(320, 20);
-	qBert->AddComponent<dae::SpriteRenderer>();
-	qBert->GetComponent<dae::SpriteRenderer>()->SetSpriteSheet("QBertMoving.png", 4, 2);
-	qBert->GetComponent<dae::SpriteRenderer>()->SetFrameDelay(0.3f);
-	qBert->AddComponent<dae::physics::RigidBody>();
-	//qBert->GetComponent<dae::physics::RigidBody>()->IsKinematic = true;
-	qBert->AddComponent<dae::physics::Collider>(16.f, 16.f, glm::vec2{ -8.f,12.f });
-	qBert->GetComponent<dae::physics::Collider>()->SetTag("Player");
-	qBert->AddComponent<dae::DeathHandlerComponent>();
-	qBert->AddComponent<dae::Health>();
-	qBert->GetComponent<dae::Health>()->AddObserver(qBertHealth->GetComponent<dae::HealthHUD>());
-	qBert->GetComponent<dae::Health>()->AddObserver(qBert->GetComponent<dae::DeathHandlerComponent>());
-	qBert->AddComponent<dae::PlayerScore>();
-	qBert->GetComponent<dae::PlayerScore>()->AddObserver(qBertScore->GetComponent<dae::ScoreHUD>());
-	m_Scene->Add(qBert);
-
-	InputManager::GetInstance().AddAction("MoveUpLeft", SDL_SCANCODE_A, dae::TriggerEvent::Down, std::make_unique<dae::MoveCommand>(*qBert.get(), glm::vec2{ -1,-5.4 }, 250.f));
-	InputManager::GetInstance().AddAction("MoveDownRight", SDL_SCANCODE_D, dae::TriggerEvent::Down, std::make_unique<dae::MoveCommand>(*qBert.get(), glm::vec2{ 1,-2.5 }, 120.5f));
-	InputManager::GetInstance().AddAction("MoveUpRight", SDL_SCANCODE_W, dae::TriggerEvent::Down, std::make_unique<dae::MoveCommand>(*qBert.get(), glm::vec2{ 1,-5.4 }, 250.f));
-	InputManager::GetInstance().AddAction("MoveDownLeft", SDL_SCANCODE_S, dae::TriggerEvent::Down, std::make_unique<dae::MoveCommand>(*qBert.get(), glm::vec2{ -1,-2.5 }, 120.5f));
-
+	input.AddAction("ChangeToLevel1", SDL_SCANCODE_F1, TriggerEvent::Down, std::make_unique<ChangeLevelCommand>(1, m_Mode));
+	input.AddAction("ChangeToLevel2", SDL_SCANCODE_F2, TriggerEvent::Down, std::make_unique<ChangeLevelCommand>(2, m_Mode));
+	input.AddAction("ChangeToLevel3", SDL_SCANCODE_F3, TriggerEvent::Down, std::make_unique<ChangeLevelCommand>(3, m_Mode));
 
 }
 
@@ -183,12 +52,20 @@ void dae::LevelState::Update()
 
 	if (IsLevelComplete())
 	{
+		if (m_LevelNumber == 3)
+		{
+			const int score = m_pScene->Find("Player")->GetComponent<dae::PlayerScore>()->GetScore();
+			GameLoop::GetInstance().ChangeState(std::make_unique<EndState>(score));
+			return;
+		}
 		std::cout << "Level Complete!" << std::endl;
-		GameLoop::GetInstance().ChangeState(std::make_unique<LevelState>(++m_LevelNumber));
+		GameLoop::GetInstance().ChangeState(std::make_unique<LevelState>(++m_LevelNumber, m_Mode));
 		return;
 	}
 	if (IsLevelLost())
 	{
+		const int score = m_pScene->Find("Player")->GetComponent<dae::PlayerScore>()->GetScore();
+		GameLoop::GetInstance().ChangeState(std::make_unique<EndState>(score));
 		std::cout << "Level Lost!" << std::endl;
 		return;
 	}
@@ -199,9 +76,14 @@ void dae::LevelState::BlockReachedTargetColor()
 	m_CurrentNrBlocks++;
 }
 
+void dae::LevelState::BlockTargetColorReverted()
+{
+	m_CurrentNrBlocks--;
+}
+
 void dae::LevelState::ResetLevel()
 {
-	auto objects = m_Scene->GetObjects();
+	auto objects = m_pScene->GetObjects();
 
 	for (auto& enemy : objects)
 	{
@@ -220,6 +102,8 @@ void dae::LevelState::SpawnEnemies()
 
 	if (m_SpawnEnemiesTimer <= 0)
 	{
+		m_SpawnEnemiesTimer = m_SpawnEnemiesInterval;
+
 		if (m_LevelNumber == 1)
 		{
 			SpawnCoily();
@@ -230,35 +114,71 @@ void dae::LevelState::SpawnEnemies()
 			if (dist(engine) == 0)
 			{
 				SpawnWrongWay();
+				return;
 			}
 			else
 			{
 				SpawnUgg();
+				return;
 			}
 		}
 		else if (m_LevelNumber == 2)
 		{
 			static std::default_random_engine engine{ std::random_device{}() };
-			static std::uniform_int_distribution<int> dist(0, 1);
+			static std::uniform_int_distribution<int> dist(0, 3);
+
+			SpawnCoily();
 
 			if (dist(engine) == 0)
 			{
 				SpawnWrongWay();
+				return;
 			}
-			else
+			else if(dist(engine) == 1)
 			{
 				SpawnUgg();
+				return;
 			}
-
-			SpawnCoily();
+			else if (dist(engine) == 2)
+			{
+				SpawnSlick();
+				return;
+			}
+			else if (dist(engine) == 3)
+			{
+				SpawnSam();
+				return;
+			}
 
 		}
 		else if (m_LevelNumber == 3)
 		{
+			static std::default_random_engine engine{ std::random_device{}() };
+			static std::uniform_int_distribution<int> dist(0, 3);
+
+			SpawnCoily();
+
+			if (dist(engine) == 0)
+			{
+				SpawnWrongWay();
+				return;
+			}
+			else if (dist(engine) == 1)
+			{
+				SpawnUgg();
+				return;
+			}
+			else if (dist(engine) == 2)
+			{
+				SpawnSlick();
+				return;
+			}
+			else if (dist(engine) == 3)
+			{
+				SpawnSam();
+				return;
+			}
 		}
-
-
-		m_SpawnEnemiesTimer = m_SpawnEnemiesInterval;
 	}
 
 }
@@ -266,9 +186,9 @@ void dae::LevelState::SpawnEnemies()
 void dae::LevelState::SpawnCoily()
 {
 	//If Coily isn't already spawned
-	if (!m_Scene->Find("CoilySnake").get())
+	if (!m_pScene->Find("Coily").get())
 	{
-		auto qBert = m_Scene->Find("Player");
+		auto qBert = m_pScene->Find("Player");
 
 		auto coily = std::make_shared<dae::GameObject>();
 		coily->GetTransform()->SetLocalPosition(320, 60);
@@ -278,11 +198,14 @@ void dae::LevelState::SpawnCoily()
 		coily->AddComponent<dae::physics::RigidBody>();
 		//coily->GetComponent<dae::physics::RigidBody>()->IsKinematic = true;
 		coily->AddComponent<dae::physics::Collider>(16.f, 16.f, glm::vec2{ -8.f,24.f });
-		coily->GetComponent<dae::physics::Collider>()->SetTag("CoilySnake");
-		if(qBert)
-			coily->AddComponent<dae::Coily>(qBert->GetTransform());
-		coily->AddComponent<dae::EnemyDeathHandlerComponent>();
-		m_Scene->Add(coily);
+		coily->GetComponent<dae::physics::Collider>()->SetTag("Coily");
+		if (qBert)
+		{
+			coily->AddComponent<dae::Coily>(qBert->GetTransform(), m_Pvp);
+			coily->AddComponent<dae::EnemyDeathHandlerComponent>();
+			coily->GetComponent<dae::EnemyDeathHandlerComponent>()->AddObserver(qBert->GetComponent<PlayerScore>());
+		}
+		m_pScene->Add(coily);
 
 		m_Enemies.push_back(coily.get());
 	}
@@ -290,11 +213,39 @@ void dae::LevelState::SpawnCoily()
 
 void dae::LevelState::SpawnSlick()
 {
+
+	auto slick = std::make_shared<dae::GameObject>();
+	slick->GetTransform()->SetLocalPosition(288, 60);
+	slick->AddComponent<dae::SpriteRenderer>();
+	slick->GetComponent<dae::SpriteRenderer>()->SetSpriteSheet("Slick.png", 2, 4);
+	slick->GetComponent<dae::SpriteRenderer>()->SetFrameDelay(0.3f);
+	slick->AddComponent<dae::physics::RigidBody>();
+	slick->AddComponent<dae::physics::Collider>(16.f, 16.f, glm::vec2{ -8.f,8.f });
+	slick->GetComponent<dae::physics::Collider>()->SetTag("Slick");
+	slick->AddComponent<dae::SamOrSlick>();
+	slick->AddComponent<dae::EnemyDeathHandlerComponent>();
+	m_pScene->Add(slick);
+
+	m_Enemies.push_back(slick.get());
+
 }
 
 
 void dae::LevelState::SpawnSam()
 {
+	auto sam = std::make_shared<dae::GameObject>();
+	sam->GetTransform()->SetLocalPosition(352, 60);
+	sam->AddComponent<dae::SpriteRenderer>();
+	sam->GetComponent<dae::SpriteRenderer>()->SetSpriteSheet("Sam.png", 2, 4);
+	sam->GetComponent<dae::SpriteRenderer>()->SetFrameDelay(0.3f);
+	sam->AddComponent<dae::physics::RigidBody>();
+	sam->AddComponent<dae::physics::Collider>(16.f, 16.f, glm::vec2{ -8.f,8.f });
+	sam->GetComponent<dae::physics::Collider>()->SetTag("Sam");
+	sam->AddComponent<dae::SamOrSlick>();
+	sam->AddComponent<dae::EnemyDeathHandlerComponent>();
+	m_pScene->Add(sam);
+
+	m_Enemies.push_back(sam.get());
 }
 
 void dae::LevelState::SpawnUgg()
@@ -306,12 +257,11 @@ void dae::LevelState::SpawnUgg()
 	ugg->GetComponent<dae::SpriteRenderer>()->SetFrameDelay(0.3f);
 	ugg->AddComponent<dae::physics::RigidBody>();
 	ugg->GetComponent<dae::physics::RigidBody>()->Gravity = glm::vec2{ 1,0 };
-	//redBall->GetComponent<dae::physics::RigidBody>()->IsKinematic = true;
 	ugg->AddComponent<dae::physics::Collider>(16.f, 16.f, glm::vec2{ -8.f,-8.f });
 	ugg->GetComponent<dae::physics::Collider>()->SetTag("Ugg");
 	ugg->AddComponent<dae::WrongWay>(glm::vec2{ -2.5, -2.5 }, glm::vec2{ -2.5, 2.5 });
 	ugg->AddComponent<dae::EnemyDeathHandlerComponent>();
-	m_Scene->Add(ugg);
+	m_pScene->Add(ugg);
 
 	m_Enemies.push_back(ugg.get());
 
@@ -320,18 +270,17 @@ void dae::LevelState::SpawnUgg()
 void dae::LevelState::SpawnWrongWay()
 {
 	auto wrongWay = std::make_shared<dae::GameObject>();
-	wrongWay->GetTransform()->SetLocalPosition(520, 398);
+	wrongWay->GetTransform()->SetLocalPosition(560, 398);
 	wrongWay->AddComponent<dae::SpriteRenderer>();
 	wrongWay->GetComponent<dae::SpriteRenderer>()->SetSpriteSheet("WrongWay.png", 2, 4);
 	wrongWay->GetComponent<dae::SpriteRenderer>()->SetFrameDelay(0.3f);
 	wrongWay->AddComponent<dae::physics::RigidBody>();
 	wrongWay->GetComponent<dae::physics::RigidBody>()->Gravity = glm::vec2{ -1,0 };
-	//redBall->GetComponent<dae::physics::RigidBody>()->IsKinematic = true;
 	wrongWay->AddComponent<dae::physics::Collider>(16.f, 16.f, glm::vec2{ -8.f,-8.f });
 	wrongWay->GetComponent<dae::physics::Collider>()->SetTag("WrongWay");
 	wrongWay->AddComponent<dae::WrongWay>(glm::vec2{ 2.5, -2.5 }, glm::vec2{ 2.5, 2.5 });
 	wrongWay->AddComponent<dae::EnemyDeathHandlerComponent>();
-	m_Scene->Add(wrongWay);
+	m_pScene->Add(wrongWay);
 
 
 	m_Enemies.push_back(wrongWay.get());
@@ -339,17 +288,27 @@ void dae::LevelState::SpawnWrongWay()
 
 void dae::LevelState::Exit()
 {
-	m_Scene->RemoveAll();
+	m_pScene->RemoveAll();
+	auto& input = InputManager::GetInstance();
+
+	input.RemoveAction("MoveUpLeft");
+	input.RemoveAction("MoveUpRight");
+	input.RemoveAction("MoveDownLeft");
+	input.RemoveAction("MoveDownRight");
+	input.RemoveAction("ChangeToLevel1");
+	input.RemoveAction("ChangeToLevel2");
+	input.RemoveAction("ChangeToLevel3");
 }
 
 bool dae::LevelState::IsLevelComplete() const
 {
+	//return false;
 	return m_CurrentNrBlocks>=m_MaxNrBlocks;
 }
 
 bool dae::LevelState::IsLevelLost() const
 {
-	auto qBert = m_Scene->Find("Player");
+	auto qBert = m_pScene->Find("Player");
 	if(qBert)
 		return qBert->GetComponent<dae::Health>()->IsDead();
 

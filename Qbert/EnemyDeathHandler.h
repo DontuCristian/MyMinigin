@@ -1,5 +1,6 @@
 #pragma once
 #include <BaseComponent.h>
+#include "Subject.h"
 #include <functional>
 
 namespace dae
@@ -14,7 +15,7 @@ namespace dae
 	class GameObject;
 	class Transform;
 
-	class EnemyDeathHandlerComponent : public BComponent
+	class EnemyDeathHandlerComponent : public BComponent, public Subject
 	{
 	public:
 		EnemyDeathHandlerComponent(GameObject& obj);
@@ -23,8 +24,7 @@ namespace dae
 		void Render() const override {};
 
 	private:
-
-		void DeathSequence();
+		void OnDeath();
 
 		Transform* m_pTransform{ nullptr };
 

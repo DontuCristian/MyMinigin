@@ -10,3 +10,6 @@
 #include "Block.h"
 #include "WrongWay.h"
 #include "Coily.h"
+#include "MenuSelector.h"
+#include "SamOrSlick.h"
+#include "TextInput.h"
