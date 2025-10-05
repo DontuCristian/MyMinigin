@@ -16,5 +16,8 @@ namespace dae
 		Minigin(Minigin&& other) = delete;
 		Minigin& operator=(const Minigin& other) = delete;
 		Minigin& operator=(Minigin&& other) = delete;
+
+		const inline static int WIDTH{ 640 };
+		const inline static int HEIGHT{ 480 };
 	};
 }

@@ -64,8 +64,8 @@ dae::Minigin::Minigin(const std::string &dataPath)
 		"Programming 4 assignment",
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
-		640,
-		480,
+		WIDTH,
+		HEIGHT,
 		SDL_WINDOW_OPENGL
 	);
 	if (g_window == nullptr) 
@@ -99,6 +99,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	auto& physics = ServiceLocator::GetPhysicsService();
 
     timer.Init();
+	timer.PlaceTimeStamp();
 
     float lag{};
 
@@ -126,6 +127,13 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
         renderer.Render();
 		SceneManager::GetInstance().Cleanup();
+
+		if (timer.GetTimeStampDuration() >= 1.f)
+		{
+			timer.PlaceTimeStamp();
+			ResourceManager::GetInstance().UnloadUnusedResources();
+		}
+
 
         auto smth = timer.GetThisMoment();
         const auto sleepTime{ frameStart + std::chrono::milliseconds(16) - smth };

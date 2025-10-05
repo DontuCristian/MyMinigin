@@ -14,6 +14,8 @@ namespace dae
 	public:
 		virtual ~TextureRenderer() = default;
 		explicit TextureRenderer(GameObject& owner, const std::string& path);
+		explicit TextureRenderer(GameObject& owner, std::shared_ptr<Texture2D> texture);
+		explicit TextureRenderer(GameObject& owner);
 
 		TextureRenderer(const TextureRenderer&) = delete;
 		TextureRenderer(TextureRenderer&&) noexcept = delete;
@@ -29,7 +31,6 @@ namespace dae
 
 		Transform* m_Transform;
 		std::shared_ptr<Texture2D> m_Texture;
-
 	};
 }
 

@@ -28,6 +28,11 @@ const glm::vec2& dae::Transform::GetLocalPosition() const
 	return m_LocalPosition;
 }
 
+float dae::Transform::GetRotation() const
+{
+	return m_Rotation;
+}
+
 void dae::Transform::UpdateWorldPosition()
 {
 	if (m_IsPosDirty)
@@ -37,9 +42,13 @@ void dae::Transform::UpdateWorldPosition()
 		GameObject* parent = BComponent::GetOwner()->GetParent();
 
 		if (parent == nullptr)
+		{
 			m_WorldPosition = m_LocalPosition;
+		}
 		else
+		{
 			m_WorldPosition = parent->GetTransform()->GetWorldPosition() + m_LocalPosition;
+		}
 
 		//Just to be safe
 		parent = nullptr;
@@ -57,6 +66,11 @@ void dae::Transform::SetLocalPosition(float x, float y)
 {
 	glm::vec2 pos{x,y};
 	SetLocalPosition(pos);
+}
+
+void dae::Transform::SetRotation(float angle)
+{
+	m_Rotation = angle;
 }
 
 void dae::Transform::SetPositionDirty()

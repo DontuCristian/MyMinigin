@@ -23,16 +23,22 @@ namespace dae
 		const glm::vec2& GetWorldPosition();
 		const glm::vec2& GetLocalPosition() const;
 
+		float GetRotation() const;
+
 		void UpdateWorldPosition();
 
 		void SetLocalPosition(const glm::vec2& pos);
 		void SetLocalPosition(float x, float y);
+
+		void SetRotation(float angle);
 
 		void SetPositionDirty();
 
 	private:
 		glm::vec2 m_LocalPosition;
 		glm::vec2 m_WorldPosition;
+
+		float m_Rotation{ 0.f }; // Angle in degrees, clockwise
 
 		bool m_IsPosDirty{ false };
 	};

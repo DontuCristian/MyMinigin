@@ -24,13 +24,6 @@ namespace dae
 		void PlaySound(const std::string& path, SoundId sound, const float volume, bool loops = false) override;
 		void PlayMusic(const std::string& path, SoundId sound, const float volume, bool loops = false) override;
 
-		void StopSound(SoundId sound) override;
-		void StopMusic(SoundId sound) override;
-		void PauseSound(SoundId sound) override;
-		void PauseMusic(SoundId sound) override;
-
-
-
 		void Update();
 
 	private:

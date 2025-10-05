@@ -1,6 +1,6 @@
 #include "Scene.h"
 #include "GameObject.h"
-
+#include "PhysicsComponents.h"
 #include <algorithm>
 
 using namespace dae;
@@ -11,14 +11,18 @@ Scene::Scene(const std::string& name) : m_name(name) {}
 
 Scene::~Scene() = default;
 
-void Scene::Add(std::shared_ptr<GameObject> object)
+void Scene::Add(std::unique_ptr<GameObject> object)
 {
 	m_objects.emplace_back(std::move(object));
 }
 
-void Scene::Remove(std::shared_ptr<GameObject> object)
+void Scene::Remove(GameObject* object)
 {
-	m_objects.erase(std::remove(m_objects.begin(), m_objects.end(), object), m_objects.end());
+	auto itr = std::find_if(m_objects.begin(),
+		m_objects.end(),
+		[object](auto& element) { return element.get() == object; });
+
+	m_objects.erase(itr);
 }
 
 void Scene::RemoveAll()
@@ -26,11 +30,45 @@ void Scene::RemoveAll()
 	m_objects.clear();
 }
 
+std::vector<GameObject*> dae::Scene::FindAll(const std::string& tag) const
+{
+	std::vector<GameObject*> foundObjects;
+	for (const auto& object : m_objects)
+	{
+		if (object->HasComponent<physics::Collider>())
+		{
+			if(object->GetComponent<physics::Collider>()->CompareTag(tag))
+			{
+				foundObjects.push_back(object.get());
+			}
+		}
+	}
+	return foundObjects;
+}
+
+GameObject* dae::Scene::Find(const std::string& tag) const
+{
+	auto it = std::find_if(m_objects.begin(), m_objects.end(),
+		[&tag](const std::unique_ptr<GameObject>& obj)
+		{
+			if (obj->HasComponent<physics::Collider>())
+			{
+				return obj->GetComponent<physics::Collider>()->CompareTag(tag);
+			}
+			return false;
+		});
+
+	if (it != m_objects.end())
+		return it->get();
+
+	return nullptr;
+}
+
 void Scene::Update()
 {
-	for(auto& object : m_objects)
+	for (size_t i = 0; i < m_objects.size(); ++i)
 	{
-		object->Update();
+		if (m_objects[i]) m_objects[i]->Update();
 	}
 }
 
@@ -50,31 +88,9 @@ void Scene::Cleanup()
 		{
 			if (object->ShouldBeDeleted())
 			{
-				Remove(object);
+				Remove(object.get());
 			}
 		}
 	}
-}
-
-std::shared_ptr<GameObject> dae::Scene::Find(const std::string& colliderTag)
-{
-
-	auto it = std::find_if(m_objects.begin(), m_objects.end(),
-
-		[&colliderTag](const std::shared_ptr<GameObject>& obj)
-		{
-			if (obj->HasComponent<physics::Collider>())
-			{
-				auto collider = obj->GetComponent<physics::Collider>();
-				return collider && collider->CompareTag(colliderTag);
-			}
-
-			return false;
-		});
-
-	if (it != m_objects.end())
-		return *it;
-
-	return nullptr;
 }
 

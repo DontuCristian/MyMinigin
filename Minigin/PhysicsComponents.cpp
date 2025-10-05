@@ -32,6 +32,18 @@ void dae::physics::RigidBody::SetForce(const glm::vec2& direction, float strengt
 	Force = direction * strength;
 }
 
+dae::physics::Collider::Collider(dae::GameObject& obj):
+	BComponent(obj)
+{
+	pTransform = obj.GetTransform();
+
+	//Add the Collider to the physics service
+	ServiceLocator::GetPhysicsService().AddCollider(this);
+
+	m_OnCollisionCallbacks.clear();
+	m_OnTriggerCallbacks.clear();
+}
+
 dae::physics::Collider::Collider(dae::GameObject& obj, float width, float height, glm::vec2 offset, bool isTrigger) :
 	BComponent(obj),
 	Offset{ offset },
@@ -41,7 +53,7 @@ dae::physics::Collider::Collider(dae::GameObject& obj, float width, float height
 {
 	pTransform = obj.GetTransform();
 
-	//Remove the Collider from the physics service
+	//Add the Collider to the physics service
 	ServiceLocator::GetPhysicsService().AddCollider(this);
 
 	m_OnCollisionCallbacks.clear();
@@ -75,21 +87,10 @@ void dae::physics::Collider::Render() const
 #endif
 
 }
-bool dae::physics::Collider::CompareTag(const std::string& tag) const
+
+bool dae::physics::Collider::CompareTag(std::string tag) const
 {
-	if(tag.empty())
-		return false;
-
-	auto hash = make_sdbm_hash_str(tag);
-
-	return 	hash == m_Tag;
-}
-
-void dae::physics::Collider::SetTag(const std::string& tag)
-{
-	if (tag.empty())
-		return;
-	m_Tag = make_sdbm_hash_str(tag);
+	return m_Tag == make_sdbm_hash_str(tag);
 }
 
 void dae::physics::Collider::OnCollision(const Collider* other, const CollisionPoints& points)

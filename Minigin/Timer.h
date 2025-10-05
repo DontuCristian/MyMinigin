@@ -20,13 +20,24 @@ namespace dae
 		float GetFrameCount() const { return m_FrameCount; }
 		float GetFixedFrameCount() const { return m_FixedFrameCount; }
 		std::chrono::high_resolution_clock::time_point GetThisMoment() const { return std::chrono::high_resolution_clock::now(); }
-		int GetTimeStep() const;
+
+		float GetTimeStampDuration() const
+		{
+			return std::chrono::duration<float>(GetThisMoment() - m_StartTimeStamp).count();
+		}
+
+		void PlaceTimeStamp()
+		{
+			m_StartTimeStamp = std::chrono::high_resolution_clock::now();
+		}
 
 	private:
 
 		//=====================
 		//Datamembers
 		//=====================
+		std::chrono::high_resolution_clock::time_point m_StartTimeStamp{};
+
 		float m_DeltaTime{};
 		//The number of update calls since the start of the game
 		float m_FrameCount{};

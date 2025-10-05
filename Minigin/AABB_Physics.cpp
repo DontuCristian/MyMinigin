@@ -7,6 +7,9 @@
 
 void dae::physics::AABB_Physics::FixedUpdate()
 {
+
+	ResolveCollisions();
+
 	for (RigidBody* rb : m_RigidBodies)
 	{
 		if (!rb->IsKinematic)
@@ -14,17 +17,16 @@ void dae::physics::AABB_Physics::FixedUpdate()
 			glm::vec2 gravity = rb->Gravity * rb->GravityScale;
 			rb->Force += gravity * rb->Mass; // Apply gravity to the force
 
-			rb->Velocity += rb->Force / rb->Mass * Timer::GetInstance().GetFixedDeltaTime(); // Update velocity based on force
+			rb->Velocity = rb->Force / rb->Mass * Timer::GetInstance().GetFixedDeltaTime(); // Update velocity based on force
 
 			glm::vec2 positionOffset = rb->pTransform->GetLocalPosition() + rb->Velocity;
 			rb->pTransform->SetLocalPosition(positionOffset); // Update position based on velocity
-
-			//Reset the force for the next frame
+		
+			// Reset forces for the next frame
 			rb->Force = glm::vec2{ 0,0 };
 		}
 	}
-
-	ResolveCollisions();
+ 
 }
 
 void dae::physics::AABB_Physics::AddRigidBody(const RigidBody* rb)

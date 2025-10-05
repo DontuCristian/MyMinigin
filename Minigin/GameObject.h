@@ -1,4 +1,4 @@
-#pragma once
+#pragma once 
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -6,10 +6,12 @@
 #include <typeindex>
 #include <assert.h>
 #include <string>
-#include "EngineComponentsIncludes.h"
 
 namespace dae
 {
+	class BComponent;
+	class Transform;
+
 	class GameObject
 	{
 	public:
@@ -94,7 +96,7 @@ namespace dae
 
 		//Components
 		std::unique_ptr<Transform> m_pTransform;
-		std::unordered_map<std::type_index, std::unique_ptr<BComponent>> m_ComponentsMap{};
+		std::unordered_map<std::type_index, std::unique_ptr<BComponent>> m_ComponentsMap;
 
 		//For the scene graph
 		GameObject* m_Parent{};

@@ -18,7 +18,7 @@ namespace dae::physics
 
 	struct RigidBody : public BComponent
 	{
-		RigidBody(dae::GameObject& obj, bool isKin = false);
+		explicit RigidBody(dae::GameObject& obj, bool isKin = false);
 		~RigidBody() override;
 
 		void Update() override {};
@@ -44,7 +44,8 @@ namespace dae::physics
 
 	struct Collider : public BComponent
 	{
-		Collider(dae::GameObject& obj, float width, float height, glm::vec2 offset, bool isTrigger = false);
+		explicit Collider(dae::GameObject& obj);
+		Collider(dae::GameObject& obj, float width, float height, glm::vec2 offset = {0,0}, bool isTrigger = false);
 		~Collider() override;
 
 		void Update() override {};
@@ -65,18 +66,26 @@ namespace dae::physics
 		bool IsColliding{ false }; // Is the collider colliding this frame?
 
 
-		bool CompareTag(const std::string& tag) const;
+		template <size_t N>
+		constexpr bool CompareTag(const char(&tag)[N]) const {
+			return make_sdbm_hash(tag) == m_Tag;
+		}
 
-		void SetTag(const std::string& tag);
-
-		void SetCollisionCallback(std::function<void(const Collider*, const CollisionPoints&)>& callback)
+		void SetTag(ColliderTag tag) 
 		{
-			m_OnCollisionCallbacks.push_back(callback);
+			m_Tag = tag;
+		}
+
+		bool CompareTag(std::string tag) const;
+
+		void SetCollisionCallback(std::function<void(const Collider*, const CollisionPoints&)>&& callback)
+		{
+			m_OnCollisionCallbacks.push_back(std::move(callback));
 		};
 
-		void SetTriggerCallback(std::function<void(const Collider*, const CollisionPoints&)>& callback)
+		void SetTriggerCallback(std::function<void(const Collider*, const CollisionPoints&)>&& callback)
 		{
-			m_OnTriggerCallbacks.push_back(callback);
+			m_OnTriggerCallbacks.push_back(std::move(callback));
 		};
 
 		void OnCollision(const Collider* other, const CollisionPoints& points);
@@ -88,8 +97,6 @@ namespace dae::physics
 	private:
 
 		
-		
-
 		ColliderTag m_Tag{ 0 };
 	};
 }

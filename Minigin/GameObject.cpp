@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
+#include "EngineComponentsIncludes.h"
 
 
 dae::Transform* dae::GameObject::GetTransform()
@@ -94,7 +95,7 @@ void dae::GameObject::FlagForDeletion()
 
 	for (auto* child : m_Children)
 	{
-		child->SetParent(nullptr, true);
+		child->FlagForDeletion();
 	}
 }
 const std::vector<dae::GameObject*>& dae::GameObject::GetChildren() const

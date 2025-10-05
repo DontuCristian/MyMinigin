@@ -41,7 +41,5 @@ namespace dae::physics
 		virtual ~Solver() = default;
 
 		virtual void SolveCollision(const Collision& points) = 0;
-	private:
-
 	};
 }

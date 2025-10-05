@@ -39,7 +39,6 @@ namespace dae
 		std::shared_ptr<Texture2D> m_TextTexture;
 		std::string m_Text;
 
-		//TO DO: make a warpper class for SDL_Color
 		SDL_Color m_Color = { 255,255,255,255 };
 
 		bool m_NeedsUpdate;

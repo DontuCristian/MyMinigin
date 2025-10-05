@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "ResourceManager.h"
@@ -35,6 +36,13 @@ std::shared_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& fil
 	if(m_loadedFonts.find(key) == m_loadedFonts.end())
 		m_loadedFonts.insert(std::pair(key,std::make_shared<Font>(fullPath.string(), size)));
 	return m_loadedFonts.at(key);
+}
+
+std::shared_ptr<dae::Texture2D> dae::ResourceManager::AddTexture(const std::string& name, std::shared_ptr<Texture2D> texture)
+{
+	m_loadedTextures.insert(std::pair(name,texture));
+
+	return texture;
 }
 
 void dae::ResourceManager::UnloadUnusedResources()

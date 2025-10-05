@@ -18,11 +18,11 @@ namespace dae
 		void Render() const;
 		void Destroy();
 
-		void RenderTexture(const Texture2D& texture, float x, float y) const;
-		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height) const;
+		void RenderTexture(const Texture2D& texture, float x, float y, float angle = {0}) const;
+		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height, float angle = {0}) const;
 
-		void RenderTexture(const Texture2D& texture, const SDL_Rect& dst, const SDL_Rect& src) const;
-		void RenderTexture(const Texture2D& texture, const float x, const float y, const SDL_Rect& src) const;
+		void RenderTexture(const Texture2D& texture, const SDL_Rect& dst, const SDL_Rect& src, float angle = {0}) const;
+		void RenderTexture(const Texture2D& texture, const float x, const float y, const SDL_Rect& src, float angle = {0}) const;
 
 		void RenderRect(const SDL_Rect& rect, const SDL_Color& color) const;
 
@@ -30,6 +30,9 @@ namespace dae
 
 		const SDL_Color& GetBackgroundColor() const { return m_clearColor; }
 		void SetBackgroundColor(const SDL_Color& color) { m_clearColor = color; }
+
+		int GetWindowWidth() const;
+		int GetWindowHeight() const;
 	};
 }
 

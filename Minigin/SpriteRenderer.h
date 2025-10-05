@@ -23,7 +23,7 @@ namespace dae
 	{
 	public:
 		virtual ~SpriteRenderer() = default;
-		SpriteRenderer(GameObject& owner);
+		explicit SpriteRenderer(GameObject& owner);
 
 		SpriteRenderer(const SpriteRenderer&) = delete;
 		SpriteRenderer(SpriteRenderer&&) noexcept = delete;

@@ -1,22 +1,108 @@
-[
-    {
-        "name": "DON",
-        "score": 225
-    },
-    {
-        "name": "CAE",
-        "score": 4700
-    },
-    {
-        "name": "ABA",
-        "score": 100
-    },
-    {
-        "name": "DAC",
-        "score": 50
-    },
-    {
-        "name": "AZA",
-        "score": 25
-    }
-]
+{
+    "Coop": [
+        {
+            "players": [
+                "hhh",
+                "kkk"
+            ],
+            "score": [
+                222,
+                222
+            ]
+        },
+        {
+            "players": [
+                "BAC",
+                "BAB"
+            ],
+            "score": [
+                0,
+                0
+            ]
+        },
+        {
+            "players": [
+                "ABB",
+                "BBB"
+            ],
+            "score": [
+                0,
+                0
+            ]
+        },
+        {
+            "players": [
+                "AAA",
+                "YZA"
+            ],
+            "score": [
+                0,
+                0
+            ]
+        }
+    ],
+    "Pvp": [
+        {
+            "players": [
+                "aaa",
+                "ccc"
+            ],
+            "score": [
+                111,
+                111
+            ]
+        },
+        {
+            "players": [
+                "BCZ",
+                "BCD"
+            ],
+            "score": [
+                0,
+                0
+            ]
+        }
+    ],
+    "Single": [
+        {
+            "name": "ABC",
+            "score": 0
+        },
+        {
+            "name": "AAA",
+            "score": 0
+        },
+        {
+            "name": "AAA",
+            "score": 0
+        },
+        {
+            "name": "ABC",
+            "score": 0
+        },
+        {
+            "name": "ABB",
+            "score": 0
+        },
+        {
+            "name": "ABC",
+            "score": 100
+        },
+        {
+            "name": "AAA",
+            "score": 0
+        },
+        {
+            "name": "AAA",
+            "score": 0
+        },
+        {
+            "name": "AAA",
+            "score": 0
+        },
+        {
+            "name": "ABC",
+            "score": 400
+        }
+    ]
+}

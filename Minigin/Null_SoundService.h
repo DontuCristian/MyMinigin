@@ -11,10 +11,6 @@ namespace dae
 
 		void PlaySound(const std::string&, SoundId, const float, bool) override { /*No operation*/ }
 		void PlayMusic(const std::string&, SoundId, const float, bool) override { /*No operation*/ }
-		void StopSound(SoundId) override { /*No operation*/ }
-		void StopMusic(SoundId) override { /*No operation*/ }
-		void PauseSound(SoundId) override { /*No operation*/ }
-		void PauseMusic(SoundId) override { /*No operation*/ }
 	};
 }
 

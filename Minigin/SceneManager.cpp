@@ -3,7 +3,7 @@
 
 void dae::SceneManager::Update()
 {
-	for(auto& scene : m_scenes)
+	for (auto& scene : m_scenes)
 	{
 		scene->Update();
 	}
@@ -32,7 +32,7 @@ dae::Scene& dae::SceneManager::CreateScene(const std::string& name)
 	return *scene;
 }
 
-dae::Scene* dae::SceneManager::GetScene(const std::string& name)
+dae::Scene& dae::SceneManager::GetScene(const std::string& name)
 {
 	auto it = std::find_if(m_scenes.begin(), m_scenes.end(),
 		[&name](const std::shared_ptr<Scene>& scene)
@@ -41,6 +41,7 @@ dae::Scene* dae::SceneManager::GetScene(const std::string& name)
 		});
 
 	if (it != m_scenes.end())
-		return it->get();
-	return nullptr;
+		return **it;
+
+	return *m_scenes.front();
 }

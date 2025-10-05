@@ -1,0 +1,55 @@
+#include "PlayerScore.h"
+#include "Event.h"
+#include <algorithm>
+#include "Collisions.h"
+#include "PhysicsComponents.h"
+#include <iostream>
+
+dae::PlayerScore::PlayerScore(GameObject& obj) :
+	BComponent(obj)
+{
+}
+
+void dae::PlayerScore::Update()
+{
+	if (m_CurrentScore >= m_MaxScore)
+	{
+		Event event(make_sdbm_hash("MaxScoreAchieved"));
+		NotifyObservers(event);
+	}
+}
+
+void dae::PlayerScore::OnNotify(Event event, Subject* )
+{
+	if (event.id == make_sdbm_hash("EnemyDied"))
+	{
+		bool isRecogniser = std::any_cast<bool>(event.args[0]);
+
+		if (isRecogniser)
+		{
+			IncreaseScore(250);
+		}
+		else
+		{
+			IncreaseScore(100);
+		}
+	}
+}
+
+void dae::PlayerScore::Render() const
+{
+}
+
+void dae::PlayerScore::IncreaseScore(int ammmount)
+{
+	m_CurrentScore += ammmount;
+	m_CurrentScore = std::clamp(m_CurrentScore, 0, m_MaxScore);
+
+	Event event(make_sdbm_hash("ScoreChanged"));
+	event.args[0] = static_cast<std::any>(m_CurrentScore);
+	NotifyObservers(event);
+}
+
+
+
+

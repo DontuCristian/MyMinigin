@@ -15,7 +15,8 @@ void dae::GameLoop::Update()
         m_ChangeState = false;
     }
 
-    m_pCurrentState->Update();
+    if(m_pCurrentState)
+        m_pCurrentState->Update();
 }
 
 void dae::GameLoop::ChangeState(std::unique_ptr<GameState> newState) 

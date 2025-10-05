@@ -1,4 +1,5 @@
 #pragma once
+#include "GameObject.h"
 
 namespace dae
 {
@@ -22,19 +23,19 @@ namespace dae
 		GameObject* GetOwner() const { return m_pOwner; }
 
 		//Helper functions to access components of the owner GameObject thorugh other components
-		//template <typename Component>
-		//	requires std::derived_from<Component, BComponent>
-		//Component* GetOwnerComponent() const
-		//{
-		//	return m_pOwner->GetComponent<Component>();
-		//}
-		//
-		//template <typename Component>
-		//	requires std::derived_from<Component, BComponent>
-		//bool HasOwnerComponent() const
-		//{
-		//	return m_pOwner->HasComponent<Component>();
-		//}
+		template <typename Component>
+			requires std::derived_from<Component, BComponent>
+		Component* GetOwnerComponent() const
+		{
+			return m_pOwner->GetComponent<Component>();
+		}
+		
+		template <typename Component>
+			requires std::derived_from<Component, BComponent>
+		bool HasOwnerComponent() const
+		{
+			return m_pOwner->HasComponent<Component>();
+		}
 
 		Transform* GetOwnerTransform() const;
 

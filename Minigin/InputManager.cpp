@@ -135,6 +135,14 @@ void dae::InputManager::AddAction(const std::string& name, const uint32_t button
 		tempAction->ControllerIdx = controllerIndex;
 		tempAction->Event = state;
 
+		auto it = m_ControllerActions.find(name);
+
+		if (it != m_ControllerActions.end())
+		{
+			it->second->Delete = true;
+		}
+
+
 		m_ControllerActions.insert({ name, std::move(tempAction) });
 }
 
@@ -144,6 +152,14 @@ void dae::InputManager::AddAction(const std::string& name, const uint8_t key, co
 		tempAction->Key = key;
 		tempAction->Command = std::move(command);
 		tempAction->Event = state;
+
+		auto it = m_KeyActions.find(name);
+
+		if (it != m_KeyActions.end())
+		{
+			it->second->Delete = true;
+		}
+
 
 		m_KeyActions.insert({ name, std::move(tempAction) });
 }

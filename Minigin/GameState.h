@@ -2,9 +2,6 @@
 
 namespace dae
 {
-
-	class GameObject;
-
 	class GameState
 	{
 	public:
