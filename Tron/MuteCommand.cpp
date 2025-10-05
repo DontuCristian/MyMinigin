@@ -7,5 +7,5 @@
 
 void dae::MuteCommand::Execute()
 {
-	ServiceLocator::GetSoundService().ToggleMute();
+	//ServiceLocator::GetSoundService().ToggleMute();
 }
